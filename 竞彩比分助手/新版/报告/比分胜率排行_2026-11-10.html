@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>比分胜率排序 · 2026-11-10</title><style>
+:root{--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--accent:#1f3b63}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:var(--ink);
+  font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1280px;margin:30px auto 60px;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:18px;gap:16px}
+h1{font-size:23px;margin:0;letter-spacing:.5px}
+.sub{color:var(--mute);font-size:13px;margin-top:6px}
+.stamp{text-align:right;color:var(--mute);font-size:13px;line-height:1.55;white-space:nowrap}
+.stamp b{color:var(--accent);font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.card span{display:block;font-size:12px;color:var(--mute)}
+.card b{font-size:20px;color:var(--accent);font-variant-numeric:tabular-nums}
+.card em{font-style:normal;font-size:12px;color:#94a3b8;margin-left:4px}
+.note{background:#fff7e6;border:1px solid #f5d9a8;border-radius:10px;padding:10px 14px;
+  margin:0 0 18px;font-size:13px;color:#7c4a03}
+.note b{color:#b45309}
+h2{font-size:17px;margin:28px 0 12px;color:var(--accent)}
+h2 small{font-weight:400;font-size:12.5px;color:var(--mute);margin-left:8px}
+.mcard{background:#fff;border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px 12px;margin-bottom:12px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.mhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.no{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.lg{font-size:12px;padding:2px 8px;border-radius:6px;background:#eef2f7;color:#475569;white-space:nowrap}
+.teams{font-weight:600;font-size:15.5px}
+.teams span{color:#cbd5e1;margin:0 6px;font-size:12px;font-weight:400}
+.kick{margin-left:auto;color:var(--mute);font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.probbar{display:flex;height:9px;border-radius:5px;overflow:hidden;background:#f1f5f9;margin:6px 0 3px}
+.seg{display:block;height:100%}
+.nums{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);
+  font-variant-numeric:tabular-nums;margin-bottom:8px}
+.nums i{font-style:normal}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;table-layout:fixed}
+th{background:#eef2f7;color:#334155;font-size:12px;font-weight:600;text-align:left;
+  padding:8px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 9px;border-bottom:1px solid #f1f5f9;vertical-align:middle;font-size:13px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fbfdff}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.mname{font-weight:600;white-space:nowrap}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid;
+  font-size:12.5px;white-space:nowrap}
+.score{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scores{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--mute);align-items:center}
+.scores b{color:var(--ink);font-variant-numeric:tabular-nums}
+.chip{background:#f8fafc;border:1px solid #e8eef5;border-radius:7px;padding:2px 8px;white-space:nowrap}
+.muted{color:#94a3b8;font-size:12px}
+.modelnote{margin-top:6px;font-size:12px;color:#94a3b8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}.kick{margin-left:0}}
+footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);
+  color:#94a3b8;font-size:12px;line-height:1.8}
+.best{background:#ecfdf3;font-weight:600}
+details{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+
+.sortbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px;font-size:13px;color:#64748b}
+.sortbar button{font:inherit;font-size:13px;padding:6px 12px;border:1px solid #d8e0ea;
+  background:#fff;border-radius:8px;color:#334155;cursor:pointer}
+.sortbar button.on{background:#1f3b63;border-color:#1f3b63;color:#fff}
+.sortbar button:hover{border-color:#1f3b63}
+td.rk{font-weight:700;color:#1f3b63;font-variant-numeric:tabular-nums;text-align:center}
+td.teams{font-weight:600}
+td.teams span{color:#cbd5e1;font-weight:400;margin:0 4px}
+.mini{font-size:11.5px;color:#94a3b8;font-weight:400}
+.pcell{min-width:120px}
+.pcell b{display:block;font-variant-numeric:tabular-nums;font-size:13px}
+.pbar{display:block;height:5px;border-radius:3px;background:#eef2f7;margin-top:4px;overflow:hidden}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,#3f74c9,#1f3b63);border-radius:3px}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;border:1px solid}
+.tag.ok{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}
+.tag.off{color:#b45309;border-color:#fde68a;background:#fffbeb}
+</style></head>
+<body><div class="wrap">
+<header><div><h1>预测比分胜率排序</h1>
+<div class="sub">按首选比分概率从高到低 · 点上方按钮切换排序口径</div></div>
+<div class="stamp">日期 <b>2026-11-10</b><br>生成 2026-11-10 11:24:42</div></header>
+<div class="note"><b>口径：</b>比分 Top5 = 集成矩阵 85% + 市场比分盘 15%；
+“首选概率”是单个比分的概率，通常只有 7%–12%，排序只反映相对高低，不代表命中把握。所有数字为模型计算，不构成投注建议。</div>
+<div class="cards">
+<div class="card"><span>入榜场次</span><b>2</b><em>场</em></div>
+<div class="card"><span>首选最高</span><b>12.3%</b><em>单场</em></div>
+<div class="card"><span>首选 ≥10%</span><b>2</b><em>场</em></div>
+<div class="card"><span>比分盘覆盖</span><b>2/2</b><em>场</em></div>
+</div>
+<div class="sortbar"><span>排序：</span>
+<button data-k="p1" class="on">首选概率</button>
+<button data-k="p2">次选概率</button>
+<button data-k="t3">Top3 累计</button>
+<button data-k="t5">Top5 累计</button>
+</div>
+<table id="rk"><colgroup>
+<col style="width:5%"><col style="width:9%"><col style="width:22%"><col style="width:7%">
+<col style="width:7%"><col style="width:12%"><col style="width:7%"><col style="width:8%">
+<col style="width:8%"><col style="width:8%"><col style="width:7%"><col style="width:7%">
+</colgroup><thead><tr><th class="n">排名</th><th>场次</th><th>对阵</th><th>倾向</th>
+<th>首选比分</th><th>首选概率</th><th>次选</th><th class="n">次选概率</th>
+<th class="n">Top3 累计</th><th class="n">Top5 累计</th><th class="n">市场首选</th><th>与倾向</th>
+</tr></thead><tbody id="rkb"><tr data-p1="0.123500" data-p2="0.097600" data-t3="0.313200" data-t5="0.471700"><td class="rk">1</td><td><span class="no">周二001</span><br><span class="mini">英锦标赛</span></td><td class="teams">伯顿 <span>vs</span> 诺茨郡<br><span class="mini">2026-11-11 03:00</span></td><td>主胜</td><td class="score">1-1</td><td class="pcell"><b>12.3%</b><span class="pbar"><i style="width:82%"></i></span></td><td class="score">0-0</td><td class="n">9.8%</td><td class="n">31.3%</td><td class="n">47.2%</td><td class="n"><span class="mini">1-1</span></td><td><span class="tag off">异向</span></td></tr><tr data-p1="0.100200" data-p2="0.095800" data-t3="0.267100" data-t5="0.394200"><td class="rk">2</td><td><span class="no">周二002</span><br><span class="mini">英锦标赛</span></td><td class="teams">布罗姆利 <span>vs</span> 米尔顿凯恩斯<br><span class="mini">2026-11-11 03:30</span></td><td>客胜</td><td class="score">1-1</td><td class="pcell"><b>10.0%</b><span class="pbar"><i style="width:67%"></i></span></td><td class="score">1-2</td><td class="n">9.6%</td><td class="n">26.7%</td><td class="n">39.4%</td><td class="n"><span class="mini">1-2</span></td><td><span class="tag off">异向</span></td></tr></tbody></table>
+<footer>由 jczq_pro 生成 · 数据源 500.com 竞彩 · 概率为模型计算，不构成投注建议</footer>
+</div>
+<script>
+(function(){
+  var tb=document.getElementById('rkb');
+  var btns=document.querySelectorAll('.sortbar button');
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      btns.forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      var k=b.getAttribute('data-k');
+      var rows=Array.prototype.slice.call(tb.querySelectorAll('tr'));
+      rows.sort(function(a,b){return parseFloat(b.dataset[k])-parseFloat(a.dataset[k]);});
+      rows.forEach(function(tr,i){tr.cells[0].textContent=i+1; tb.appendChild(tr);});
+    });
+  });
+})();
+</script>
+</body></html>

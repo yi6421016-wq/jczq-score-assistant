@@ -1,0 +1,149 @@
+{
+ "day": "2026-11-16",
+ "source": "补录 · 封存数据 2026-11-16 11:20",
+ "budget": 100.0,
+ "bets": [
+  {
+   "id": "M20261116-H1",
+   "day": "2026-11-16",
+   "created": "2026-11-17 18:37:27",
+   "bucket": "高赔",
+   "play": "比分",
+   "type": "2串1",
+   "legs": [
+    {
+     "no": "周一004",
+     "match": "冰岛-卢森堡",
+     "league": "欧国联",
+     "play": "比分",
+     "pick": "2-0",
+     "code": "2:0",
+     "p": 0.1719,
+     "odds": 4.75,
+     "kickoff": "2026-11-17 01:00",
+     "score_pred": "2-0",
+     "score": "",
+     "hit": null
+    },
+    {
+     "no": "周一005",
+     "match": "瑞士-苏格兰",
+     "league": "欧国联",
+     "play": "比分",
+     "pick": "2-0",
+     "code": "2:0",
+     "p": 0.1189,
+     "odds": 6.5,
+     "kickoff": "2026-11-17 03:45",
+     "score_pred": "2-0",
+     "score": "",
+     "hit": null
+    }
+   ],
+   "odds": 30.875,
+   "p": 0.020439,
+   "stake": 20.0,
+   "ev": -0.3689,
+   "status": "待结算",
+   "payout": 0.0,
+   "settled": "",
+   "backfill": true
+  },
+  {
+   "id": "M20261116-H2",
+   "day": "2026-11-16",
+   "created": "2026-11-17 18:37:27",
+   "bucket": "高赔",
+   "play": "半全场",
+   "type": "单关",
+   "legs": [
+    {
+     "no": "周一004",
+     "match": "冰岛-卢森堡",
+     "league": "欧国联",
+     "play": "半全场",
+     "pick": "胜/胜",
+     "code": "3-3",
+     "p": 0.5359,
+     "odds": 1.6,
+     "kickoff": "2026-11-17 01:00",
+     "score_pred": "2-0",
+     "score": "",
+     "hit": null
+    }
+   ],
+   "odds": 1.6,
+   "p": 0.5359,
+   "stake": 20.0,
+   "ev": -0.1426,
+   "status": "待结算",
+   "payout": 0.0,
+   "settled": "",
+   "backfill": true
+  },
+  {
+   "id": "M20261116-N1",
+   "day": "2026-11-16",
+   "created": "2026-11-17 18:37:27",
+   "bucket": "正常",
+   "play": "胜平负",
+   "type": "单关",
+   "legs": [
+    {
+     "no": "周一002",
+     "match": "哈萨克斯坦-斯洛伐克",
+     "league": "欧国联",
+     "play": "胜平负",
+     "pick": "客胜",
+     "code": 2,
+     "p": 0.5909,
+     "odds": 1.58,
+     "kickoff": "2026-11-16 23:00",
+     "score_pred": "0-1",
+     "score": "",
+     "hit": null
+    }
+   ],
+   "odds": 1.58,
+   "p": 0.5909,
+   "stake": 30.0,
+   "ev": -0.0664,
+   "status": "待结算",
+   "payout": 0.0,
+   "settled": "",
+   "backfill": true
+  },
+  {
+   "id": "M20261116-N2",
+   "day": "2026-11-16",
+   "created": "2026-11-17 18:37:27",
+   "bucket": "正常",
+   "play": "总进球",
+   "type": "单关",
+   "legs": [
+    {
+     "no": "周一004",
+     "match": "冰岛-卢森堡",
+     "league": "欧国联",
+     "play": "总进球",
+     "pick": "2 球",
+     "code": "2",
+     "p": 0.2459,
+     "odds": 3.5,
+     "kickoff": "2026-11-17 01:00",
+     "score_pred": "2-0",
+     "score": "",
+     "hit": null
+    }
+   ],
+   "odds": 3.5,
+   "p": 0.2459,
+   "stake": 30.0,
+   "ev": -0.1393,
+   "status": "待结算",
+   "payout": 0.0,
+   "settled": "",
+   "backfill": true
+  }
+ ]
+}

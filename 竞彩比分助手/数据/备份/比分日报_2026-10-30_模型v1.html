@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>竞彩比分日报 · 2026-10-30</title><style>
+:root{--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--accent:#1f3b63}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:var(--ink);
+  font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1280px;margin:30px auto 60px;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:20px}
+h1{font-size:23px;margin:0;letter-spacing:.5px}
+.sub{color:var(--mute);font-size:13px;margin-top:6px}
+.stamp{text-align:right;color:var(--mute);font-size:13px;line-height:1.55}
+.stamp b{color:var(--accent);font-size:15px}
+.cards{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;flex:1 1 158px;min-width:148px}
+.card span{display:block;font-size:12px;color:var(--mute)}
+.card b{font-size:20px;color:var(--accent);font-variant-numeric:tabular-nums}
+.card em{font-style:normal;font-size:12px;color:#94a3b8;margin-left:4px}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;table-layout:fixed;
+  box-shadow:0 1px 2px rgba(15,23,42,.04)}
+th{background:#eef2f7;color:#334155;font-size:12.5px;font-weight:600;text-align:left;
+  padding:11px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+td:nth-child(5){padding-left:18px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fbfdff}
+.no{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg{font-size:12px;padding:2px 8px;border-radius:6px;white-space:nowrap;display:inline-block}
+.teams{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.teams b{font-weight:600}
+.teams span{color:#cbd5e1;margin:0 6px;font-size:12px}
+.kick{white-space:nowrap;color:#64748b;font-size:13px;font-variant-numeric:tabular-nums}
+.segs{display:flex;height:7px;border-radius:4px;overflow:hidden;background:#f1f5f9}
+.seg{display:block;height:100%}
+.nums{display:flex;justify-content:space-between;font-size:11.5px;margin-top:4px}
+.nums i{font-style:normal;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:4px 9px;border-radius:999px;border:1px solid;
+  font-size:13px;white-space:nowrap}
+.pill b{margin-left:5px;font-variant-numeric:tabular-nums}
+.score{white-space:nowrap}
+.score b{font-size:16px;font-variant-numeric:tabular-nums}
+.score em{font-style:normal;margin-left:6px;font-size:12px;padding:1px 6px;border-radius:5px;
+  background:#eef2f7;color:#475569;font-variant-numeric:tabular-nums}
+.score em.hit{background:#e8f7ee;color:#15803d;font-weight:600}
+.score em.miss{background:#fdf1f1;color:#b91c1c}
+.chips{display:flex;gap:3px;flex-wrap:nowrap}
+.chip{white-space:nowrap;font-size:11px;color:#475569;background:#f8fafc;
+  border:1px solid var(--line);border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums}
+.chip b{font-weight:500;color:#94a3b8;margin-left:3px}
+.chip.on{background:#fff7e6;border-color:#e9c46a;color:#7a5c00}
+.chip.on b{color:#a97f1a}
+.act{text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums;color:#94a3b8}
+.act.hit{color:#15803d;font-weight:700}
+.act.miss{color:#b91c1c;font-weight:700}
+.badge{display:inline-block;font-size:11.5px;padding:2px 7px;border-radius:5px;
+  background:#f1f5f9;color:#64748b;white-space:nowrap}
+.badge.ok{background:#e8f7ee;color:#15803d}
+.badge.mid{background:#eef6ff;color:#1d4ed8}
+.badge.no{color:#b91c1c;background:#fef2f2;font-weight:600}
+footer{margin-top:18px;color:var(--mute);font-size:12.5px;line-height:1.95}
+footer b{color:#334155}
+.late{display:inline-block;background:#fff7e6;color:#a16207;border:1px solid #f2d08a;
+  border-radius:6px;padding:1px 8px;font-size:12px;margin-left:8px}
+@media(max-width:1000px){.card{flex:1 1 46%}}
+</style></head>
+<body><div class="wrap">
+<header>
+  <div><h1>竞彩比分概率日报</h1>
+    <div class="sub">泊松模型 · 由胜平负赔率反解期望进球 · 只做概率分布与校准记录</div></div>
+  <div class="stamp"><b>2026-10-30（周五）</b><br>封存 2026-10-30 22:51:14<br>样本 11 场</div>
+</header>
+<div class="cards">
+  <div class="card"><span>场次</span><b>11</b></div>
+  <div class="card"><span>首选比分期望命中</span><b>1.21</b><em>场</em></div>
+  <div class="card"><span>TOP3 期望命中</span><b>3.40</b><em>场</em></div>
+  <div class="card"><span>返还率</span><b>87.8%</b></div>
+  <div class="card"><span>已核对</span><b>0</b><em>场</em></div></div>
+<table>
+<colgroup><col style="width:56px"><col style="width:58px"><col style="width:208px">
+<col style="width:94px"><col style="width:162px"><col style="width:92px">
+<col style="width:104px"><col style="width:200px"><col style="width:64px"><col style="width:76px"></colgroup>
+<thead><tr><th>场次</th><th>联赛</th><th>对阵</th><th>开球</th><th>胜 / 平 / 负</th>
+<th>预测胜负</th><th>预测比分</th><th>TOP3 比分</th><th>实际</th><th>核对</th></tr></thead>
+<tbody>
+      <tr>
+        <td class="no">周五002</td>
+        <td><span class="lg" style="background:#3b82f61a;color:#3b82f6">德乙</span></td>
+        <td class="teams" title="科特布斯 vs 波鸿"><b>科特布斯</b><span>vs</span>波鸿</td>
+        <td class="kick" title="2026-10-31 01:30">10-31 01:30</td>
+        <td><div class="segs"><span class="seg" style="width:28.1%;background:#b91c1c"></span><span class="seg" style="width:24.3%;background:#475569"></span><span class="seg" style="width:47.6%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">28%</i><i style="color:#475569">24%</i><i style="color:#1d4ed8">48%</i></div></td>
+        <td><span class="pill" style="color:#1d4ed8;background:#eff6ff;border-color:#1d4ed833">客胜<b>48%</b></span></td>
+        <td class="score"><b>0-1</b><em class="">9.5%</em></td>
+        <td><div class="chips"><span class="chip on">1-1<b>11.5%</b></span><span class="chip">0-1<b>9.5%</b></span><span class="chip">1-2<b>9.4%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr>
+      <tr>
+        <td class="no">周五003</td>
+        <td><span class="lg" style="background:#7c3aed1a;color:#7c3aed">法甲</span></td>
+        <td class="teams" title="尼斯 vs 雷恩"><b>尼斯</b><span>vs</span>雷恩</td>
+        <td class="kick" title="2026-10-31 02:00">10-31 02:00</td>
+        <td><div class="segs"><span class="seg" style="width:34.1%;background:#b91c1c"></span><span class="seg" style="width:25.4%;background:#475569"></span><span class="seg" style="width:40.5%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">34%</i><i style="color:#475569">25%</i><i style="color:#1d4ed8">40%</i></div></td>
+        <td><span class="pill" style="color:#1d4ed8;background:#eff6ff;border-color:#1d4ed833">客胜<b>40%</b></span></td>
+        <td class="score"><b>0-1</b><em class="">9.1%</em></td>
+        <td><div class="chips"><span class="chip on">1-1<b>12.0%</b></span><span class="chip">0-1<b>9.1%</b></span><span class="chip">1-2<b>8.7%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr>
+      <tr>
+        <td class="no">周五004</td>
+        <td><span class="lg" style="background:#7c3aed1a;color:#7c3aed">法甲</span></td>
+        <td class="teams" title="勒阿弗尔 vs 巴黎圣日尔曼"><b>勒阿弗尔</b><span>vs</span>巴黎圣日尔曼</td>
+        <td class="kick" title="2026-10-31 02:00">10-31 02:00</td>
+        <td><div class="segs"><span class="seg" style="width:9.1%;background:#b91c1c"></span><span class="seg" style="width:14.1%;background:#475569"></span><span class="seg" style="width:76.8%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">9%</i><i style="color:#475569">14%</i><i style="color:#1d4ed8">77%</i></div></td>
+        <td><span class="pill" style="color:#1d4ed8;background:#eff6ff;border-color:#1d4ed833">客胜<b>77%</b></span></td>
+        <td class="score"><b>0-2</b><em class="">10.2%</em></td>
+        <td><div class="chips"><span class="chip on">0-2<b>10.2%</b></span><span class="chip">0-3<b>9.4%</b></span><span class="chip">1-2<b>8.8%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr>
+      <tr>
+        <td class="no">周五005</td>
+        <td><span class="lg" style="background:#ef44441a;color:#ef4444">挪超</span></td>
+        <td class="teams" title="博德闪耀 vs 维京"><b>博德闪耀</b><span>vs</span>维京</td>
+        <td class="kick" title="2026-10-31 02:00">10-31 02:00</td>
+        <td><div class="segs"><span class="seg" style="width:64.6%;background:#b91c1c"></span><span class="seg" style="width:17.4%;background:#475569"></span><span class="seg" style="width:17.9%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">65%</i><i style="color:#475569">17%</i><i style="color:#1d4ed8">18%</i></div></td>
+        <td><span class="pill" style="color:#b91c1c;background:#fef2f2;border-color:#b91c1c33">主胜<b>65%</b></span></td>
+        <td class="score"><b>2-1</b><em class="">8.8%</em></td>
+        <td><div class="chips"><span class="chip on">2-1<b>8.8%</b></span><span class="chip">3-1<b>7.6%</b></span><span class="chip">1-1<b>6.7%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr>
+      <tr>
+        <td class="no">周五006</td>
+        <td><span class="lg" style="background:#fb923c1a;color:#fb923c">荷乙</span></td>
+        <td class="teams" title="福伦丹 vs 格拉夫夏普"><b>福伦丹</b><span>vs</span>格拉夫夏普</td>
+        <td class="kick" title="2026-10-31 03:00">10-31 03:00</td>
+        <td><div class="segs"><span class="seg" style="width:58.1%;background:#b91c1c"></span><span class="seg" style="width:17.8%;background:#475569"></span><span class="seg" style="width:24.1%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">58%</i><i style="color:#475569">18%</i><i style="color:#1d4ed8">24%</i></div></td>
+        <td><span class="pill" style="color:#b91c1c;background:#fef2f2;border-color:#b91c1c33">主胜<b>58%</b></span></td>
+        <td class="score"><b>2-1</b><em class="">7.3%</em></td>
+        <td><div class="chips"><span class="chip on">2-1<b>7.3%</b></span><span class="chip">3-1<b>6.7%</b></span><span class="chip">2-2<b>6.5%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr>
+      <tr>
+        <td class="no">周五007</td>
+        <td><span class="lg" style="background:#1f6feb1a;color:#1f6feb">德甲</span></td>
+        <td class="teams" title="埃尔沃斯堡 vs 美因茨"><b>埃尔沃斯堡</b><span>vs</span>美因茨</td>
+        <td class="kick" title="2026-10-31 03:30">10-31 03:30</td>
+        <td><div class="segs"><span class="seg" style="width:27.2%;background:#b91c1c"></span><span class="seg" style="width:23.7%;background:#475569"></span><span class="seg" style="width:49.1%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">27%</i><i style="color:#475569">24%</i><i style="color:#1d4ed8">49%</i></div></td>
+        <td><span class="pill" style="color:#1d4ed8;background:#eff6ff;border-color:#1d4ed833">客胜<b>49%</b></span></td>
+        <td class="score"><b>1-2</b><em class="">9.5%</em></td>
+        <td><div class="chips"><span class="chip on">1-1<b>11.0%</b></span><span class="chip">1-2<b>9.5%</b></span><span class="chip">0-1<b>9.0%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr>
+      <tr>
+        <td class="no">周五008</td>
+        <td><span class="lg" style="background:#0284c71a;color:#0284c7">英冠</span></td>
+        <td class="teams" title="谢菲尔德联 vs 雷克斯汉姆"><b>谢菲尔德联</b><span>vs</span>雷克斯汉姆</td>
+        <td class="kick" title="2026-10-31 04:00">10-31 04:00</td>
+        <td><div class="segs"><span class="seg" style="width:44.0%;background:#b91c1c"></span><span class="seg" style="width:28.5%;background:#475569"></span><span class="seg" style="width:27.6%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">44%</i><i style="color:#475569">28%</i><i style="color:#1d4ed8">28%</i></div></td>
+        <td><span class="pill" style="color:#b91c1c;background:#fef2f2;border-color:#b91c1c33">主胜<b>44%</b></span></td>
+        <td class="score"><b>1-0</b><em class="">13.8%</em></td>
+        <td><div class="chips"><span class="chip on">1-0<b>13.8%</b></span><span class="chip">1-1<b>13.1%</b></span><span class="chip">0-0<b>10.9%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr>
+      <tr>
+        <td class="no">周五009</td>
+        <td><span class="lg" style="background:#f59e0b1a;color:#f59e0b">西甲</span></td>
+        <td class="teams" title="比利亚雷亚尔 vs 西班牙人"><b>比利亚雷亚尔</b><span>vs</span>西班牙人</td>
+        <td class="kick" title="2026-10-31 04:00">10-31 04:00</td>
+        <td><div class="segs"><span class="seg" style="width:72.3%;background:#b91c1c"></span><span class="seg" style="width:16.2%;background:#475569"></span><span class="seg" style="width:11.5%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">72%</i><i style="color:#475569">16%</i><i style="color:#1d4ed8">12%</i></div></td>
+        <td><span class="pill" style="color:#b91c1c;background:#fef2f2;border-color:#b91c1c33">主胜<b>72%</b></span></td>
+        <td class="score"><b>2-0</b><em class="">10.2%</em></td>
+        <td><div class="chips"><span class="chip on">2-0<b>10.2%</b></span><span class="chip">2-1<b>9.4%</b></span><span class="chip">3-0<b>8.6%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr>
+      <tr>
+        <td class="no">周五010</td>
+        <td><span class="lg" style="background:#7c3aed1a;color:#7c3aed">法甲</span></td>
+        <td class="teams" title="里尔 vs 朗斯"><b>里尔</b><span>vs</span>朗斯</td>
+        <td class="kick" title="2026-10-31 04:05">10-31 04:05</td>
+        <td><div class="segs"><span class="seg" style="width:40.2%;background:#b91c1c"></span><span class="seg" style="width:28.5%;background:#475569"></span><span class="seg" style="width:31.3%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">40%</i><i style="color:#475569">28%</i><i style="color:#1d4ed8">31%</i></div></td>
+        <td><span class="pill" style="color:#b91c1c;background:#fef2f2;border-color:#b91c1c33">主胜<b>40%</b></span></td>
+        <td class="score"><b>1-0</b><em class="">12.7%</em></td>
+        <td><div class="chips"><span class="chip on">1-1<b>13.2%</b></span><span class="chip">1-0<b>12.7%</b></span><span class="chip">0-1<b>10.8%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr>
+      <tr>
+        <td class="no">周五011</td>
+        <td><span class="lg" style="background:#10b9811a;color:#10b981">葡超</span></td>
+        <td class="teams" title="卡萨皮亚 vs 里斯本竞技"><b>卡萨皮亚</b><span>vs</span>里斯本竞技</td>
+        <td class="kick" title="2026-10-31 04:15">10-31 04:15</td>
+        <td><div class="segs"><span class="seg" style="width:7.5%;background:#b91c1c"></span><span class="seg" style="width:14.4%;background:#475569"></span><span class="seg" style="width:78.0%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">8%</i><i style="color:#475569">14%</i><i style="color:#1d4ed8">78%</i></div></td>
+        <td><span class="pill" style="color:#1d4ed8;background:#eff6ff;border-color:#1d4ed833">客胜<b>78%</b></span></td>
+        <td class="score"><b>0-2</b><em class="">13.2%</em></td>
+        <td><div class="chips"><span class="chip on">0-2<b>13.2%</b></span><span class="chip">0-3<b>11.2%</b></span><span class="chip">0-1<b>10.4%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr>
+      <tr>
+        <td class="no">周五012</td>
+        <td><span class="lg" style="background:#84cc161a;color:#84cc16">巴甲</span></td>
+        <td class="teams" title="科林蒂安 vs 米拉索尔"><b>科林蒂安</b><span>vs</span>米拉索尔</td>
+        <td class="kick" title="2026-10-31 07:00">10-31 07:00</td>
+        <td><div class="segs"><span class="seg" style="width:51.6%;background:#b91c1c"></span><span class="seg" style="width:27.9%;background:#475569"></span><span class="seg" style="width:20.5%;background:#1d4ed8"></span></div>
+          <div class="nums"><i style="color:#b91c1c">52%</i><i style="color:#475569">28%</i><i style="color:#1d4ed8">20%</i></div></td>
+        <td><span class="pill" style="color:#b91c1c;background:#fef2f2;border-color:#b91c1c33">主胜<b>52%</b></span></td>
+        <td class="score"><b>1-0</b><em class="">16.4%</em></td>
+        <td><div class="chips"><span class="chip on">1-0<b>16.4%</b></span><span class="chip">1-1<b>12.3%</b></span><span class="chip">0-0<b>12.0%</b></span></div></td>
+        <td class="act ">—</td>
+        <td><span class="badge">待赛</span></td>
+      </tr></tbody></table>
+<footer>
+<b>读法：</b>“预测比分”与“预测胜负”同向——在该胜负结果内取概率最高的比分；所以个别场次会出现“预测客胜、全场最高比分却是 1-1”，因为平局概率被摊在 1-1、0-0、2-2 多格上。<br>
+<b>量级：</b>首选比分概率多在 7%—16%，11 场合计期望命中 1.21 场；TOP3 合计 3.40 场。胜负命中率正常区间 50%—55%。模型拟合误差 0.00009，说明它只是把市场赔率换算成比分分布，并不比市场更准。<br>
+<b>声明：</b>本页是概率分布与赛前记录，不构成任何投注建议。　<a href="汇总.html" style="color:#1f3b63">累计校准 →</a>
+</footer>
+</div></body></html>

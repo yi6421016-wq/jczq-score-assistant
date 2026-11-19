@@ -1,0 +1,27 @@
+name: 赛果核对
+# 北京时间 09:10 / 09:50 / 10:30（UTC 01:10 / 01:50 / 02:30）
+on:
+  schedule:
+    - cron: "10 1 * * *"
+    - cron: "50 1 * * *"
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: jczq-state
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/pipeline
+        with:
+          mode: verify

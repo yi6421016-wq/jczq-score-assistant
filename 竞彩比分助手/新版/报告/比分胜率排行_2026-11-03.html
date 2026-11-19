@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>比分胜率排序 · 2026-11-03</title><style>
+:root{--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--accent:#1f3b63}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:var(--ink);
+  font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1280px;margin:30px auto 60px;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:18px;gap:16px}
+h1{font-size:23px;margin:0;letter-spacing:.5px}
+.sub{color:var(--mute);font-size:13px;margin-top:6px}
+.stamp{text-align:right;color:var(--mute);font-size:13px;line-height:1.55;white-space:nowrap}
+.stamp b{color:var(--accent);font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.card span{display:block;font-size:12px;color:var(--mute)}
+.card b{font-size:20px;color:var(--accent);font-variant-numeric:tabular-nums}
+.card em{font-style:normal;font-size:12px;color:#94a3b8;margin-left:4px}
+.note{background:#fff7e6;border:1px solid #f5d9a8;border-radius:10px;padding:10px 14px;
+  margin:0 0 18px;font-size:13px;color:#7c4a03}
+.note b{color:#b45309}
+h2{font-size:17px;margin:28px 0 12px;color:var(--accent)}
+h2 small{font-weight:400;font-size:12.5px;color:var(--mute);margin-left:8px}
+.mcard{background:#fff;border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px 12px;margin-bottom:12px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.mhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.no{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.lg{font-size:12px;padding:2px 8px;border-radius:6px;background:#eef2f7;color:#475569;white-space:nowrap}
+.teams{font-weight:600;font-size:15.5px}
+.teams span{color:#cbd5e1;margin:0 6px;font-size:12px;font-weight:400}
+.kick{margin-left:auto;color:var(--mute);font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.probbar{display:flex;height:9px;border-radius:5px;overflow:hidden;background:#f1f5f9;margin:6px 0 3px}
+.seg{display:block;height:100%}
+.nums{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);
+  font-variant-numeric:tabular-nums;margin-bottom:8px}
+.nums i{font-style:normal}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;table-layout:fixed}
+th{background:#eef2f7;color:#334155;font-size:12px;font-weight:600;text-align:left;
+  padding:8px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 9px;border-bottom:1px solid #f1f5f9;vertical-align:middle;font-size:13px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fbfdff}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.mname{font-weight:600;white-space:nowrap}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid;
+  font-size:12.5px;white-space:nowrap}
+.score{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scores{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--mute);align-items:center}
+.scores b{color:var(--ink);font-variant-numeric:tabular-nums}
+.chip{background:#f8fafc;border:1px solid #e8eef5;border-radius:7px;padding:2px 8px;white-space:nowrap}
+.muted{color:#94a3b8;font-size:12px}
+.modelnote{margin-top:6px;font-size:12px;color:#94a3b8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}.kick{margin-left:0}}
+footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);
+  color:#94a3b8;font-size:12px;line-height:1.8}
+.best{background:#ecfdf3;font-weight:600}
+details{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+
+.sortbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px;font-size:13px;color:#64748b}
+.sortbar button{font:inherit;font-size:13px;padding:6px 12px;border:1px solid #d8e0ea;
+  background:#fff;border-radius:8px;color:#334155;cursor:pointer}
+.sortbar button.on{background:#1f3b63;border-color:#1f3b63;color:#fff}
+.sortbar button:hover{border-color:#1f3b63}
+td.rk{font-weight:700;color:#1f3b63;font-variant-numeric:tabular-nums;text-align:center}
+td.teams{font-weight:600}
+td.teams span{color:#cbd5e1;font-weight:400;margin:0 4px}
+.mini{font-size:11.5px;color:#94a3b8;font-weight:400}
+.pcell{min-width:120px}
+.pcell b{display:block;font-variant-numeric:tabular-nums;font-size:13px}
+.pbar{display:block;height:5px;border-radius:3px;background:#eef2f7;margin-top:4px;overflow:hidden}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,#3f74c9,#1f3b63);border-radius:3px}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;border:1px solid}
+.tag.ok{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}
+.tag.off{color:#b45309;border-color:#fde68a;background:#fffbeb}
+</style></head>
+<body><div class="wrap">
+<header><div><h1>预测比分胜率排序</h1>
+<div class="sub">按首选比分概率从高到低 · 点上方按钮切换排序口径</div></div>
+<div class="stamp">日期 <b>2026-11-03</b><br>生成 2026-11-03 15:38:13</div></header>
+<div class="note"><b>口径：</b>比分 Top5 = 集成矩阵 85% + 市场比分盘 15%；
+“首选概率”是单个比分的概率，通常只有 7%–12%，排序只反映相对高低，不代表命中把握。所有数字为模型计算，不构成投注建议。</div>
+<div class="cards">
+<div class="card"><span>入榜场次</span><b>11</b><em>场</em></div>
+<div class="card"><span>首选最高</span><b>10.2%</b><em>单场</em></div>
+<div class="card"><span>首选 ≥10%</span><b>1</b><em>场</em></div>
+<div class="card"><span>比分盘覆盖</span><b>11/11</b><em>场</em></div>
+</div>
+<div class="sortbar"><span>排序：</span>
+<button data-k="p1" class="on">首选概率</button>
+<button data-k="p2">次选概率</button>
+<button data-k="t3">Top3 累计</button>
+<button data-k="t5">Top5 累计</button>
+</div>
+<table id="rk"><colgroup>
+<col style="width:5%"><col style="width:9%"><col style="width:22%"><col style="width:7%">
+<col style="width:7%"><col style="width:12%"><col style="width:7%"><col style="width:8%">
+<col style="width:8%"><col style="width:8%"><col style="width:7%"><col style="width:7%">
+</colgroup><thead><tr><th class="n">排名</th><th>场次</th><th>对阵</th><th>倾向</th>
+<th>首选比分</th><th>首选概率</th><th>次选</th><th class="n">次选概率</th>
+<th class="n">Top3 累计</th><th class="n">Top5 累计</th><th class="n">市场首选</th><th>与倾向</th>
+</tr></thead><tbody id="rkb"><tr data-p1="0.102500" data-p2="0.097500" data-t3="0.296300" data-t5="0.453100"><td class="rk">1</td><td><span class="no">周二002</span><br><span class="mini">亚冠</span></td><td class="teams">柏太阳神 <span>vs</span> 大田市民<br><span class="mini">2026-11-03 18:00</span></td><td>主胜</td><td class="score">1-1</td><td class="pcell"><b>10.2%</b><span class="pbar"><i style="width:68%"></i></span></td><td class="score">2-1</td><td class="n">9.8%</td><td class="n">29.6%</td><td class="n">45.3%</td><td class="n"><span class="mini">2-1</span></td><td><span class="tag off">异向</span></td></tr><tr data-p1="0.095100" data-p2="0.088300" data-t3="0.249100" data-t5="0.375200"><td class="rk">2</td><td><span class="no">周二003</span><br><span class="mini">亚冠</span></td><td class="teams">曼谷港务 <span>vs</span> 北京国安<br><span class="mini">2026-11-03 20:15</span></td><td>客胜</td><td class="score">1-1</td><td class="pcell"><b>9.5%</b><span class="pbar"><i style="width:63%"></i></span></td><td class="score">1-2</td><td class="n">8.8%</td><td class="n">24.9%</td><td class="n">37.5%</td><td class="n"><span class="mini">1-2</span></td><td><span class="tag off">异向</span></td></tr><tr data-p1="0.095100" data-p2="0.078300" data-t3="0.250900" data-t5="0.365600"><td class="rk">3</td><td><span class="no">周二008</span><br><span class="mini">欧冠</span></td><td class="teams">曼彻斯特联 <span>vs</span> 罗马<br><span class="mini">2026-11-04 04:00</span></td><td>客胜</td><td class="score">1-1</td><td class="pcell"><b>9.5%</b><span class="pbar"><i style="width:63%"></i></span></td><td class="score">1-2</td><td class="n">7.8%</td><td class="n">25.1%</td><td class="n">36.6%</td><td class="n"><span class="mini">2-1</span></td><td><span class="tag off">异向</span></td></tr><tr data-p1="0.084900" data-p2="0.084300" data-t3="0.229700" data-t5="0.346900"><td class="rk">4</td><td><span class="no">周二011</span><br><span class="mini">欧冠</span></td><td class="teams">博德闪耀 <span>vs</span> 里尔<br><span class="mini">2026-11-04 04:00</span></td><td>主胜</td><td class="score">1-1</td><td class="pcell"><b>8.5%</b><span class="pbar"><i style="width:57%"></i></span></td><td class="score">2-1</td><td class="n">8.4%</td><td class="n">23.0%</td><td class="n">34.7%</td><td class="n"><span class="mini">2-1</span></td><td><span class="tag off">异向</span></td></tr><tr data-p1="0.084200" data-p2="0.079300" data-t3="0.226300" data-t5="0.343600"><td class="rk">5</td><td><span class="no">周二001</span><br><span class="mini">亚冠</span></td><td class="teams">纽卡斯尔喷气机 <span>vs</span> 上海海港<br><span class="mini">2026-11-03 15:45</span></td><td>客胜</td><td class="score">1-1</td><td class="pcell"><b>8.4%</b><span class="pbar"><i style="width:56%"></i></span></td><td class="score">1-2</td><td class="n">7.9%</td><td class="n">22.6%</td><td class="n">34.4%</td><td class="n"><span class="mini">1-2</span></td><td><span class="tag off">异向</span></td></tr><tr data-p1="0.082400" data-p2="0.074800" data-t3="0.223800" data-t5="0.338000"><td class="rk">6</td><td><span class="no">周二005</span><br><span class="mini">欧冠</span></td><td class="teams">马德里竞技 <span>vs</span> 拜仁慕尼黑<br><span class="mini">2026-11-04 04:00</span></td><td>客胜</td><td class="score">1-1</td><td class="pcell"><b>8.2%</b><span class="pbar"><i style="width:55%"></i></span></td><td class="score">1-2</td><td class="n">7.5%</td><td class="n">22.4%</td><td class="n">33.8%</td><td class="n"><span class="mini">1-1</span></td><td><span class="tag off">异向</span></td></tr><tr data-p1="0.081800" data-p2="0.071600" data-t3="0.223600" data-t5="0.341600"><td class="rk">7</td><td><span class="no">周二006</span><br><span class="mini">欧冠</span></td><td class="teams">LASK林茨 <span>vs</span> 布拉迪斯拉发<br><span class="mini">2026-11-04 04:00</span></td><td>主胜</td><td class="score">2-1</td><td class="pcell"><b>8.2%</b><span class="pbar"><i style="width:55%"></i></span></td><td class="score">3-1</td><td class="n">7.2%</td><td class="n">22.4%</td><td class="n">34.2%</td><td class="n"><span class="mini">2-1</span></td><td><span class="tag ok">同向</span></td></tr><tr data-p1="0.080400" data-p2="0.080200" data-t3="0.220700" data-t5="0.334700"><td class="rk">8</td><td><span class="no">周二007</span><br><span class="mini">欧冠</span></td><td class="teams">费耶诺德 <span>vs</span> 国际米兰<br><span class="mini">2026-11-04 04:00</span></td><td>客胜</td><td class="score">1-2</td><td class="pcell"><b>8.0%</b><span class="pbar"><i style="width:54%"></i></span></td><td class="score">1-1</td><td class="n">8.0%</td><td class="n">22.1%</td><td class="n">33.5%</td><td class="n"><span class="mini">1-2</span></td><td><span class="tag ok">同向</span></td></tr><tr data-p1="0.077100" data-p2="0.067300" data-t3="0.209800" data-t5="0.325500"><td class="rk">9</td><td><span class="no">周二009</span><br><span class="mini">欧冠</span></td><td class="teams">巴塞罗那 <span>vs</span> 阿斯顿维拉<br><span class="mini">2026-11-04 04:00</span></td><td>主胜</td><td class="score">3-1</td><td class="pcell"><b>7.7%</b><span class="pbar"><i style="width:51%"></i></span></td><td class="score">4-1</td><td class="n">6.7%</td><td class="n">21.0%</td><td class="n">32.6%</td><td class="n"><span class="mini">3-1</span></td><td><span class="tag ok">同向</span></td></tr><tr data-p1="0.076900" data-p2="0.068200" data-t3="0.208500" data-t5="0.317100"><td class="rk">10</td><td><span class="no">周二010</span><br><span class="mini">欧冠</span></td><td class="teams">比利亚雷亚尔 <span>vs</span> 巴黎圣日尔曼<br><span class="mini">2026-11-04 04:00</span></td><td>客胜</td><td class="score">1-2</td><td class="pcell"><b>7.7%</b><span class="pbar"><i style="width:51%"></i></span></td><td class="score">1-3</td><td class="n">6.8%</td><td class="n">20.8%</td><td class="n">31.7%</td><td class="n"><span class="mini">1-2</span></td><td><span class="tag ok">同向</span></td></tr><tr data-p1="0.074800" data-p2="0.073700" data-t3="0.212900" data-t5="0.326500"><td class="rk">11</td><td><span class="no">周二004</span><br><span class="mini">欧冠</span></td><td class="teams">加拉塔萨雷 <span>vs</span> 斯图加特<br><span class="mini">2026-11-04 01:45</span></td><td>主胜</td><td class="score">2-1</td><td class="pcell"><b>7.5%</b><span class="pbar"><i style="width:50%"></i></span></td><td class="score">1-1</td><td class="n">7.4%</td><td class="n">21.3%</td><td class="n">32.6%</td><td class="n"><span class="mini">2-1</span></td><td><span class="tag ok">同向</span></td></tr></tbody></table>
+<footer>由 jczq_pro 生成 · 数据源 500.com 竞彩 · 概率为模型计算，不构成投注建议</footer>
+</div>
+<script>
+(function(){
+  var tb=document.getElementById('rkb');
+  var btns=document.querySelectorAll('.sortbar button');
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      btns.forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      var k=b.getAttribute('data-k');
+      var rows=Array.prototype.slice.call(tb.querySelectorAll('tr'));
+      rows.sort(function(a,b){return parseFloat(b.dataset[k])-parseFloat(a.dataset[k]);});
+      rows.forEach(function(tr,i){tr.cells[0].textContent=i+1; tb.appendChild(tr);});
+    });
+  });
+})();
+</script>
+</body></html>

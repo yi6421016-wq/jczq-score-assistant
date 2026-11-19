@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4F5F7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="比分助手">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<title>竞彩比分助手 · 手机版</title>
+<style>
+  :root{
+    --bg:#F4F5F7; --card:#FFFFFF; --line:#E6E9ED; --line2:#F0F2F4;
+    --ink:#151A21; --sub:#6B7280; --dim:#9AA1AB;
+    --brand:#0B6B4F; --brand2:#0E8A63; --brandbg:#E8F5EF;
+    --pos:#0E7A4F; --posbg:#E7F6EE;
+    --neg:#B42318; --negbg:#FDECEA;
+    --warn:#B45309; --warnbg:#FFF4E5;
+    --blue:#1D4ED8; --bluebg:#EDF2FF;
+    --violet:#6D28D9; --violetbg:#F3EEFF;
+    --r:16px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg)}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    color:var(--ink); font-size:15px; line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+    overscroll-behavior-y:none;
+  }
+  button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+  .wrap{max-width:560px;margin:0 auto;min-height:100vh}
+  .topbar{
+    position:sticky;top:0;z-index:30;
+    display:flex;align-items:center;gap:10px;
+    padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+    background:rgba(244,245,247,.92);
+    -webkit-backdrop-filter:saturate(180%) blur(12px);
+    backdrop-filter:saturate(180%) blur(12px);
+    border-bottom:1px solid rgba(0,0,0,.05);
+  }
+  .mark{
+    width:36px;height:36px;border-radius:10px;flex:none;
+    background:linear-gradient(150deg,#0C5C46,#0F8A64);
+    color:#fff;font-weight:800;font-size:20px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 10px rgba(11,107,79,.22);
+  }
+  .brand{flex:1;min-width:0}
+  .brand h1{margin:0;font-size:19px;letter-spacing:.2px;font-weight:800}
+  .brand p{margin:1px 0 0;font-size:11px;color:var(--sub);letter-spacing:.2px}
+  .refresh{
+    width:38px;height:38px;border-radius:50%;flex:none;
+    background:#fff;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;color:var(--sub);
+  }
+  .refresh:active{background:#EEF1F3}
+  .refresh spin{display:block}
+  .refresh.loading svg{animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .view{padding:14px 14px calc(96px + env(safe-area-inset-bottom))}
+  .section-title{display:flex;align-items:baseline;justify-content:space-between;margin:20px 2px 10px}
+  .section-title h2{margin:0;font-size:16px;font-weight:800;letter-spacing:.2px}
+  .section-title span{font-size:12px;color:var(--sub)}
+
+  /* 顶部数据条 */
+  .databar{
+    background:linear-gradient(135deg,#0C5C46,#0E805F 62%,#139A70);
+    border-radius:var(--r);padding:14px 16px;color:#fff;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    box-shadow:0 8px 20px rgba(11,92,70,.18);
+  }
+  .databar .n{display:flex;align-items:baseline;gap:5px}
+  .databar .n b{font-size:26px;letter-spacing:-.5px}
+  .databar .n span{font-size:12px;opacity:.8}
+  .databar .n em{font-style:normal;font-size:11px;opacity:.72;margin-left:6px}
+  .databar .hint{
+    font-size:11px;line-height:1.5;text-align:right;opacity:.85;
+    border-left:1px solid rgba(255,255,255,.22);padding-left:12px;
+  }
+
+  /* 日期条 */
+  .days{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 2px;scrollbar-width:none}
+  .days::-webkit-scrollbar{display:none}
+  .daypill{
+    flex:none;min-width:60px;padding:7px 10px;border-radius:12px;
+    background:#fff;border:1px solid var(--line);
+    display:flex;flex-direction:column;align-items:center;gap:1px;
+    color:var(--sub);transition:transform .08s ease;
+  }
+  .daypill b{font-size:13px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+  .daypill span{font-size:10px;color:var(--dim)}
+  .daypill.on{background:var(--brand);border-color:var(--brand);box-shadow:0 4px 10px rgba(11,107,79,.2)}
+  .daypill.on b,.daypill.on span{color:#fff}
+  .daypill:active{transform:scale(.96)}
+
+  /* 比赛卡 */
+  .match{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+    padding:13px 14px 12px;margin-bottom:10px;
+    box-shadow:0 1px 2px rgba(16,24,40,.03);
+  }
+  .match:active{background:#FCFCFD}
+  .mhead{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--sub)}
+  .lg{background:var(--brandbg);color:var(--brand);font-weight:700;border-radius:6px;padding:1px 6px}
+  .mno{font-weight:700;color:#4B5563;font-variant-numeric:tabular-nums}
+  .mko{margin-left:auto;color:var(--dim);font-variant-numeric:tabular-nums}
+  .teams{display:flex;align-items:center;gap:8px;margin:9px 0 10px;font-size:17px;font-weight:750;letter-spacing:.2px}
+  .teams i{font-style:normal;font-size:11px;color:var(--dim);font-weight:500}
+  .teams .score{
+    margin-left:auto;font-size:15px;font-weight:800;color:var(--brand);
+    background:var(--brandbg);border-radius:8px;padding:2px 8px;
+    font-variant-numeric:tabular-nums;letter-spacing:1px;
+  }
+  .picks{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .chip{
+    display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;
+    background:#F7F8FA;border:1px solid var(--line2);border-radius:10px;
+    padding:7px 9px 6px;text-align:left;min-height:52px;align-content:center;
+  }
+  .chip em{font-style:normal;font-size:10px;color:var(--dim);flex:none}
+  .chip b{font-size:14px;font-weight:800;letter-spacing:.2px}
+  .chip span{font-size:10.5px;color:var(--sub);font-variant-numeric:tabular-nums;margin-left:auto;white-space:nowrap}
+  .chip.hit{border-color:#BFE6D3;background:var(--posbg)}
+  .chip.miss{opacity:.62}
+  .chip .lv{font-style:normal;font-size:9px;line-height:1.4;padding:0 4px;border-radius:4px;margin-left:2px;vertical-align:1px}
+  .lv.high{background:var(--posbg);color:var(--pos)}
+  .lv.mid{background:var(--warnbg);color:var(--warn)}
+  .lv.low{background:#EEF1F3;color:var(--dim)}
+  .hfhint{font-size:11px;color:var(--sub);margin:0 0 7px;padding:6px 8px;border-radius:8px;background:#F7F8FA}
+  .hfhint.high{background:var(--posbg);color:var(--pos)}
+  .hfhint.mid{background:var(--warnbg);color:var(--warn)}
+  .hitmark{font-style:normal;font-size:12px;font-weight:800;margin-left:2px}
+  .hitmark.ok{color:var(--pos)}
+  .hitmark.no{color:var(--neg)}
+  .expandline{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:9px;font-size:11.5px;color:var(--dim)}
+  .chev{display:inline-block;transition:transform .18s ease;font-style:normal}
+  .match.open .chev{transform:rotate(180deg)}
+  .detail{margin-top:11px;border-top:1px dashed var(--line);padding-top:11px;animation:fade .18s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+  .dsec{margin-bottom:12px}
+  .dsec h4{margin:0 0 6px;font-size:11.5px;color:var(--sub);font-weight:700;letter-spacing:.3px}
+  .srow{display:flex;align-items:center;gap:8px;padding:3px 0;font-variant-numeric:tabular-nums}
+  .srow .sc{width:38px;font-size:12.5px;font-weight:700}
+  .srow .bar{flex:1;height:6px;background:#F0F2F4;border-radius:4px;overflow:hidden}
+  .srow .bar i{display:block;height:100%;background:linear-gradient(90deg,#8ED3B8,#0E8A63);border-radius:4px}
+  .srow .pp{width:46px;text-align:right;font-size:11.5px;color:var(--sub)}
+  .srow .od{width:44px;text-align:right;font-size:11.5px;color:var(--dim)}
+  .jqgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
+  .jq{background:#F7F8FA;border-radius:8px;padding:5px 2px;text-align:center;border:1px solid transparent}
+  .jq b{display:block;font-size:12px}
+  .jq span{display:block;font-size:9.5px;color:var(--sub);font-variant-numeric:tabular-nums}
+  .jq em{display:block;font-style:normal;font-size:9px;color:var(--dim)}
+  .jq.on{background:var(--brandbg);border-color:#BFE6D3}
+  .jq.on b,.jq.on span{color:var(--brand)}
+  .hf{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed}
+  .hf th{font-size:9.5px;color:var(--dim);font-weight:600;padding:1px}
+  .hf td{background:#F7F8FA;border-radius:7px;padding:4px 2px;text-align:center;font-size:10px;color:var(--sub)}
+  .hf td b{display:block;font-size:11px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .hf td.on{background:var(--brandbg);box-shadow:inset 0 0 0 1px #BFE6D3}
+  .hf td.on b{color:var(--brand)}
+  .dmeta{margin-top:2px;font-size:10.5px;color:var(--dim);font-variant-numeric:tabular-nums;line-height:1.6}
+  .resline{
+    margin-top:9px;background:#F7F8FA;border-radius:9px;padding:7px 9px;
+    font-size:11px;color:var(--sub);display:flex;flex-wrap:wrap;gap:4px 10px;
+  }
+  .resline b{color:var(--ink)}
+
+  /* 模拟投注 */
+  .kpigrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .kpi{
+    background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11px 12px;
+    box-shadow:0 1px 2px rgba(16,24,40,.03);
+  }
+  .kpi em{font-style:normal;display:block;font-size:10.5px;color:var(--sub);margin-bottom:3px}
+  .kpi b{display:block;font-size:20px;font-weight:800;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
+  .kpi span{display:block;font-size:10px;color:var(--dim);margin-top:2px}
+  .kpi.pos b{color:var(--pos)} .kpi.neg b{color:var(--neg)} .kpi.warn b{color:var(--warn)}
+  .kpi.hero{grid-column:span 2;background:linear-gradient(135deg,#0C5C46,#0F8A64);border:0;color:#fff}
+  .kpi.hero em,.kpi.hero span{color:rgba(255,255,255,.75)}
+  .kpi.hero b{color:#fff;font-size:27px}
+  .ticket{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+    padding:12px 13px;margin-bottom:9px;box-shadow:0 1px 2px rgba(16,24,40,.03);
+  }
+  .thead{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .playtag{background:var(--bluebg);color:var(--blue);font-size:10px;font-weight:700;border-radius:6px;padding:1px 6px}
+  .bucket{background:#F3F4F6;color:#4B5563;font-size:10px;border-radius:6px;padding:1px 6px}
+  .bucket.bf{background:#EEF2FF;color:#2F6FED}
+  .thead b{font-size:13px}
+  .badge{margin-left:auto;font-size:10.5px;font-weight:700;border-radius:7px;padding:2px 7px}
+  .badge.win{background:var(--posbg);color:var(--pos)}
+  .badge.lose{background:var(--negbg);color:var(--neg)}
+  .badge.pend{background:var(--warnbg);color:var(--warn)}
+  .tmeta{
+    display:flex;flex-wrap:wrap;gap:3px 12px;margin:7px 0 8px;
+    font-size:10.5px;color:var(--sub);font-variant-numeric:tabular-nums;
+  }
+  .tmeta b{color:var(--ink);font-weight:700}
+  .tmeta .pos{color:var(--pos)} .tmeta .neg{color:var(--neg)}
+  .leg{border-top:1px solid var(--line2);padding:7px 0 6px}
+  .leg:first-of-type{border-top:0;padding-top:2px}
+  .legtop{display:flex;align-items:center;gap:6px;font-size:11px}
+  .lno{color:var(--dim);font-variant-numeric:tabular-nums;flex:none}
+  .lmatch{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lmark{margin-left:auto;font-style:normal;font-weight:800;font-size:12px;flex:none}
+  .lmark.ok{color:var(--pos)} .lmark.no{color:var(--neg)}
+  .legsub{display:flex;gap:9px;align-items:baseline;margin-top:2px;font-size:10.5px;color:var(--sub);font-variant-numeric:tabular-nums}
+  .legsub b{color:var(--ink)}
+  .legsub span:last-child{margin-left:auto;color:var(--dim);white-space:nowrap}
+  .grouphead{
+    width:100%;display:flex;align-items:center;gap:8px;text-align:left;
+    background:var(--card);border:1px solid var(--line);border-radius:13px;
+    padding:10px 12px;margin:8px 0;
+  }
+  .grouphead .gday{font-weight:800;font-size:13px}
+  .grouphead .gsub{font-size:10.5px;color:var(--dim);margin-left:6px;font-variant-numeric:tabular-nums}
+  .grouphead .gpl{margin-left:auto;font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
+  .grouphead .chev{color:var(--dim);margin-left:2px}
+  .gpl.pos{color:var(--pos)} .gpl.neg{color:var(--neg)} .gpl.flat{color:var(--dim)}
+  .note{
+    margin:12px 2px 0;font-size:10.5px;line-height:1.65;color:var(--dim);
+  }
+  .note b{color:var(--sub)}
+  .autorun{margin:2px 2px 8px;padding:7px 10px;border-radius:8px;background:#EEF7F2;
+    border:1px solid #D8EDE3;color:#0E6B4E;font-size:10.5px;line-height:1.55}
+  .autorun b{font-weight:800}
+
+  /* 战绩 */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin-bottom:10px;box-shadow:0 1px 2px rgba(16,24,40,.03)}
+  .panel h3{margin:0 0 3px;font-size:14px;font-weight:800}
+  .panel .hint{font-size:10.5px;color:var(--dim);margin-bottom:10px}
+  .hrow{display:flex;align-items:center;gap:9px;padding:6px 0}
+  .hname{width:56px;font-size:11.5px;color:var(--sub);flex:none}
+  .hbar{position:relative;flex:1;height:8px;background:#F0F2F4;border-radius:4px}
+  .hbar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#8ED3B8,#0E8A63);min-width:2px}
+  .hbar .expmark{position:absolute;top:-3px;bottom:-3px;width:2px;background:#F59E0B;border-radius:1px;opacity:.9}
+  .hnum{width:78px;text-align:right;flex:none;font-variant-numeric:tabular-nums}
+  .hnum b{font-size:13px}
+  .hnum em{display:block;font-style:normal;font-size:9.5px;color:var(--dim)}
+  .legend{display:flex;gap:14px;margin-top:8px;font-size:9.5px;color:var(--dim)}
+  .legend i{display:inline-block;width:10px;height:6px;border-radius:2px;background:linear-gradient(90deg,#8ED3B8,#0E8A63);margin-right:4px;vertical-align:middle}
+  .legend .m{display:inline-block;width:2px;height:9px;background:#F59E0B;margin-right:4px;vertical-align:middle}
+  .chart{position:relative;height:172px;margin:6px 2px 0}
+  .zeroline{position:absolute;left:0;right:0;top:50%;border-top:1px dashed #D9DEE4}
+  .cols{position:absolute;inset:0;display:flex;align-items:stretch;gap:8px}
+  .col{position:relative;flex:1}
+  .colbar{position:absolute;left:14%;right:14%;border-radius:5px 5px 3px 3px;min-height:3px}
+  .colbar.pos{bottom:50%;background:linear-gradient(180deg,#34B183,#0E7A4F)}
+  .colbar.neg{top:50%;background:linear-gradient(180deg,#E57366,#B42318);border-radius:3px 3px 5px 5px}
+  .colbar em{position:absolute;left:50%;transform:translateX(-50%);font-style:normal;font-size:9px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .colbar.pos em{bottom:calc(100% + 3px);color:var(--pos)}
+  .colbar.neg em{top:calc(100% + 3px);color:var(--neg)}
+  .clabel{position:absolute;bottom:-19px;left:0;right:0;text-align:center;font-size:9px;color:var(--dim);font-variant-numeric:tabular-nums}
+  .chartspace{height:22px}
+  .rrow{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line2);font-size:11.5px}
+  .rrow:first-of-type{border-top:0}
+  .rrow .rid{color:var(--dim);font-size:10px;font-variant-numeric:tabular-nums;flex:none;width:52px}
+  .rrow .rplay{flex:1;min-width:0}
+  .rrow .rplay b{font-weight:700}
+  .rrow .rplay span{display:block;font-size:9.5px;color:var(--dim)}
+  .rrow .rpl{width:74px;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
+  .rrow .rpl.pos{color:var(--pos)} .rrow .rpl.neg{color:var(--neg)}
+  .btgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px}
+  .bt{background:#F7F8FA;border-radius:9px;padding:7px 3px;text-align:center}
+  .bt b{display:block;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+  .bt span{display:block;font-size:9px;color:var(--dim);margin-top:1px}
+  .btmeta{margin-top:8px;font-size:10px;color:var(--dim);font-variant-numeric:tabular-nums;line-height:1.6}
+
+  /* 雷达 */
+  .radar{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;margin-bottom:9px;box-shadow:0 1px 2px rgba(16,24,40,.03)}
+  .rhead{display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--sub)}
+  .rteams{font-size:15px;font-weight:750;margin:7px 0 9px}
+  .rgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .rmarket,.rcold{border-radius:10px;padding:8px 9px;background:#F7F8FA}
+  .rmarket em,.rcold em{font-style:normal;display:block;font-size:9.5px;color:var(--dim)}
+  .rmarket b,.rcold b{display:block;font-size:14px;font-weight:800;margin:1px 0}
+  .rmarket span,.rcold span{font-size:10px;color:var(--sub);font-variant-numeric:tabular-nums}
+  .rcold{background:var(--violetbg)}
+  .rcold b{color:var(--violet)}
+  .rcold i{float:right;font-style:normal;font-size:10px;font-weight:800;color:var(--violet);margin-top:-14px}
+  .rscores{font-size:10px;color:var(--dim);margin-top:8px;font-variant-numeric:tabular-nums}
+  .empty{
+    text-align:center;padding:46px 20px;color:var(--dim);font-size:12px;line-height:1.8;
+    background:var(--card);border:1px dashed var(--line);border-radius:var(--r);
+  }
+  .empty b{display:block;font-size:14px;color:var(--sub);margin-bottom:4px}
+
+  /* 底部导航 */
+  .tabbar{
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    display:flex;max-width:560px;margin:0 auto;
+    background:#FFFFFF;
+    -webkit-backdrop-filter:saturate(180%) blur(14px);
+    backdrop-filter:saturate(180%) blur(14px);
+    border-top:1px solid rgba(0,0,0,.06);
+    padding:6px 6px calc(6px + env(safe-area-inset-bottom));
+  }
+  .tabbar button{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+    padding:5px 0 3px;color:#9AA1AB;border-radius:10px;
+  }
+  .tabbar button svg{width:21px;height:21px;display:block}
+  .tabbar button span{font-size:10px;letter-spacing:.2px}
+  .tabbar button.on{color:var(--brand)}
+  .tabbar button:active{background:#F3F6F5}
+
+  .toast{
+    position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,8px);
+    background:rgba(21,26,33,.92);color:#fff;font-size:12px;border-radius:10px;
+    padding:8px 14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60;
+    max-width:80vw;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .offlinechip{
+    display:inline-flex;align-items:center;gap:4px;font-size:9.5px;color:var(--warn);
+    background:var(--warnbg);border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:1px;
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="mark">竞</div>
+    <div class="brand">
+      <h1>竞彩比分助手<span id="offline" class="offlinechip" style="display:none">离线快照</span></h1>
+      <p>模拟记账 · 不构成投注建议</p>
+    </div>
+    <button class="refresh" id="refresh" aria-label="刷新数据">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 6.3"/><path d="M20 4v7h-7"/></svg>
+    </button>
+  </header>
+  <main class="view" id="view">
+    <div class="empty"><b>正在读取数据</b>请稍候…</div>
+  </main>
+</div>
+<nav class="tabbar" id="tabbar"></nav>
+<div class="toast" id="toast"></div>
+
+<script>
+window.__SNAPSHOT__ = null;
+const HF_CODES = ["3-3","3-1","3-0","1-3","1-1","1-0","0-3","0-1","0-0"];
+const HF_LABELS = ["胜/胜","胜/平","胜/负","平/胜","平/平","平/负","负/胜","负/平","负/负"];
+const PLACE = {"主胜":0,"平局":1,"客胜":2};
+const ORDER = {H1:1,H2:2,N1:3,N2:4};
+const CACHE_KEY = "jczq_mobile_data_v1";
+const TABS = [
+  ["today","今日",'<rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9h18M8 2.8v3.4M16 2.8v3.4"/>'],
+  ["sim","模拟投注",'<path d="M4 8.5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2z"/><path d="M4 15.5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M9 4v16"/>'],
+  ["record","战绩",'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],
+  ["radar","雷达",'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12l6-5"/><circle cx="12" cy="12" r="1"/>']
+];
+
+let S = null;
+let tab = (location.hash || "").replace("#","") || "today";
+if (!["today","sim","record","radar"].includes(tab)) tab = "today";
+let curDay = null;
+let radarDay = null;
+let expanded = new Set();
+let openGroups = new Set();
+let offlineMode = false;
+let loading = false;
+
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pct = (x, d=1) => (x == null || isNaN(x)) ? "—" : (x*100).toFixed(d) + "%";
+const money = x => (x == null ? 0 : x).toLocaleString("zh-CN", {maximumFractionDigits: 0});
+const money1 = x => (x == null ? 0 : x).toLocaleString("zh-CN", {maximumFractionDigits: 1});
+const sgn = (x, dec=0) => (x >= 0 ? "+" : "−") + "¥" + Math.abs(x).toLocaleString("zh-CN", {maximumFractionDigits: dec});
+const week = day => {
+  const d = new Date(day + "T00:00:00");
+  return ["周日","周一","周二","周三","周四","周五","周六"][d.getDay()] || "";
+};
+const shortDay = day => day ? day.slice(5).replace("-", "/") : "";
+const pickP = m => m.pick_p != null ? m.pick_p : (m.probs ? m.probs[PLACE[m.pick]] : null);
+const pickOdds = m => (m.odds && PLACE[m.pick] != null) ? m.odds[PLACE[m.pick]] : null;
+const jqLabel = n => Number(n) === 7 ? "7+" : String(n == null ? "—" : n);
+const hfIdx = code => HF_CODES.indexOf(code);
+const hfLabel = code => { const i = hfIdx(code); return i < 0 ? (code || "—") : HF_LABELS[i]; };
+const hfHint = m => {
+  const p = (m.hf_pick_p || 0) * 100;
+  const pick = hfLabel(m.hf_pick);
+  if ((m.hf_level || "low") === "high") return `首选 ${pick} ${p.toFixed(0)}% · 高把握档，按单关；单格历史约 55%—75%`;
+  if ((m.hf_level || "low") === "mid") return `首选 ${pick} ${p.toFixed(0)}% · 一般把握（38%—45%），只作参考，不串关`;
+  return `首选 ${pick} ${p.toFixed(0)}% · 观望（不足 38%），9 选 1 单格通常只有两成，别串关`;
+};
+const badge = s => s === "中" ? '<span class="badge win">中</span>' :
+                     s === "未中" ? '<span class="badge lose">未中</span>' :
+                     '<span class="badge pend">待结算</span>';
+const markHtml = ok => ok == null ? "" : `<i class="hitmark ${ok?"ok":"no"}">${ok?"✓":"×"}</i>`;
+
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove("show"), 1800);
+}
+
+function renderTabs(){
+  document.getElementById("tabbar").innerHTML = TABS.map(([k,label,path]) => `
+    <button data-tab="${k}" class="${tab===k?"on":""}" aria-label="${label}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${path}</svg>
+      <span>${label}</span>
+    </button>`).join("");
+}
+
+function dayScroller(){
+  return `<div class="days">${S.days.map(d => `
+    <button class="daypill ${d.day===curDay?"on":""}" data-day="${d.day}">
+      <b>${shortDay(d.day)}</b><span>${week(d.day)}</span>
+    </button>`).join("")}</div>`;
+}
+
+/* ---------- 今日 ---------- */
+function matchCard(m, day, idx){
+  const settled = !!m.score;
+  const key = day + "|" + (m.no || idx);
+  const open = expanded.has(key);
+  const bfOdds = m.same_score_odds;
+  const chips = [
+    ["胜平负", m.pick, pickP(m), pickOdds(m), settled ? m.wdl_result === m.pick : null],
+    ["比分", m.same_score, m.same_score_p, bfOdds, settled ? String(m.same_score||"").replace("-", ":") === m.score : null],
+    ["总进球", jqLabel(m.jq_pick), m.jq_pick_p, m.jq_odds ? m.jq_odds[String(m.jq_pick)] : null, settled ? String(m.jq_pick) === String(m.jq_result) : null],
+    ["半全场", hfLabel(m.hf_pick), m.hf_pick_p, (m.bq_odds && hfIdx(m.hf_pick) >= 0) ? m.bq_odds[hfIdx(m.hf_pick)] : null, settled ? m.hf_pick === m.hf_result : null]
+  ];
+  const chipsHtml = chips.map(([k, v, p, o, ok]) => {
+    const lv = k === "半全场" ? (m.hf_level || "low") : "";
+    const lvTxt = lv === "high" ? "高" : lv === "mid" ? "中" : lv === "low" ? "观望" : "";
+    return `
+    <div class="chip ${ok===true?"hit":ok===false?"miss":""}">
+      <em>${k}${lv ? `<i class="lv ${lv}">${lvTxt}</i>` : ""}</em><b>${esc(v == null ? "—" : v)}</b>
+      <span>${pct(p)}${o ? " · " + Number(o).toFixed(2) : ""}</span>${markHtml(ok)}
+    </div>`;
+  }).join("");
+
+  let detail = "";
+  if (open){
+    const top = (m.top || []).slice(0, 6);
+    const maxP = Math.max(...top.map(t => t[1] || 0), 0.0001);
+    const scoreRows = top.map(([sc, p, o]) => `
+      <div class="srow"><span class="sc">${esc(sc)}</span>
+        <div class="bar"><i style="width:${Math.max(2, (p / maxP) * 100).toFixed(1)}%"></i></div>
+        <span class="pp">${pct(p)}</span><span class="od">${o ? "@" + Number(o).toFixed(2) : ""}</span>
+      </div>`).join("");
+
+    const jq = (m.jq_probs || []).map((p, i) => `
+      <div class="jq ${i === m.jq_pick ? "on" : ""}"><b>${i===7?"7+":i}</b>
+        <span>${pct(p, 0)}</span><em>${m.jq_odds && m.jq_odds[String(i)] ? "@" + Number(m.jq_odds[String(i)]).toFixed(1) : ""}</em>
+      </div>`).join("");
+
+    const hf = (m.hf || []).map((p, i) => `
+      <td class="${HF_CODES[i] === m.hf_pick ? "on" : ""}"><b>${pct(p, 0)}</b>${HF_LABELS[i].replace("/", "")}</td>`);
+    const hfRows = [0,1,2].map(r => `<tr><th>${["胜","平","负"][r]}</th>${hf.slice(r*3, r*3+3).join("")}</tr>`).join("");
+
+    const hc = m.hc && m.hc.odds ? `让球 ${m.hc.h > 0 ? "+" : ""}${m.hc.h} · ${Number(m.hc.odds[0]).toFixed(2)}/${Number(m.hc.odds[1]).toFixed(2)}/${Number(m.hc.odds[2]).toFixed(2)}` : "";
+    const meta = [hc, m.return_rate ? "返还率 " + (m.return_rate*100).toFixed(1) + "%" : "",
+                  m.lambda ? "λ " + Number(m.lambda[0]).toFixed(2) + " / " + Number(m.lambda[1]).toFixed(2) : ""].filter(Boolean).join(" · ");
+
+    const res = settled ? `<div class="resline">
+      <span>赛果 <b>${esc(m.score)}</b></span>
+      <span>胜平负 <b>${esc(m.wdl_result || "—")}</b></span>
+      <span>总进球 <b>${esc(m.jq_result)}</b></span>
+      <span>半全场 <b>${esc(hfLabel(m.hf_result))}</b></span>
+    </div>` : "";
+
+    detail = `<div class="detail">
+      <div class="dsec"><h4>比分概率 Top 6</h4>${scoreRows}</div>
+      <div class="dsec"><h4>总进球概率（括号内为赔率）</h4><div class="jqgrid">${jq}</div></div>
+      <div class="dsec"><h4>半全场概率（半场/全场）</h4>
+        <div class="hfhint ${m.hf_level || "low"}">${hfHint(m)}</div>
+        <table class="hf"><tr><th></th><th>胜</th><th>平</th><th>负</th></tr>${hfRows}</table>
+      </div>
+      <div class="dmeta">${esc(meta)}</div>${res}
+    </div>`;
+  }
+
+  return `<article class="match ${open?"open":""}" data-expand="${esc(key)}">
+    <div class="mhead">
+      ${m.league ? `<span class="lg">${esc(m.league)}</span>` : ""}
+      <span class="mno">${esc(m.no || "")}</span>
+      <span class="mko">${esc((m.kickoff || "").slice(5))}</span>
+    </div>
+    <div class="teams"><span>${esc(m.home)}</span><i>vs</i><span>${esc(m.away)}</span>
+      ${settled ? `<span class="score">${esc(m.score)}</span>` : ""}
+    </div>
+    <div class="picks">${chipsHtml}</div>
+    <div class="expandline">${open ? "收起" : "模型细节 · 比分/总进球/半全场"} <i class="chev">⌄</i></div>
+    ${detail}
+  </article>`;
+}
+
+function viewToday(){
+  if (!S.days || !S.days.length) return `<div class="empty"><b>还没有比赛数据</b>请先在电脑上生成比分日报。</div>`;
+  const d = S.days.find(x => x.day === curDay) || S.days[0];
+  curDay = d.day;
+  const ms = d.matches || [];
+  const isToday = d.day === S.today;
+  return `
+    <div class="databar">
+      <div class="n"><b>${ms.length}</b><span>场</span><em>${esc((d.sealed || "").slice(11,16))} 封存</em></div>
+      <div class="hint">${isToday ? "今日推荐" : shortDay(d.day) + " " + week(d.day)}<br>四玩法各取最优</div>
+    </div>
+    ${dayScroller()}
+    <div class="section-title"><h2>${isToday ? "今日推荐" : "当日推荐"}</h2><span>点卡片看模型细节</span></div>
+    ${ms.map((m, i) => matchCard(m, d.day, i)).join("")}
+    <div class="note">
+      <b>口径：</b>胜平负取融合模型首选；比分只取与胜负方向一致的首选比分；总进球取分布众数；半全场取模型首选，≥45% 标“高把握”按单关，38%—45% 只参考，低于 38% 观望不串关。
+      全部为赛前概率，红黑不计情绪，只按长期期望复盘。不构成投注建议。
+    </div>`;
+}
+
+/* ---------- 模拟投注 ---------- */
+function ticketCard(b){
+  const cls = b.status === "中" ? "win" : b.status === "未中" ? "lose" : "pend";
+  const legs = (b.legs || []).map(l => `
+    <div class="leg">
+      <div class="legtop"><span class="lno">${esc(l.no || "")}</span>
+        <span class="lmatch">${esc(l.match || "")}</span>
+        <i class="lmark ${l.hit === true ? "ok" : l.hit === false ? "no" : ""}">${l.hit == null ? "" : l.hit ? "✓" : "×"}</i>
+      </div>
+      <div class="legsub"><span>${esc(l.play || "")} · <b>${esc(l.pick || "")}</b></span>
+        <span>${pct(l.p)} · @${Number(l.odds).toFixed(2)}</span>
+        <span>${l.score ? esc(l.score) : "待赛"}</span>
+      </div>
+    </div>`).join("");
+  const evCls = (b.ev || 0) > 0 ? "pos" : "neg";
+  const pay = b.status === "中" ? `返还 <b>¥${money1(b.payout)}</b>` :
+              b.status === "未中" ? `盈亏 <b class="neg">−¥${money1(b.stake)}</b>` :
+              `中则返还 <b>¥${money1((b.stake || 0) * (b.odds || 0))}</b>`;
+  return `<div class="ticket">
+    <div class="thead">
+      <span class="playtag">${esc(b.play)}</span><b>${esc(b.type)}</b>
+      <span class="bucket">${esc(b.bucket)}</span>${b.backfill ? '<span class="bucket bf">补录</span>' : ""}${badge(b.status)}
+    </div>
+    <div class="tmeta">
+      <span>赔率 <b>${Number(b.odds).toFixed(2)}</b></span>
+      <span>联合概率 <b>${pct(b.p)}</b></span>
+      <span>本金 <b>¥${money(b.stake)}</b></span>
+      <span>${pay}</span>
+      <span>期望 <b class="${evCls}">${(b.ev*100 >= 0 ? "+" : "−") + Math.abs(b.ev*100).toFixed(1)}%</b></span>
+    </div>
+    ${legs}
+  </div>`;
+}
+
+function viewSim(){
+  const st = S.stats || {};
+  const todayBets = S.ledger.filter(b => b.day === S.today);
+  const todayStake = todayBets.reduce((a, b) => a + (b.stake || 0), 0);
+  const heroCls = st.profit >= 0 ? "" : "";
+  const groups = [];
+  for (const b of S.ledger){
+    if (b.day === S.today) continue;
+    let g = groups.find(x => x.day === b.day);
+    if (!g){ g = {day: b.day, bets: []}; groups.push(g); }
+    g.bets.push(b);
+  }
+  groups.forEach(g => {
+    g.stake = g.bets.reduce((a, b) => a + (b.stake || 0), 0);
+    g.payout = g.bets.reduce((a, b) => a + (b.payout || 0), 0);
+    g.pending = g.bets.some(b => b.status === "待结算");
+    g.profit = g.payout - g.stake;
+  });
+  if (!openGroups.size && groups.length) openGroups.add(groups[0].day);
+
+  const groupHtml = groups.map(g => {
+    const open = openGroups.has(g.day);
+    const pl = g.pending && g.payout === 0 ? `<span class="gpl flat">待结算</span>` :
+      `<span class="gpl ${g.profit > 0 ? "pos" : g.profit < 0 ? "neg" : "flat"}">${sgn(g.profit, 1)}</span>`;
+    return `
+      <button class="grouphead" data-group="${g.day}">
+        <span class="gday">${shortDay(g.day)} ${week(g.day)}</span>
+        <span class="gsub">${g.bets.length} 注 · ¥${money(g.stake)}${g.bets.every(b => b.backfill) ? " · 补录" : ""}</span>
+        ${pl}<i class="chev" style="transform:rotate(${open ? 90 : 0}deg)">›</i>
+      </button>
+      ${open ? g.bets.map(ticketCard).join("") : ""}`;
+  }).join("");
+
+  const au = S.auto || {};
+  const autoHtml = au.at ? `<div class="autorun"><b>自动运行</b> ${esc(au.schedule || "")}
+    · 最近 ${esc(au.at)} · 今日 ${au.today || 0} 注 · 待结算 ${au.pending || 0} 注</div>` : "";
+  return `
+    <div class="kpigrid">
+      <div class="kpi hero ${heroCls}"><em>累计盈亏（已结算）</em><b>${sgn(st.profit || 0, 1)}</b>
+        <span>${st.settled_n || 0} 注 · 投入 ¥${money(st.stake)} · 返还 ¥${money(st.payout)}</span></div>
+      <div class="kpi"><em>命中率</em><b>${pct(st.hit_rate, 0)}</b><span>${st.hits || 0} 中 / ${st.settled_n || 0} 注</span></div>
+      <div class="kpi"><em>待结算</em><b class="x">${st.pending_n || 0} 注</b><span>本金 ¥${money(st.pending_stake)}</span></div>
+      <div class="kpi"><em>今日方案</em><b>${todayBets.length} 注</b><span>¥${money(todayStake)}${todayBets.length ? "" : " · 未生成"}</span></div>
+      <div class="kpi"><em>结算返还</em><b>¥${money(st.payout)}</b><span>含中奖返还</span></div>
+    </div>
+    <div class="section-title"><h2>今日方案</h2><span>${S.today}</span></div>
+    ${autoHtml}
+    ${todayBets.length ? todayBets.map(ticketCard).join("") :
+      `<div class="empty"><b>今天还没有方案</b>每天自动出票，通常 11:45 前生成。</div>`}
+    <div class="section-title"><h2>历史注单</h2><span>不含今日 · 按天折叠</span></div>
+    ${groupHtml}
+    <div class="note">
+      <b>分配：</b>每天 100 元，正常盘 60（胜平负、总进球单关各 30）＋ 高赔盘 40（比分 2串1、半全场单关各 20）。半全场只打 ≥45% 的高把握场次，没有就不出票。
+      可投场次不足时只出能凑齐的注，金额会低于 100 元。同一场同玩法不重复出票。
+      只记录，不代下单，不构成投注建议。
+    </div>`;
+}
+
+/* ---------- 战绩 ---------- */
+function viewRecord(){
+  const st = S.stats || {};
+  const plays = st.plays || [];
+  const daily = st.daily || [];
+  const maxAbs = Math.max(10, ...daily.map(d => Math.abs(d.profit || 0)));
+  const chart = daily.map(d => {
+    const h = Math.max(5.5, Math.abs(d.profit) / maxAbs * 44);
+    const cls = d.profit >= 0 ? "pos" : "neg";
+    return `<div class="col">
+      <div class="colbar ${cls}" style="height:${h.toFixed(1)}%">
+        <em>${d.profit >= 0 ? "+" : "−"}${Math.round(Math.abs(d.profit))}</em>
+      </div>
+      <span class="clabel">${shortDay(d.day)}</span>
+    </div>`;
+  }).join("");
+
+  const recent = S.ledger.filter(b => b.status === "中" || b.status === "未中").slice(0, 8);
+  const recentHtml = recent.length ? recent.map(b => {
+    const pl = (b.payout || 0) - (b.stake || 0);
+    return `<div class="rrow">
+      <span class="rid">${shortDay(b.day)}</span>
+      <span class="rplay"><b>${esc(b.play)} ${esc(b.type)}</b><span>${b.id}${b.backfill ? " · 补录" : ""} · 本金 ¥${money(b.stake)}</span></span>
+      <span class="rpl ${pl >= 0 ? "pos" : "neg"}">${sgn(pl, 1)}</span>
+    </div>`;
+  }).join("") : `<div class="empty" style="padding:24px 10px">还没有已结算注单</div>`;
+
+  const bt = S.backtest || {};
+  const playsHtml = plays.map(p => `
+    <div class="hrow">
+      <span class="hname">${esc(p.play)}</span>
+      <div class="hbar"><i style="width:${Math.max(1, (p.rate || 0) * 100).toFixed(1)}%"></i>
+        <span class="expmark" style="left:${Math.min(99, (p.exp || 0) * 100).toFixed(1)}%"></span></div>
+      <span class="hnum"><b>${pct(p.rate)}</b><em>${p.hit}/${p.n} · 预期 ${pct(p.exp, 0)}</em></span>
+    </div>`).join("");
+
+  return `
+    <div class="panel">
+      <h3>四玩法命中率</h3>
+      <div class="hint">近 ${st.window_days || 14} 个比赛日 · 只统计已完赛场次</div>
+      ${playsHtml || `<div class="empty" style="padding:20px">暂无样本</div>`}
+      <div class="legend"><span><i></i>实际命中率</span><span><span class="m"></span>模型预期</span></div>
+    </div>
+    <div class="panel">
+      <h3>每日盈亏</h3>
+      <div class="hint">只算已结算注单，单位元</div>
+      <div class="chart"><div class="zeroline"></div><div class="cols">${chart || ""}</div></div>
+      <div class="chartspace"></div>
+    </div>
+    <div class="panel">
+      <h3>最近结算</h3>
+      <div class="hint">按时间倒序，最近 8 注</div>
+      ${recentHtml}
+    </div>
+    <div class="panel">
+      <h3>比分模型回测</h3>
+      <div class="hint">${bt.at ? "更新于 " + esc(bt.at) : "暂无"} · 样本 ${bt.n || 0} 场</div>
+      <div class="btgrid">
+        <div class="bt"><b>${pct(bt.top1_rate, 1)}</b><span>Top1 命中</span></div>
+        <div class="bt"><b>${pct(bt.top3_rate, 1)}</b><span>Top3 覆盖</span></div>
+        <div class="bt"><b>${pct(bt.top5_rate, 1)}</b><span>Top5 覆盖</span></div>
+        <div class="bt"><b>${pct(bt.top10_rate, 1)}</b><span>Top10 覆盖</span></div>
+      </div>
+      <div class="btmeta">Dixon-Coles ρ = ${bt.rho != null ? Number(bt.rho).toFixed(2) : "—"} · 集成平均分布误差 ${bt.dist != null ? Number(bt.dist).toFixed(3) : "—"} · 比分单场首选命中约 ${pct(bt.top1_rate, 1)}，串关需乘概率。</div>
+    </div>
+    <div class="note">
+      命中率是长期校准指标，不是承诺。比分玩法单场命中率本来就低，靠高赔率覆盖；串关概率是各腿相乘，
+      两串一大约只剩个位数百分点。所有数字只用于复盘模型，不构成投注建议。
+    </div>`;
+}
+
+/* ---------- 雷达 ---------- */
+function viewRadar(){
+  const keys = Object.keys(S.radar || {}).sort().reverse();
+  if (!keys.length) return `<div class="empty"><b>暂无爆冷雷达数据</b>电脑上生成日报后会自动更新。</div>`;
+  const withRows = keys.filter(k => (S.radar[k] || []).length);
+  const d = radarDay && keys.includes(radarDay) ? radarDay : (withRows[0] || keys[0]);
+  radarDay = d;
+  const rows = S.radar[d] || [];
+  const pills = keys.slice(0, 7).map(k => `
+    <button class="daypill ${k === d ? "on" : ""}" data-radarday="${k}">
+      <b>${shortDay(k)}</b><span>${week(k)}</span>
+    </button>`).join("");
+  const list = rows.length ? rows.map(r => `
+    <div class="radar">
+      <div class="rhead">${r.league ? `<span class="lg">${esc(r.league)}</span>` : ""}<span class="mno">${esc(r.no || "")}</span>
+        <span class="mko">${esc((r.kickoff || "").slice(5))}</span></div>
+      <div class="rteams">${esc(r.match || "")}</div>
+      <div class="rgrid">
+        <div class="rmarket"><em>市场热门</em><b>${esc(r.fav || "—")}</b>
+          <span>${pct(r.fav_p)} · @${Number(r.fav_odds || 0).toFixed(2)}</span></div>
+        <div class="rcold"><em>模型冷门</em><b>${esc(r.cold || "—")}</b>
+          <span>${pct(r.cold_p)} · @${Number(r.cold_odds || 0).toFixed(2)}</span>
+          <i>${r.diff >= 0 ? "+" : "−"}${Math.abs((r.diff || 0) * 100).toFixed(1)}pp</i></div>
+      </div>
+      <div class="rscores">比分参考 ${esc(r.s1 || "—")} ${pct(r.s1p)} · ${esc(r.s2 || "—")} ${pct(r.s2p)}</div>
+    </div>`).join("") :
+    `<div class="empty"><b>这一天没有强冷门信号</b>模型与市场分歧不够大，按常规方案出票即可。</div>`;
+
+  return `
+    <div class="section-title" style="margin-top:2px"><h2>爆冷雷达</h2><span>市场热门 vs 模型冷门</span></div>
+    <div class="days">${pills}</div>
+    <div style="height:10px"></div>
+    ${list}
+    <div class="note">
+      雷达只标出「模型概率明显高于市场隐含概率」的场次，用来提醒风险，不保证真的爆冷。
+      冷门方向赔率高、命中率低，适合小注或串关搭配。不构成投注建议。
+    </div>`;
+}
+
+function render(){
+  const v = document.getElementById("view");
+  if (!S){
+    v.innerHTML = `<div class="empty"><b>没有数据</b>请先在电脑上运行『启动手机版』。</div>`;
+    return;
+  }
+  if (tab === "today") v.innerHTML = viewToday();
+  else if (tab === "sim") v.innerHTML = viewSim();
+  else if (tab === "record") v.innerHTML = viewRecord();
+  else v.innerHTML = viewRadar();
+  renderTabs();
+  const offlineEl = document.getElementById("offline");
+  offlineEl.style.display = offlineMode ? "" : "none";
+}
+
+async function fetchData(){
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), 8000);
+  try{
+    const r = await fetch("api/data?t=" + Date.now(), {cache: "no-store", signal: ctl.signal});
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const text = await r.text();
+    try{ localStorage.setItem(CACHE_KEY, text); }catch(e){}
+    return JSON.parse(text);
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+async function boot(){
+  if (window.__SNAPSHOT__){
+    S = window.__SNAPSHOT__;
+    offlineMode = true;
+    render();
+    return;
+  }
+  try{
+    S = await fetchData();
+    offlineMode = false;
+    render();
+  }catch(e){
+    let cached = null;
+    try{ cached = localStorage.getItem(CACHE_KEY); }catch(err){}
+    if (cached){
+      try{
+        S = JSON.parse(cached);
+        offlineMode = true;
+        render();
+        toast("连不上电脑，显示上次缓存");
+        return;
+      }catch(err){}
+    }
+    document.getElementById("view").innerHTML = `
+      <div class="empty"><b>连不上数据服务</b>
+        请确认电脑上的『启动手机版』正在运行，手机和电脑连同一个 Wi-Fi，然后点右上角刷新。<br><br>
+        <button class="btn" id="retry" style="background:#0B6B4F;color:#fff;border-radius:10px;padding:8px 18px;font-size:13px;margin-top:6px">重试</button>
+      </div>`;
+    renderTabs();
+  }
+}
+
+function goTab(t){
+  tab = t;
+  if (location.hash !== "#" + t){
+    try{ history.replaceState(null, "", "#" + t); }catch(e){ location.hash = t; }
+  }
+  render();
+  window.scrollTo(0, 0);
+}
+
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-tab]");
+  if (t){ goTab(t.dataset.tab); return; }
+  const dayEl = e.target.closest("[data-day]");
+  if (dayEl){ curDay = dayEl.dataset.day; expanded.clear(); render(); return; }
+  const rd = e.target.closest("[data-radarday]");
+  if (rd){ radarDay = rd.dataset.radarday; render(); return; }
+  const grp = e.target.closest("[data-group]");
+  if (grp){
+    const k = grp.dataset.group;
+    if (openGroups.has(k)) openGroups.delete(k); else openGroups.add(k);
+    render();
+    return;
+  }
+  const card = e.target.closest("[data-expand]");
+  if (card){
+    const k = card.dataset.expand;
+    if (expanded.has(k)) expanded.delete(k); else expanded.add(k);
+    render();
+    return;
+  }
+  if (e.target.closest("#retry")){ boot(); return; }
+  if (e.target.closest("#refresh")){ refresh(); return; }
+});
+
+async function refresh(){
+  if (loading) return;
+  loading = true;
+  const btn = document.getElementById("refresh");
+  btn.classList.add("loading");
+  try{
+    S = await fetchData();
+    offlineMode = false;
+    render();
+    toast("已更新 · " + (S.generated || "").slice(11, 16));
+  }catch(e){
+    toast("更新失败，请检查电脑端服务");
+  }finally{
+    loading = false;
+    setTimeout(() => btn.classList.remove("loading"), 300);
+  }
+}
+
+window.addEventListener("hashchange", () => {
+  const t = (location.hash || "").replace("#", "");
+  if (TABS.some(x => x[0] === t) && t !== tab){ tab = t; render(); }
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && S && !offlineMode){
+    fetchData().then(x => { S = x; render(); }).catch(() => {});
+  }
+});
+
+renderTabs();
+boot();
+</script>
+</body>
+</html>

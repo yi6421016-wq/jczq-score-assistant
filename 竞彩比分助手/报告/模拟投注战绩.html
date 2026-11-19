@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>模拟投注战绩</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#1d2129;
+font:14px/1.6 -apple-system,"PingFang SC","Helvetica Neue",sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 22px 48px}
+h1{font-size:24px;margin:0 0 4px}h1 small{font-weight:400;color:#86909c;font-size:13px;margin-left:8px}
+h2{font-size:16px;margin:28px 0 10px;padding-left:9px;border-left:3px solid #2f6fed}
+.kpis{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:16px 0}
+.kpi{background:#fff;border:1px solid #e8eaee;border-radius:10px;padding:12px 14px}
+.kpi .k{color:#86909c;font-size:12px}.kpi .v{font-size:20px;font-weight:700;margin-top:2px}
+.kpi .v small{font-size:12px;color:#86909c;font-weight:400}
+.pos{color:#0f9d58}.neg{color:#d93025}
+.ticket{background:#fff;border:1px solid #e8eaee;border-radius:10px;padding:14px 16px;margin:12px 0}
+.thead{display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.tmeta{color:#4e5969;font-size:12.5px;margin:6px 0 10px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:7px 8px;border-bottom:1px solid #eef0f3;text-align:left;font-size:12.5px}
+th{color:#86909c;font-weight:500;background:#fafbfc}
+tr:last-child td{border-bottom:none}
+.num{text-align:right}.c{text-align:center}.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+.ok{color:#0f9d58;font-weight:700}.no{color:#d93025;font-weight:700}
+.bd{display:inline-block;padding:1px 8px;border-radius:9px;font-size:11.5px}
+.bd.win{background:#e6f4ea;color:#0f9d58}.bd.lose{background:#fdecea;color:#d93025}
+.bd.pend{background:#fff4e5;color:#b26a00}.bd.bf{background:#eef2ff;color:#2f6fed}
+.curve{width:100%;height:180px;background:#fff;border:1px solid #e8eaee;border-radius:10px}
+.curve .line{fill:none;stroke:#2f6fed;stroke-width:2}
+.curve .zero{stroke:#d5d8dd;stroke-dasharray:4 4}
+.curve .axis{fill:#86909c;font-size:11px}
+.bar{height:7px;background:#eef0f3;border-radius:4px;overflow:hidden;width:120px}
+.bar i{display:block;height:100%;background:#2f6fed}
+.note{background:#fff;border:1px solid #e8eaee;border-left:3px solid #f0a020;border-radius:8px;
+padding:12px 16px;color:#4e5969;font-size:12.5px;margin-top:14px}
+.empty{color:#86909c;padding:14px 0}
+.auto{margin-top:10px;padding:8px 12px;border-radius:8px;font-size:12.5px;
+border:1px solid #e8eaee;background:#fff;color:#1d2129}
+.auto.ok{border-left:3px solid #0f9d58}
+.auto.warn{border-left:3px solid #f0a020;color:#4e5969}
+footer{color:#a9aeb8;font-size:12px;margin-top:26px}
+</style></head><body><div class="wrap">
+<h1>模拟投注战绩 <small>每天 100 元 · 正常 60 / 高赔 40 · 只记账不下注</small></h1>
+<div class="auto ok">自动运行：launchd com.sequoia.jczq.simbank · 每天 10:40 / 11:45 / 14:20 / 18:50 · 最近一次 2026-11-19 14:20:05，今日 3 注，待结算 3 注</div>
+<div class="kpis">
+<div class="kpi"><div class="k">已结算投入</div><div class="v">¥1230</div></div>
+<div class="kpi"><div class="k">结算返还</div><div class="v">¥1553</div></div>
+<div class="kpi"><div class="k">累计盈亏</div><div class="v pos">+¥323</div></div>
+<div class="kpi"><div class="k">回报率</div><div class="v pos">26.3<small>%</small></div></div>
+<div class="kpi"><div class="k">中票</div><div class="v">12<small>/49</small></div></div>
+<div class="kpi"><div class="k">命中率</div><div class="v">24.5<small>%</small></div></div>
+<div class="kpi"><div class="k">待结算</div><div class="v">3<small> 注 · ¥80</small></div></div>
+</div>
+<h2>余额曲线</h2><svg viewBox="0 0 760 180" class="curve"><line x1="40" y1="124.7" x2="720" y2="124.7" class="zero"/><polyline points="40.0,140.0 96.7,143.2 153.3,150.0 210.0,20.0 266.7,25.0 323.3,20.4 380.0,28.5 436.7,43.7 493.3,59.0 550.0,64.1 606.7,74.5 663.3,69.6 720.0,75.3" class="line"/><text x="40" y="174" class="axis">2026-11-05</text><text x="720" y="174" class="axis" text-anchor="end">2026-11-18</text></svg>
+<h2>2026-11-19 方案</h2>
+<div class="ticket"><div class="thead"><b>M20261119-H1 · 高赔 比分</b><span>2串1</span></div><div class="tmeta">赔率 <b>65.88</b> · 联合概率 <b>0.83%</b> · 本金 <b>20</b> 元 · 中则返还 <b>1318</b> 元 · 期望 <b class="neg">-45.1%</b> <span class="bd pend">待结算</span></div><table><thead><tr><th>场次</th><th>对阵</th><th>选项</th><th>概率</th><th>赔率</th><th>比分</th><th></th></tr></thead><tbody><tr><td class="mono">周四002</td><td>圣保罗-弗鲁米嫩塞</td><td class="mono">比分 1-0</td><td class="num">9.8%</td><td class="num">7.75</td><td class="num">—</td><td class="c"></td></tr><tr><td class="mono">周四003</td><td>奥兰多城-辛辛那提FC</td><td class="mono">比分 2-1</td><td class="num">8.5%</td><td class="num">8.50</td><td class="num">—</td><td class="c"></td></tr></tbody></table></div><div class="ticket"><div class="thead"><b>M20261119-N1 · 正常 胜平负</b><span>单关</span></div><div class="tmeta">赔率 <b>1.80</b> · 联合概率 <b>50.18%</b> · 本金 <b>30</b> 元 · 中则返还 <b>54</b> 元 · 期望 <b class="neg">-9.7%</b> <span class="bd pend">待结算</span></div><table><thead><tr><th>场次</th><th>对阵</th><th>选项</th><th>概率</th><th>赔率</th><th>比分</th><th></th></tr></thead><tbody><tr><td class="mono">周四004</td><td>西雅图海湾人-皇家盐湖城</td><td class="mono">胜平负 主胜</td><td class="num">50.2%</td><td class="num">1.80</td><td class="num">—</td><td class="c"></td></tr></tbody></table></div><div class="ticket"><div class="thead"><b>M20261119-N2 · 正常 总进球</b><span>单关</span></div><div class="tmeta">赔率 <b>3.75</b> · 联合概率 <b>22.51%</b> · 本金 <b>30</b> 元 · 中则返还 <b>112</b> 元 · 期望 <b class="neg">-15.6%</b> <span class="bd pend">待结算</span></div><table><thead><tr><th>场次</th><th>对阵</th><th>选项</th><th>概率</th><th>赔率</th><th>比分</th><th></th></tr></thead><tbody><tr><td class="mono">周四004</td><td>西雅图海湾人-皇家盐湖城</td><td class="mono">总进球 2 球</td><td class="num">22.5%</td><td class="num">3.75</td><td class="num">—</td><td class="c"></td></tr></tbody></table></div>
+<h2>最近兑奖</h2>
+<div class="ticket"><table><thead><tr><th>编号</th><th>类型</th><th>本金</th><th>赔率</th>
+<th>每腿</th><th>结果</th><th>返还</th></tr></thead><tbody><tr><td class="mono">M20261118-H1</td><td>高赔 比分</td><td class="num">20</td><td class="num">38.81</td><td class="mono">× ×</td><td class="c"><span class="bd lose">未中</span></td><td class="num">0.00</td></tr><tr><td class="mono">M20261118-H2</td><td>高赔 半全场</td><td class="num">20</td><td class="num">1.47</td><td class="mono">✓</td><td class="c"><span class="bd win">中</span></td><td class="num">29.40</td></tr><tr><td class="mono">M20261118-N1</td><td>正常 胜平负</td><td class="num">30</td><td class="num">1.11</td><td class="mono">✓</td><td class="c"><span class="bd win">中</span></td><td class="num">33.30</td></tr><tr><td class="mono">M20261118-N2</td><td>正常 总进球</td><td class="num">30</td><td class="num">4.50</td><td class="mono">×</td><td class="c"><span class="bd lose">未中</span></td><td class="num">0.00</td></tr><tr><td class="mono">M20261117-H1</td><td>高赔 比分</td><td class="num">20</td><td class="num">33.64</td><td class="mono">× ×</td><td class="c"><span class="bd lose">未中</span></td><td class="num">0.00</td></tr><tr><td class="mono">M20261117-H2</td><td>高赔 半全场</td><td class="num">20</td><td class="num">1.80</td><td class="mono">×</td><td class="c"><span class="bd lose">未中</span></td><td class="num">0.00</td></tr><tr><td class="mono">M20261117-N1</td><td>正常 胜平负</td><td class="num">30</td><td class="num">1.41</td><td class="mono">×</td><td class="c"><span class="bd lose">未中</span></td><td class="num">0.00</td></tr><tr><td class="mono">M20261117-N2</td><td>正常 总进球</td><td class="num">30</td><td class="num">4.40</td><td class="mono">✓</td><td class="c"><span class="bd win">中</span></td><td class="num">132.00</td></tr><tr><td class="mono">M20261116-H1 <span class="bd bf">补录</span></td><td>高赔 比分</td><td class="num">20</td><td class="num">30.88</td><td class="mono">× ×</td><td class="c"><span class="bd lose">未中</span></td><td class="num">0.00</td></tr><tr><td class="mono">M20261116-H2 <span class="bd bf">补录</span></td><td>高赔 半全场</td><td class="num">20</td><td class="num">1.60</td><td class="mono">✓</td><td class="c"><span class="bd win">中</span></td><td class="num">32.00</td></tr><tr><td class="mono">M20261116-N1 <span class="bd bf">补录</span></td><td>正常 胜平负</td><td class="num">30</td><td class="num">1.58</td><td class="mono">×</td><td class="c"><span class="bd lose">未中</span></td><td class="num">0.00</td></tr><tr><td class="mono">M20261116-N2 <span class="bd bf">补录</span></td><td>正常 总进球</td><td class="num">30</td><td class="num">3.50</td><td class="mono">×</td><td class="c"><span class="bd lose">未中</span></td><td class="num">0.00</td></tr></tbody></table>
+</div>
+<h2>每日汇总</h2>
+<div class="ticket"><table><thead><tr><th>日期</th><th>投入</th><th>返还</th>
+<th>盈亏</th><th>中票</th><th>待结算</th></tr></thead><tbody><tr><td class="mono">2026-11-19</td><td class="num">0</td><td class="num">0</td><td class="num ">+0.00</td><td class="num">0/0</td><td class="num">80（待）</td></tr><tr><td class="mono">2026-11-18</td><td class="num">100</td><td class="num">63</td><td class="num neg">-37.30</td><td class="num">2/4</td><td class="num">—</td></tr><tr><td class="mono">2026-11-17</td><td class="num">100</td><td class="num">132</td><td class="num pos">+32.00</td><td class="num">1/4</td><td class="num">—</td></tr><tr><td class="mono">2026-11-16 <span class="bd bf">补录</span></td><td class="num">100</td><td class="num">32</td><td class="num neg">-68.00</td><td class="num">1/4</td><td class="num">—</td></tr><tr><td class="mono">2026-11-15</td><td class="num">80</td><td class="num">46</td><td class="num neg">-33.50</td><td class="num">1/3</td><td class="num">—</td></tr><tr><td class="mono">2026-11-14</td><td class="num">100</td><td class="num">0</td><td class="num neg">-100.00</td><td class="num">0/4</td><td class="num">—</td></tr><tr><td class="mono">2026-11-13</td><td class="num">100</td><td class="num">0</td><td class="num neg">-100.00</td><td class="num">0/4</td><td class="num">—</td></tr><tr><td class="mono">2026-11-12</td><td class="num">100</td><td class="num">47</td><td class="num neg">-52.90</td><td class="num">1/4</td><td class="num">—</td></tr><tr><td class="mono">2026-11-11</td><td class="num">100</td><td class="num">130</td><td class="num pos">+30.50</td><td class="num">1/4</td><td class="num">—</td></tr><tr><td class="mono">2026-11-10</td><td class="num">80</td><td class="num">47</td><td class="num neg">-32.90</td><td class="num">1/3</td><td class="num">—</td></tr><tr><td class="mono">2026-11-08</td><td class="num">100</td><td class="num">950</td><td class="num pos">+850.50</td><td class="num">2/4</td><td class="num">—</td></tr><tr><td class="mono">2026-11-07</td><td class="num">100</td><td class="num">56</td><td class="num neg">-44.46</td><td class="num">1/4</td><td class="num">—</td></tr><tr><td class="mono">2026-11-06</td><td class="num">70</td><td class="num">49</td><td class="num neg">-20.96</td><td class="num">1/3</td><td class="num">—</td></tr><tr><td class="mono">2026-11-05</td><td class="num">100</td><td class="num">0</td><td class="num neg">-100.00</td><td class="num">0/4</td><td class="num">—</td></tr></tbody></table></div>
+<h2>玩法分布</h2>
+<div class="ticket"><table><thead><tr><th>玩法</th><th>票数</th><th>投入</th>
+<th>返还</th><th>回报率</th><th>返还/投入</th></tr></thead><tbody><tr><td>胜平负</td><td class="num">13</td><td class="num">390</td><td class="num">319</td><td class="num neg">-18.2%</td><td><div class="bar"><i style="width:82%"></i></div></td></tr><tr><td>比分</td><td class="num">13</td><td class="num">260</td><td class="num">910</td><td class="num pos">+250.0%</td><td><div class="bar"><i style="width:100%"></i></div></td></tr><tr><td>总进球</td><td class="num">11</td><td class="num">330</td><td class="num">262</td><td class="num neg">-20.5%</td><td><div class="bar"><i style="width:80%"></i></div></td></tr><tr><td>半全场</td><td class="num">11</td><td class="num">220</td><td class="num">61</td><td class="num neg">-72.1%</td><td><div class="bar"><i style="width:28%"></i></div></td></tr></tbody></table></div>
+<div class="note">分配规则：每天 100 元固定拆成四注——正常盘 60 元（胜平负单关、总进球单关各 30 元，取模型概率×赔率最优）；
+高赔盘 40 元（比分 2 串 1 20 元，每场只用模型同向最高比分；半全场单关 20 元，只打模型 ≥45% 的高把握场次，没有就不出票）。
+半全场单格是 9 选 1，命中率天然只有三成左右；过去用 3 串 1，联合概率只剩 5%—10%，所以几乎不中，现改为单关。
+11-07 的票仍是旧规则（胜平负 2 串 1），11-08 起正常盘改为两注单关，少一层串关、命中率不被平方。
+11-16 为补录：当天定时任务因程序路径失效未出票，事后用当日封存赛事数据按同一规则重算，票面标注「补录」，兑奖照常按赛果结算。
+所有票按“模型概率 × 赔率”取最优，不再为凑赔率反向选腿。同一场的不同玩法可以同时出票，同场同玩法不重复。
+当天可投场次不足时（如只有 1—2 场）只出能凑齐的注，总金额会低于 100 元。兑奖按竞彩规则：全中返还 = 本金 × 赔率乘积。
+全部为模拟记录，不构成投注建议。</div>
+<footer>生成于 2026-11-19 14:20:05 · 台账 /Users/sequoia/竞彩比分助手/模拟投注/台账.json</footer>
+</div></body></html>

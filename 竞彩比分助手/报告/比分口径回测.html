@@ -1,0 +1,724 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>竞彩比分口径回测 · 2026-10-05~2026-11-15</title><style>
+:root{--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--accent:#1f3b63}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:var(--ink);
+  font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1280px;margin:30px auto 60px;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:20px}
+h1{font-size:23px;margin:0;letter-spacing:.5px}
+.sub{color:var(--mute);font-size:13px;margin-top:6px}
+.stamp{text-align:right;color:var(--mute);font-size:13px;line-height:1.55}
+.stamp b{color:var(--accent);font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;margin-bottom:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.card span{display:block;font-size:12px;color:var(--mute)}
+.card b{font-size:20px;color:var(--accent);font-variant-numeric:tabular-nums}
+.card em{font-style:normal;font-size:12px;color:#94a3b8;margin-left:4px}
+.rcb{background:#fff7e6;border:1px solid #f5d9a8;border-radius:10px;padding:10px 14px;
+  margin:-8px 0 18px;font-size:13px;color:#7c4a03;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rcb b{color:#b45309}
+.rcb a{margin-left:auto;color:#1f3b63;font-weight:600;text-decoration:none;white-space:nowrap}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;table-layout:fixed;
+  box-shadow:0 1px 2px rgba(15,23,42,.04)}
+th{background:#eef2f7;color:#334155;font-size:12.5px;font-weight:600;text-align:left;
+  padding:11px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+td:nth-child(5){padding-left:18px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fbfdff}
+.no{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg{font-size:12px;padding:2px 8px;border-radius:6px;white-space:nowrap;display:inline-block}
+.teams{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.teams b{font-weight:600}
+.teams span{color:#cbd5e1;margin:0 6px;font-size:12px}
+.kick{white-space:nowrap;color:#64748b;font-size:13px;font-variant-numeric:tabular-nums}
+.segs{display:flex;height:7px;border-radius:4px;overflow:hidden;background:#f1f5f9}
+.seg{display:block;height:100%}
+.nums{display:flex;justify-content:space-between;font-size:11.5px;margin-top:4px}
+.nums i{font-style:normal;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:4px 9px;border-radius:999px;border:1px solid;
+  font-size:13px;white-space:nowrap}
+.pill b{margin-left:5px;font-variant-numeric:tabular-nums}
+.score{white-space:nowrap}
+.score b{font-size:16px;font-variant-numeric:tabular-nums}
+.score em{font-style:normal;margin-left:6px;font-size:12px;padding:1px 6px;border-radius:5px;
+  background:#eef2f7;color:#475569;font-variant-numeric:tabular-nums}
+.score em.hit{background:#e8f7ee;color:#15803d;font-weight:600}
+.score em.miss{background:#fdf1f1;color:#b91c1c}
+.score .alt{font-size:10.5px;color:#94a3b8;margin-top:2px;font-variant-numeric:tabular-nums;white-space:normal;line-height:1.4;max-width:100%}
+.hf{white-space:nowrap;text-align:center;font-variant-numeric:tabular-nums}
+.hf b{font-size:14px}
+.hf em{font-style:normal;margin-left:4px;font-size:11.5px;color:#64748b}
+.hf small{display:block;font-size:10.5px;color:#94a3b8;margin-top:2px}
+.hf small.next{color:#64748b;font-size:9.5px;line-height:1.35}
+.hf small.ok{color:#15803d;font-weight:600}
+.hf small.no{color:#b91c1c}
+.chips{display:flex;gap:3px;flex-wrap:wrap}
+.chip{white-space:nowrap;font-size:11px;color:#475569;background:#f8fafc;
+  border:1px solid var(--line);border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums}
+.chip b{font-weight:500;color:#94a3b8;margin-left:3px}
+.chip.on{background:#fff7e6;border-color:#e9c46a;color:#7a5c00}
+.chip.on b{color:#a97f1a}
+.act{text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums;color:#94a3b8}
+.act.hit{color:#15803d;font-weight:700}
+.act.miss{color:#b91c1c;font-weight:700}
+.badge{display:inline-block;font-size:11.5px;padding:2px 7px;border-radius:5px;
+  background:#f1f5f9;color:#64748b;white-space:nowrap}
+.badge.ok{background:#e8f7ee;color:#15803d}
+.badge.mid{background:#eef6ff;color:#1d4ed8}
+.badge.no{color:#b91c1c;background:#fef2f2;font-weight:600}
+footer{margin-top:18px;color:var(--mute);font-size:12.5px;line-height:1.95}
+footer b{color:#334155}
+.late{display:inline-block;background:#fff7e6;color:#a16207;border:1px solid #f2d08a;
+  border-radius:6px;padding:1px 8px;font-size:12px;margin-left:8px}
+.h2{font-size:17px;margin:28px 0 6px;color:#1f3b63}
+.hint{color:var(--mute);font-size:12.5px;margin:0 0 10px;line-height:1.8}
+td.hfc{text-align:center;padding:7px 3px;font-size:11.5px;
+  font-variant-numeric:tabular-nums;border-left:1px solid #fff}
+.hftop{font-size:11px;color:#475569;line-height:1.55;white-space:nowrap;font-variant-numeric:tabular-nums}
+.hftop b{color:#1e3a8a;font-weight:600;margin-left:3px}
+.hfstats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.hfstats div{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 12px;min-width:112px}
+.hfstats span{display:block;font-size:11.5px;color:var(--mute)}
+.hfstats b{font-size:17px;color:var(--accent);font-variant-numeric:tabular-nums}
+.hfstats em{font-style:normal;font-size:11px;color:#94a3b8;margin-left:4px}
+.mc{font-size:13px;text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mc em{display:block;font-style:normal;font-size:10.5px;color:#94a3b8;line-height:1.3}
+.mc small{display:block;font-size:9.5px;color:#b6bec9;line-height:1.25}
+.mc.ens{background:#f4f8ff}
+.oc{text-align:center;font-variant-numeric:tabular-nums;padding:7px 4px;line-height:1.25}
+.oc b{display:block;font-size:13.5px}
+.oc small{display:block;font-size:9.5px;color:#94a3b8;white-space:nowrap}
+.oc.on{background:#f4f8ff}
+.ochip{display:inline-block;white-space:nowrap;font-size:10.5px;color:#475569;
+  background:#f8fafc;border:1px solid var(--line);border-radius:5px;padding:1px 4px;
+  margin:1px 2px 1px 0;font-variant-numeric:tabular-nums}
+.ochip b{color:#334155;font-weight:600;margin-left:3px}
+.ochip i{font-style:normal;color:#94a3b8;margin-left:3px;font-size:9px}
+.ochip.hot{background:#fff7e6;border-color:#e9c46a;color:#7a5c00}
+.ochip.hot b{color:#a97f1a}
+.ochip.win{background:#d9f2e3;border-color:#86c79a;color:#166534}
+.ochip.win b,.ochip.win i{color:#166534}
+.odcell{padding:7px 9px;line-height:1.65}
+.hfc .od{display:block;font-size:9.5px;color:#7f8ea3;font-weight:400;line-height:1.25;margin-top:1px}
+h3.subh{font-size:15px;margin:22px 0 8px;color:#334155;font-weight:600}
+@media(max-width:1000px){.card{flex:1 1 46%}}
+</style></head>
+<body><div class="wrap">
+<header><div><h1>比分口径配对回测</h1>
+<div class="sub">同一批 572 场已完赛比赛上逐场对比各种选号口径；差异用 McNemar 精确检验给出 p 值</div></div>
+<div class="stamp">生成 2026-11-15 18:47:10<br><b>41 个比赛日</b></div></header>
+<div class="cards">
+  <div class="card"><span>回溯样本</span><b>572</b><em>场已完赛</em></div>
+  <div class="card"><span>覆盖日期</span><b>41</b><em>10-05 ~ 11-15</em></div>
+  <div class="card"><span>回溯/封存</span><b>351/221</b><em>场</em></div>
+  <div class="card"><span>现口径命中</span><b>65</b><em>11.4%</em></div>
+  <div class="card"><span>胜平负命中</span><b>325</b><em>56.8%</em></div></div>
+<div class="rcb">⚠️ <b>样本性质：</b>回溯场次的赔率取自 500.com 历史页面留存，属于开赛前的最终赔率而非我们当日封存的那一版；因此可用于比较口径优劣，不能等同于每日实盘时点。<b>只做概率与模拟记录，不涉及任何投注。</b></div>
+
+<div class="h2">一、单格比分口径对比</div>
+<div class="hint">命中率区间为 Wilson 95%；“期望”是所选格子概率的平均值，用来检验模型是否自洽（命中率≈期望即校准良好）；虚拟回报按所选格子的市场赔率计算，每场 1 注，平注。</div>
+<table><colgroup><col style="width:24%"><col style="width:10%"><col style="width:14%"><col style="width:11%"><col style="width:14%"><col style="width:27%"></colgroup>
+<thead><tr><th>口径</th><th>命中/场次</th><th>命中率(95%区间)</th><th>期望概率</th><th>虚拟回报</th><th>与现口径不一致场数 b/c · p 值</th></tr></thead>
+<tbody><tr>
+  <td>现口径·模型同向</td><td class="act">65/572</td>
+  <td class="act"><b>11.4%</b><br><small>9.0%–14.2%</small></td>
+  <td class="act">10.7%</td>
+  <td class="act"><span class="badge no">-21.9%</span></td>
+  <td class="act">—</td></tr><tr>
+  <td>模型全场最高</td><td class="act">70/572</td>
+  <td class="act"><b>12.2%</b><br><small>9.8%–15.2%</small></td>
+  <td class="act">11.5%</td>
+  <td class="act"><span class="badge no">-22.2%</span></td>
+  <td class="act">37/32 · p=0.630</td></tr><tr>
+  <td>纯DC同向</td><td class="act">64/572</td>
+  <td class="act"><b>11.2%</b><br><small>8.9%–14.0%</small></td>
+  <td class="act">9.7%</td>
+  <td class="act"><span class="badge no">-21.2%</span></td>
+  <td class="act">7/8 · p=1.000</td></tr><tr>
+  <td>纯市场同向</td><td class="act">64/564</td>
+  <td class="act"><b>11.3%</b><br><small>9.0%–14.2%</small></td>
+  <td class="act">11.6%</td>
+  <td class="act"><span class="badge no">-20.7%</span></td>
+  <td class="act">6/6 · p=1.000</td></tr><tr>
+  <td>市场全场最高</td><td class="act">68/564</td>
+  <td class="act"><b>12.1%</b><br><small>9.6%–15.0%</small></td>
+  <td class="act">12.3%</td>
+  <td class="act"><span class="badge no">-21.7%</span></td>
+  <td class="act">34/30 · p=0.708</td></tr><tr>
+  <td>融合(0.5/0.5)同向</td><td class="act">64/564</td>
+  <td class="act"><b>11.3%</b><br><small>9.0%–14.2%</small></td>
+  <td class="act">10.6%</td>
+  <td class="act"><span class="badge no">-20.6%</span></td>
+  <td class="act">5/5 · p=1.000</td></tr></tbody></table>
+
+<div class="h2">二、覆盖口径：多买几格能换来什么</div>
+<div class="hint">成本按注数线性增加，“注/中”是平均每命中一场需要投入的注数；覆盖率上升不代表单注更值。“期望”是覆盖格子概率之和的平均，可与命中率对照看校准。</div>
+<table><colgroup><col style="width:20%"><col style="width:11%"><col style="width:15%"><col style="width:11%"><col style="width:11%"><col style="width:15%"><col style="width:17%"></colgroup>
+<thead><tr><th>口径</th><th>命中/场次</th><th>命中率(95%区间)</th><th>期望</th><th>成本</th><th>注/中</th><th>虚拟回报</th></tr></thead>
+<tbody><tr><td>比分 TOP1 覆盖</td>
+  <td class="act">65/572</td><td class="act"><b>11.4%</b><br>
+  <small>9.0%–14.2%</small></td>
+  <td class="act">10.7%</td>
+  <td class="act">1 注/场</td>
+  <td class="act">8.8 注/中</td>
+  <td class="act"><span class="badge">样本不足</span></td></tr><tr><td>比分 TOP3 覆盖</td>
+  <td class="act">184/572</td><td class="act"><b>32.2%</b><br>
+  <small>28.5%–36.1%</small></td>
+  <td class="act">30.6%</td>
+  <td class="act">3 注/场</td>
+  <td class="act">9.3 注/中</td>
+  <td class="act"><span class="badge">样本不足</span></td></tr><tr><td>比分 TOP5 覆盖</td>
+  <td class="act">285/572</td><td class="act"><b>49.8%</b><br>
+  <small>45.7%–53.9%</small></td>
+  <td class="act">46.0%</td>
+  <td class="act">5 注/场</td>
+  <td class="act">10.0 注/中</td>
+  <td class="act"><span class="badge">样本不足</span></td></tr><tr><td>比分 TOP10 覆盖</td>
+  <td class="act">417/572</td><td class="act"><b>72.9%</b><br>
+  <small>69.1%–76.4%</small></td>
+  <td class="act">72.4%</td>
+  <td class="act">10 注/场</td>
+  <td class="act">13.7 注/中</td>
+  <td class="act"><span class="badge">样本不足</span></td></tr></tbody></table>
+
+<div class="h2">三、概率源对比（31 档整分布）</div>
+<div class="hint">log-loss 越高越好（取负后越小越好），盲猜基准 −ln(31)=−3.434；Brier 为 31 档多分类平方误差，越低越好。</div>
+<table><colgroup><col style="width:30%"><col style="width:12%"><col style="width:34%"><col style="width:24%"></colgroup>
+<thead><tr><th>概率源</th><th>样本</th><th>平均 log</th><th>多分类 Brier</th></tr></thead>
+<tbody><tr><td>纯模型 DC</td><td class="act">572</td>
+  <td class="act"><span class="badge ok">−2.947</span><br><small>盲猜 −3.434</small></td>
+  <td class="act">0.934</td></tr><tr><td>纯市场比分赔率</td><td class="act">564</td>
+  <td class="act"><span class="badge ok">−2.934</span><br><small>盲猜 −3.434</small></td>
+  <td class="act">0.931</td></tr><tr><td>现行集成</td><td class="act">572</td>
+  <td class="act"><span class="badge ok">−2.929</span><br><small>盲猜 −3.434</small></td>
+  <td class="act">0.932</td></tr><tr><td>模型×市场几何平均</td><td class="act">564</td>
+  <td class="act"><span class="badge ok">−2.930</span><br><small>盲猜 −3.434</small></td>
+  <td class="act">0.932</td></tr></tbody></table>
+
+<div class="h2">四、集成权重重搜（2026-10-28 之后为留出样本）</div>
+<div class="hint">权重按 (dc/poi/mkt/tgs) 网格搜索，先在训练段取 log-loss 最优的 8 组，再看留出段是否守得住。留出段同样本内最优的差距才是可信的量级。</div>
+<table><colgroup><col style="width:26%"><col style="width:15%"><col style="width:21%"><col style="width:16%"><col style="width:22%"></colgroup>
+<thead><tr><th>dc/poi/mkt/tgs</th><th>训练 log</th><th>训练同向命中</th><th>留出 log</th><th>留出同向命中</th></tr></thead>
+<tbody><tr><td class="act">0.25 / 0.00 / 0.20 / 0.55</td>
+  <td class="act">−2.944</td>
+  <td class="act">10.2%（35/343）</td>
+  <td class="act"><b>−2.907</b></td>
+  <td class="act">13.5%（31/229）</td></tr><tr><td class="act">0.19 / 0.06 / 0.20 / 0.55</td>
+  <td class="act">−2.944</td>
+  <td class="act">10.2%（35/343）</td>
+  <td class="act"><b>−2.907</b></td>
+  <td class="act">13.1%（30/229）</td></tr><tr><td class="act">0.25 / 0.00 / 0.35 / 0.40</td>
+  <td class="act">−2.944</td>
+  <td class="act">10.2%（35/343）</td>
+  <td class="act"><b>−2.904</b></td>
+  <td class="act">13.1%（30/229）</td></tr><tr><td class="act">0.12 / 0.12 / 0.20 / 0.55</td>
+  <td class="act">−2.945</td>
+  <td class="act">9.6%（33/343）</td>
+  <td class="act"><b>−2.907</b></td>
+  <td class="act">12.2%（28/229）</td></tr><tr><td class="act">0.10 / 0.00 / 0.35 / 0.55</td>
+  <td class="act">−2.945</td>
+  <td class="act">9.6%（33/343）</td>
+  <td class="act"><b>−2.904</b></td>
+  <td class="act">12.7%（29/229）</td></tr><tr><td class="act">0.19 / 0.06 / 0.35 / 0.40</td>
+  <td class="act">−2.945</td>
+  <td class="act">9.6%（33/343）</td>
+  <td class="act"><b>−2.904</b></td>
+  <td class="act">12.7%（29/229）</td></tr><tr><td class="act">0.40 / 0.00 / 0.20 / 0.40</td>
+  <td class="act">−2.945</td>
+  <td class="act">10.2%（35/343）</td>
+  <td class="act"><b>−2.908</b></td>
+  <td class="act">14.8%（34/229）</td></tr><tr><td class="act">0.30 / 0.10 / 0.20 / 0.40</td>
+  <td class="act">−2.945</td>
+  <td class="act">9.3%（32/343）</td>
+  <td class="act"><b>−2.907</b></td>
+  <td class="act">13.5%（31/229）</td></tr><tr><td class="act">0.30 / 0.10 / 0.35 / 0.25 ← 现行权重</td>
+  <td class="act">−2.945</td>
+  <td class="act">9.6%（33/343）</td>
+  <td class="act"><b>−2.904</b></td>
+  <td class="act">14.0%（32/229）</td></tr></tbody></table>
+<div class="hint">现行权重：0.30 / 0.10 / 0.35 / 0.25</div>
+
+<div class="h2">五、现口径按置信度分层</div>
+<table><colgroup><col style="width:20%"><col style="width:14%"><col style="width:16%"><col style="width:22%"><col style="width:28%"></colgroup>
+<thead><tr><th>首选概率档</th><th>场次</th><th>命中</th><th>命中率</th><th>层内期望</th></tr></thead>
+<tbody><tr><td>&lt;8%</td><td class="act">3</td><td class="act">0</td><td class="act"><b>0.0%</b></td><td class="act">7.0%</td></tr><tr><td>8–10%</td><td class="act">180</td><td class="act">19</td><td class="act"><b>10.6%</b></td><td class="act">9.5%</td></tr><tr><td>≥10%</td><td class="act">389</td><td class="act">46</td><td class="act"><b>11.8%</b></td><td class="act">11.2%</td></tr></tbody></table>
+
+<div class="h2">六、Dixon-Coles ρ 校准（572 场，ρ 与 λ 联合重解）</div>
+<div class="hint">每个 ρ 都重新反解期望进球 λ（热启动沿用上一点，避免优化器噪声把曲线抖成锯齿），再算两套实际比分那一格的对数似然：<b>集成列</b>是最终交付的四源加权分布，采用值按它选；<b>DC 单源列</b>只看模型自身的低比分修正，是 ρ 这个参数自己的似然。两列的 Δ 都相对各自最优，Δ≥−1.92 近似 95% 区间。
+本次采用 ρ=-0.11（集成分布最优 -0.11，区间 [-0.20, -0.01]；DC 单源 MLE -0.05，区间 [-0.08, -0.03]；小样本收缩系数 1.00）。
+两个口径的曲线都很平——整条网格的对数似然跨度只有几个单位，摊到 572 场就是万分位，逐场配对检验里 −0.02 到 −0.15 这段在统计上分不出高下。所以采用值只是集成分布上的最高点，不要当成"真值"；等样本再攒两周、区间收窄之前，这个数还会漂。已封存的历史记录仍带各自赛前的 ρ，不会被这次校准改写；新抓取场次用当前值。</div>
+<table><colgroup><col style="width:24%"><col style="width:19%"><col style="width:16%"><col style="width:19%"><col style="width:22%"></colgroup>
+<thead><tr><th>ρ</th><th>集成分布比分格对数似然</th><th>与最优差</th><th>DC 单源差</th><th>95% 区间（集成 / DC）</th></tr></thead>
+<tbody><tr><td class="act">-0.20</td>
+  <td class="act">−1,772.9</td>
+  <td class="act"><span class="badge mid">Δ-1.4</span></td>
+  <td class="act"><span class="badge no">Δ-34.3</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.18</td>
+  <td class="act">−1,772.4</td>
+  <td class="act"><span class="badge mid">Δ-0.9</span></td>
+  <td class="act"><span class="badge no">Δ-26.1</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.16</td>
+  <td class="act">−1,772.0</td>
+  <td class="act"><span class="badge mid">Δ-0.5</span></td>
+  <td class="act"><span class="badge no">Δ-18.9</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.14</td>
+  <td class="act">−1,771.7</td>
+  <td class="act"><span class="badge mid">Δ-0.2</span></td>
+  <td class="act"><span class="badge no">Δ-12.7</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.12</td>
+  <td class="act">−1,771.5</td>
+  <td class="act"><span class="badge mid">Δ-0.0</span></td>
+  <td class="act"><span class="badge no">Δ-7.7</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.11 <b>← 采用</b></td>
+  <td class="act">−1,771.5</td>
+  <td class="act"><span class="badge ok">Δ+0.0</span></td>
+  <td class="act"><span class="badge no">Δ-5.6</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.10</td>
+  <td class="act">−1,771.5</td>
+  <td class="act"><span class="badge ok">Δ-0.0</span></td>
+  <td class="act"><span class="badge no">Δ-3.8</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.08</td>
+  <td class="act">−1,771.6</td>
+  <td class="act"><span class="badge mid">Δ-0.1</span></td>
+  <td class="act"><span class="badge mid">Δ-1.2</span></td>
+  <td class="act">集成 在区间 · DC 在区间</td></tr><tr><td class="act">-0.06</td>
+  <td class="act">−1,771.9</td>
+  <td class="act"><span class="badge mid">Δ-0.4</span></td>
+  <td class="act"><span class="badge mid">Δ-0.0</span></td>
+  <td class="act">集成 在区间 · DC 在区间</td></tr><tr><td class="act">-0.05 <b>← DC 单源最优</b></td>
+  <td class="act">−1,772.1</td>
+  <td class="act"><span class="badge mid">Δ-0.6</span></td>
+  <td class="act"><span class="badge ok">Δ+0.0</span></td>
+  <td class="act">集成 在区间 · DC 在区间</td></tr><tr><td class="act">-0.04</td>
+  <td class="act">−1,772.4</td>
+  <td class="act"><span class="badge mid">Δ-0.9</span></td>
+  <td class="act"><span class="badge mid">Δ-0.3</span></td>
+  <td class="act">集成 在区间 · DC 在区间</td></tr><tr><td class="act">-0.02</td>
+  <td class="act">−1,773.0</td>
+  <td class="act"><span class="badge mid">Δ-1.5</span></td>
+  <td class="act"><span class="badge no">Δ-2.2</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">+0.00</td>
+  <td class="act">−1,773.7</td>
+  <td class="act"><span class="badge no">Δ-2.2</span></td>
+  <td class="act"><span class="badge no">Δ-5.6</span></td>
+  <td class="act">集成 不在区间 · DC 不在区间</td></tr><tr><td class="act">+0.02</td>
+  <td class="act">−1,776.1</td>
+  <td class="act"><span class="badge no">Δ-4.6</span></td>
+  <td class="act"><span class="badge no">Δ-16.5</span></td>
+  <td class="act">集成 不在区间 · DC 不在区间</td></tr></tbody></table>
+<div class="h2">七、逐场明细（前 80 场）</div>
+<table><colgroup><col style="width:9%"><col style="width:8%"><col style="width:30%"><col style="width:11%"><col style="width:20%"><col style="width:12%"></colgroup>
+<thead><tr><th>场次</th><th>日期</th><th>对阵</th><th>赛果</th><th>现口径首选</th><th>预测方向</th></tr></thead>
+<tbody><tr><td class="no">周一001</td>
+  <td class="kick">10-05</td>
+  <td class="teams">塞浦路斯<span>vs</span>拉脱维亚</td>
+  <td class="score"><b>2:1</b></td>
+  <td class="score"><b>2-0</b><em class="miss">13.6%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周一002</td>
+  <td class="kick">10-05</td>
+  <td class="teams">法国<span>vs</span>比利时</td>
+  <td class="score"><b>4:1</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.8%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周一003</td>
+  <td class="kick">10-05</td>
+  <td class="teams">罗马尼亚<span>vs</span>瑞典</td>
+  <td class="score"><b>0:1</b></td>
+  <td class="score"><b>1-2</b><em class="miss">11.1%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周一004</td>
+  <td class="kick">10-05</td>
+  <td class="teams">意大利<span>vs</span>土耳其</td>
+  <td class="score"><b>3:1</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.8%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周一005</td>
+  <td class="kick">10-05</td>
+  <td class="teams">北爱尔兰<span>vs</span>格鲁吉亚</td>
+  <td class="score"><b>0:0</b></td>
+  <td class="score"><b>1-0</b><em class="miss">13.6%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周一006</td>
+  <td class="kick">10-05</td>
+  <td class="teams">黑山<span>vs</span>亚美尼亚</td>
+  <td class="score"><b>0:0</b></td>
+  <td class="score"><b>2-0</b><em class="miss">11.3%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周一007</td>
+  <td class="kick">10-05</td>
+  <td class="teams">波黑<span>vs</span>波兰</td>
+  <td class="score"><b>1:0</b></td>
+  <td class="score"><b>0-1</b><em class="miss">9.7%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周二001</td>
+  <td class="kick">10-06</td>
+  <td class="teams">韩国<span>vs</span>乌兹别克斯坦</td>
+  <td class="score"><b>2:0</b></td>
+  <td class="score"><b>2-0</b><em class="hit">11.4%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周二002</td>
+  <td class="kick">10-06</td>
+  <td class="teams">中国<span>vs</span>塔吉克斯坦</td>
+  <td class="score"><b>0:1</b></td>
+  <td class="score"><b>1-0</b><em class="miss">11.8%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周二003</td>
+  <td class="kick">10-06</td>
+  <td class="teams">哈萨克斯坦<span>vs</span>法罗群岛</td>
+  <td class="score"><b>2:2</b></td>
+  <td class="score"><b>1-0</b><em class="miss">13.2%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周二004</td>
+  <td class="kick">10-06</td>
+  <td class="teams">爱沙尼亚<span>vs</span>冰岛</td>
+  <td class="score"><b>0:0</b></td>
+  <td class="score"><b>0-2</b><em class="miss">12.0%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周二005</td>
+  <td class="kick">10-06</td>
+  <td class="teams">卢森堡<span>vs</span>保加利亚</td>
+  <td class="score"><b>0:2</b></td>
+  <td class="score"><b>1-0</b><em class="miss">15.7%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周二006</td>
+  <td class="kick">10-06</td>
+  <td class="teams">苏格兰<span>vs</span>斯洛文尼亚</td>
+  <td class="score"><b>1:2</b></td>
+  <td class="score"><b>1-0</b><em class="miss">15.1%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周二008</td>
+  <td class="kick">10-06</td>
+  <td class="teams">克罗地亚<span>vs</span>西班牙</td>
+  <td class="score"><b>1:2</b></td>
+  <td class="score"><b>0-2</b><em class="miss">11.6%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周二010</td>
+  <td class="kick">10-06</td>
+  <td class="teams">摩尔多瓦<span>vs</span>斯洛伐克</td>
+  <td class="score"><b>0:4</b></td>
+  <td class="score"><b>0-2</b><em class="miss">14.6%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周二011</td>
+  <td class="kick">10-06</td>
+  <td class="teams">美国<span>vs</span>加拿大</td>
+  <td class="score"><b>1:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.9%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周二012</td>
+  <td class="kick">10-06</td>
+  <td class="teams">芝加哥火焰<span>vs</span>温哥华白帽</td>
+  <td class="score"><b>3:1</b></td>
+  <td class="score"><b>1-2</b><em class="miss">9.4%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周三001</td>
+  <td class="kick">10-07</td>
+  <td class="teams">赫尔辛基火花<span>vs</span>国际图尔库</td>
+  <td class="score"><b>0:0</b></td>
+  <td class="score"><b>1-2</b><em class="miss">11.1%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周三002</td>
+  <td class="kick">10-07</td>
+  <td class="teams">巴西国际<span>vs</span>科林蒂安</td>
+  <td class="score"><b>2:1</b></td>
+  <td class="score"><b>1-0</b><em class="miss">14.0%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周三003</td>
+  <td class="kick">10-07</td>
+  <td class="teams">里莫<span>vs</span>格雷米奥</td>
+  <td class="score"><b>1:1</b></td>
+  <td class="score"><b>1-0</b><em class="miss">10.9%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周三004</td>
+  <td class="kick">10-07</td>
+  <td class="teams">布拉干蒂诺RB<span>vs</span>米拉索尔</td>
+  <td class="score"><b>1:1</b></td>
+  <td class="score"><b>2-1</b><em class="miss">11.4%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周三005</td>
+  <td class="kick">10-07</td>
+  <td class="teams">维多利亚<span>vs</span>沙佩科恩斯</td>
+  <td class="score"><b>4:0</b></td>
+  <td class="score"><b>2-0</b><em class="miss">12.5%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周三006</td>
+  <td class="kick">10-07</td>
+  <td class="teams">博塔弗戈<span>vs</span>瓦斯科达伽马</td>
+  <td class="score"><b>1:2</b></td>
+  <td class="score"><b>1-2</b><em class="hit">9.7%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周四001</td>
+  <td class="kick">10-08</td>
+  <td class="teams">赫尔辛基<span>vs</span>瓦萨</td>
+  <td class="score"><b>6:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">11.0%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周四002</td>
+  <td class="kick">10-08</td>
+  <td class="teams">库奥皮奥<span>vs</span>AC奥卢</td>
+  <td class="score"><b>0:1</b></td>
+  <td class="score"><b>2-0</b><em class="miss">13.3%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周四003</td>
+  <td class="kick">10-08</td>
+  <td class="teams">桑托斯<span>vs</span>弗拉门戈</td>
+  <td class="score"><b>2:2</b></td>
+  <td class="score"><b>1-2</b><em class="miss">11.4%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周四004</td>
+  <td class="kick">10-08</td>
+  <td class="teams">巴拉纳竞技<span>vs</span>米内罗竞技</td>
+  <td class="score"><b>2:2</b></td>
+  <td class="score"><b>1-0</b><em class="miss">12.0%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周四005</td>
+  <td class="kick">10-08</td>
+  <td class="teams">弗鲁米嫩塞<span>vs</span>科里蒂巴</td>
+  <td class="score"><b>4:0</b></td>
+  <td class="score"><b>2-0</b><em class="miss">12.9%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周四006</td>
+  <td class="kick">10-08</td>
+  <td class="teams">帕尔梅拉斯<span>vs</span>巴伊亚</td>
+  <td class="score"><b>1:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">11.1%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周五001</td>
+  <td class="kick">10-09</td>
+  <td class="teams">仁川联<span>vs</span>浦项制铁</td>
+  <td class="score"><b>3:0</b></td>
+  <td class="score"><b>1-0</b><em class="miss">12.5%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周五002</td>
+  <td class="kick">10-09</td>
+  <td class="teams">柏太阳神<span>vs</span>神户胜利船</td>
+  <td class="score"><b>4:2</b></td>
+  <td class="score"><b>2-1</b><em class="miss">9.5%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周五003</td>
+  <td class="kick">10-09</td>
+  <td class="teams">海登海姆<span>vs</span>凯泽斯劳滕</td>
+  <td class="score"><b>0:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.7%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周五004</td>
+  <td class="kick">10-09</td>
+  <td class="teams">IFK哥德堡<span>vs</span>韦斯特罗斯</td>
+  <td class="score"><b>1:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.7%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周五005</td>
+  <td class="kick">10-09</td>
+  <td class="teams">布兰<span>vs</span>维京</td>
+  <td class="score"><b>0:2</b></td>
+  <td class="score"><b>1-2</b><em class="miss">9.7%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周五007</td>
+  <td class="kick">10-09</td>
+  <td class="teams">赫拉克勒斯<span>vs</span>瓦尔韦克</td>
+  <td class="score"><b>3:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.2%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周五008</td>
+  <td class="kick">10-09</td>
+  <td class="teams">多特蒙德<span>vs</span>云达不来梅</td>
+  <td class="score"><b>2:2</b></td>
+  <td class="score"><b>2-0</b><em class="miss">9.5%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周五009</td>
+  <td class="kick">10-09</td>
+  <td class="teams">朗斯<span>vs</span>里昂</td>
+  <td class="score"><b>2:1</b></td>
+  <td class="score"><b>1-2</b><em class="miss">9.1%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周五010</td>
+  <td class="kick">10-09</td>
+  <td class="teams">西汉姆联<span>vs</span>女王公园巡游者</td>
+  <td class="score"><b>1:1</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.6%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周五011</td>
+  <td class="kick">10-09</td>
+  <td class="teams">马拉加<span>vs</span>西班牙人</td>
+  <td class="score"><b>1:1</b></td>
+  <td class="score"><b>0-1</b><em class="miss">10.3%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周五012</td>
+  <td class="kick">10-09</td>
+  <td class="teams">布拉加<span>vs</span>里斯本竞技</td>
+  <td class="score"><b>1:3</b></td>
+  <td class="score"><b>0-1</b><em class="miss">10.8%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周六001</td>
+  <td class="kick">10-10</td>
+  <td class="teams">大阪樱花<span>vs</span>横滨水手</td>
+  <td class="score"><b>0:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">9.6%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六002</td>
+  <td class="kick">10-10</td>
+  <td class="teams">首尔FC<span>vs</span>济州SK</td>
+  <td class="score"><b>2:1</b></td>
+  <td class="score"><b>2-1</b><em class="hit">10.7%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六003</td>
+  <td class="kick">10-10</td>
+  <td class="teams">金泉尚武<span>vs</span>安养FC</td>
+  <td class="score"><b>0:1</b></td>
+  <td class="score"><b>2-1</b><em class="miss">9.5%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六004</td>
+  <td class="kick">10-10</td>
+  <td class="teams">京都不死鸟<span>vs</span>町田泽维亚</td>
+  <td class="score"><b>0:1</b></td>
+  <td class="score"><b>1-2</b><em class="miss">10.6%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周六005</td>
+  <td class="kick">10-10</td>
+  <td class="teams">阿森纳<span>vs</span>利兹联</td>
+  <td class="score"><b>2:1</b></td>
+  <td class="score"><b>2-0</b><em class="miss">12.9%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六007</td>
+  <td class="kick">10-10</td>
+  <td class="teams">热那亚<span>vs</span>佛罗伦萨</td>
+  <td class="score"><b>2:1</b></td>
+  <td class="score"><b>0-1</b><em class="miss">11.0%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周六008</td>
+  <td class="kick">10-10</td>
+  <td class="teams">柏林联合<span>vs</span>埃尔沃斯堡</td>
+  <td class="score"><b>1:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">9.3%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六010</td>
+  <td class="kick">10-10</td>
+  <td class="teams">美因茨<span>vs</span>勒沃库森</td>
+  <td class="score"><b>3:4</b></td>
+  <td class="score"><b>1-2</b><em class="miss">9.7%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周六011</td>
+  <td class="kick">10-10</td>
+  <td class="teams">帕德博恩<span>vs</span>斯图加特</td>
+  <td class="score"><b>0:2</b></td>
+  <td class="score"><b>1-2</b><em class="miss">9.6%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周六012</td>
+  <td class="kick">10-10</td>
+  <td class="teams">霍芬海姆<span>vs</span>汉堡</td>
+  <td class="score"><b>2:3</b></td>
+  <td class="score"><b>2-1</b><em class="miss">9.9%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六013</td>
+  <td class="kick">10-10</td>
+  <td class="teams">伊普斯维奇<span>vs</span>富勒姆</td>
+  <td class="score"><b>2:1</b></td>
+  <td class="score"><b>1-2</b><em class="miss">9.8%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周六014</td>
+  <td class="kick">10-10</td>
+  <td class="teams">切尔西<span>vs</span>伯恩茅斯</td>
+  <td class="score"><b>5:1</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.8%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六015</td>
+  <td class="kick">10-10</td>
+  <td class="teams">阿斯顿维拉<span>vs</span>布伦特福德</td>
+  <td class="score"><b>2:2</b></td>
+  <td class="score"><b>1-2</b><em class="miss">9.3%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周六016</td>
+  <td class="kick">10-10</td>
+  <td class="teams">阿拉维斯<span>vs</span>马德里竞技</td>
+  <td class="score"><b>1:2</b></td>
+  <td class="score"><b>1-2</b><em class="hit">10.9%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周六017</td>
+  <td class="kick">10-10</td>
+  <td class="teams">里尔<span>vs</span>勒阿弗尔</td>
+  <td class="score"><b>1:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.5%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六018</td>
+  <td class="kick">10-10</td>
+  <td class="teams">米亚尔比<span>vs</span>代格福什</td>
+  <td class="score"><b>1:1</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.6%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六020</td>
+  <td class="kick">10-10</td>
+  <td class="teams">曼彻斯特联<span>vs</span>托特纳姆热刺</td>
+  <td class="score"><b>1:1</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.5%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六021</td>
+  <td class="kick">10-10</td>
+  <td class="teams">莱比锡红牛<span>vs</span>法兰克福</td>
+  <td class="score"><b>6:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">9.4%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六023</td>
+  <td class="kick">10-10</td>
+  <td class="teams">费耶诺德<span>vs</span>阿尔克马尔</td>
+  <td class="score"><b>2:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">9.7%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六024</td>
+  <td class="kick">10-10</td>
+  <td class="teams">马里迪莫<span>vs</span>波尔图</td>
+  <td class="score"><b>1:2</b></td>
+  <td class="score"><b>0-2</b><em class="miss">14.2%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周六025</td>
+  <td class="kick">10-10</td>
+  <td class="teams">利雅得新月<span>vs</span>吉达联合</td>
+  <td class="score"><b>3:2</b></td>
+  <td class="score"><b>2-0</b><em class="miss">9.3%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六026</td>
+  <td class="kick">10-10</td>
+  <td class="teams">福图纳锡塔德<span>vs</span>特温特</td>
+  <td class="score"><b>1:1</b></td>
+  <td class="score"><b>1-2</b><em class="miss">9.7%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周六027</td>
+  <td class="kick">10-10</td>
+  <td class="teams">那不勒斯<span>vs</span>弗洛西诺内</td>
+  <td class="score"><b>3:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.3%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六028</td>
+  <td class="kick">10-10</td>
+  <td class="teams">摩纳哥<span>vs</span>图卢兹</td>
+  <td class="score"><b>2:2</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.4%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六029</td>
+  <td class="kick">10-10</td>
+  <td class="teams">皇家马德里<span>vs</span>比利亚雷亚尔</td>
+  <td class="score"><b>1:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">8.7%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周六030</td>
+  <td class="kick">10-10</td>
+  <td class="teams">圣保罗<span>vs</span>维多利亚</td>
+  <td class="score"><b>2:1</b></td>
+  <td class="score"><b>2-0</b><em class="miss">12.0%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周日001</td>
+  <td class="kick">10-11</td>
+  <td class="teams">光州FC<span>vs</span>蔚山现代</td>
+  <td class="score"><b>4:3</b></td>
+  <td class="score"><b>1-2</b><em class="miss">10.8%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周日002</td>
+  <td class="kick">10-11</td>
+  <td class="teams">磐城FC<span>vs</span>秋田蓝色闪电</td>
+  <td class="score"><b>1:0</b></td>
+  <td class="score"><b>1-0</b><em class="hit">11.0%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周日003</td>
+  <td class="kick">10-11</td>
+  <td class="teams">川崎前锋<span>vs</span>名古屋鲸八</td>
+  <td class="score"><b>1:2</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.7%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周日004</td>
+  <td class="kick">10-11</td>
+  <td class="teams">乌德勒支<span>vs</span>威廉二世</td>
+  <td class="score"><b>3:1</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.2%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周日005</td>
+  <td class="kick">10-11</td>
+  <td class="teams">科莫<span>vs</span>罗马</td>
+  <td class="score"><b>0:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">9.8%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周日006</td>
+  <td class="kick">10-11</td>
+  <td class="teams">南安普敦<span>vs</span>朴次茅斯</td>
+  <td class="score"><b>1:0</b></td>
+  <td class="score"><b>2-1</b><em class="miss">10.6%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周日007</td>
+  <td class="kick">10-11</td>
+  <td class="teams">埃尔切<span>vs</span>维戈塞尔塔</td>
+  <td class="score"><b>0:0</b></td>
+  <td class="score"><b>0-1</b><em class="miss">10.5%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周日008</td>
+  <td class="kick">10-11</td>
+  <td class="teams">国际图尔库<span>vs</span>库奥皮奥</td>
+  <td class="score"><b>1:0</b></td>
+  <td class="score"><b>1-0</b><em class="hit">12.3%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周日009</td>
+  <td class="kick">10-11</td>
+  <td class="teams">兹沃勒<span>vs</span>坎布尔</td>
+  <td class="score"><b>0:1</b></td>
+  <td class="score"><b>2-1</b><em class="miss">9.8%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周日010</td>
+  <td class="kick">10-11</td>
+  <td class="teams">腓特烈斯塔<span>vs</span>特罗姆瑟</td>
+  <td class="score"><b>1:1</b></td>
+  <td class="score"><b>1-2</b><em class="miss">9.8%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周日011</td>
+  <td class="kick">10-11</td>
+  <td class="teams">赫尔城<span>vs</span>埃弗顿</td>
+  <td class="score"><b>2:2</b></td>
+  <td class="score"><b>0-1</b><em class="miss">11.1%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周日012</td>
+  <td class="kick">10-11</td>
+  <td class="teams">水晶宫<span>vs</span>诺丁汉森林</td>
+  <td class="score"><b>3:1</b></td>
+  <td class="score"><b>1-2</b><em class="miss">9.2%</em></td>
+  <td class="act">客胜</td></tr><tr><td class="no">周日013</td>
+  <td class="kick">10-11</td>
+  <td class="teams">拉齐奥<span>vs</span>蒙扎</td>
+  <td class="score"><b>3:1</b></td>
+  <td class="score"><b>1-0</b><em class="miss">11.1%</em></td>
+  <td class="act">主胜</td></tr><tr><td class="no">周日014</td>
+  <td class="kick">10-11</td>
+  <td class="teams">莱切<span>vs</span>博洛尼亚</td>
+  <td class="score"><b>1:2</b></td>
+  <td class="score"><b>0-1</b><em class="miss">12.4%</em></td>
+  <td class="act">客胜</td></tr></tbody></table>
+
+<footer>
+<b>读法：</b>单格比分命中率的物理上限就在 10%–13% 附近——31 档里最高的一格通常只有 8%–14%。换选号规则不会把上限抬高，这次回测要回答的是"现口径有没有明显更差的选法"和"覆盖率/成本怎么换"。<br>
+<b>判定：</b>p&lt;0.05 才说得上差异；p 在 0.05–0.2 之间只算方向性线索，需要继续攒样本。命中率与期望概率接近说明模型校准没问题，低的是玩法本身而不是估计。<br>
+<b>边界：</b>本工具只做历史数据模拟与概率记录，不预测结果、不代下单。
+</footer>
+</div></body></html>

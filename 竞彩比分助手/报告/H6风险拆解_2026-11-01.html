@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H6 风险拆解 · 2026-11-01</title><style>
+:root{--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--accent:#1f3b63}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:var(--ink);font:15px/1.65 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1080px;margin:30px auto 60px;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:18px}
+h1{font-size:23px;margin:0}
+.sub{color:var(--mute);font-size:13px;margin-top:6px}
+.stamp{text-align:right;color:var(--mute);font-size:13px;line-height:1.55}.stamp b{color:var(--accent);font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.card span{display:block;font-size:12px;color:var(--mute)}
+.card b{font-size:20px;color:var(--accent);font-variant-numeric:tabular-nums}
+.card em{font-style:normal;font-size:12px;color:#94a3b8;margin-left:3px}
+.warn{background:#fff7e6;border:1px solid #f5d9a8;border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#7c4a03}
+.warn b{color:#b45309}
+h2{font-size:17px;margin:26px 0 4px}
+h2 small{font-weight:400;color:var(--mute);font-size:12px;margin-left:8px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:10px}
+th{background:#eef2f7;color:#475569;font-size:12px;font-weight:600;text-align:left;padding:8px 10px;white-space:nowrap}
+td{padding:9px 10px;border-top:1px solid #f1f5f9;font-size:13px;vertical-align:middle}
+td.no{color:var(--accent);font-weight:600;white-space:nowrap}
+td.teams{white-space:nowrap}
+td.teams i{font-style:normal;color:#cbd5e1;margin:0 5px}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pick{font-weight:700;color:#1f3b63}
+.pick.draw{color:#b45309}
+.fail{display:inline-block;width:96px;height:8px;background:#eef2f7;border-radius:4px;vertical-align:middle;margin-right:7px;overflow:hidden}
+.fail i{display:block;height:100%;border-radius:4px}
+.hi i{background:linear-gradient(90deg,#f0a8a8,#b91c1c)}
+.mid i{background:linear-gradient(90deg,#f3c68b,#b45309)}
+.lo i{background:linear-gradient(90deg,#a7d3b0,#15803d)}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:9px;font-weight:600}
+.tag.hi{background:#fdecec;color:#b91c1c}
+.tag.mid{background:#fff4e5;color:#b45309}
+.tag.lo{background:#eaf6ee;color:#15803d}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13px;color:#475569}
+.panel h3{font-size:14px;margin:0 0 8px;color:#1e293b}
+.panel b{color:#1e293b}
+.note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:20px;font-size:13px;color:#475569}
+.note b{color:#1e293b}
+.note ol{margin:8px 0 0;padding-left:20px}.note li{margin:5px 0}
+footer{margin-top:24px;color:#94a3b8;font-size:12px;line-height:1.8}
+</style></head>
+<body><div class="wrap">
+<header><div><h1>H6 风险拆解 · 哪一腿最容易断</h1>
+<div class="sub">794.22 倍 / 六腿 · 赔率 18:47 · 只做概率记录，不构成投注建议</div></div>
+<div class="stamp"><b>0.068%</b><br>联合概率<br>约 1 / 1475</div></header>
+
+<div class="cards">
+<div class="card"><span>最容易错</span><b>020 客胜</b><em>21.1%</em></div>
+<div class="card"><span>性价比最差</span><b>023 平局</b><em>EV 0.875</em></div>
+<div class="card"><span>最反共识</span><b>008 主胜</b><em>放弃 14.0pt</em></div>
+<div class="card"><span>最稳两腿</span><b>021 / 014</b><em>40.3% / 38.9%</em></div>
+</div>
+
+<div class="warn"><b>先定义“风险”。</b>串关里任何一腿错，整张票就死，所以风险有两种读法：
+一是<b>最容易错</b>（概率最低）——020 客胜，五次里大约四次会错；二是<b>最不值这个价</b>（赔率打折最多）——023 平局，模型概率乘赔率只有 0.875，是六腿里最低的。
+两个答案指向不同的腿，下面分开列。</div>
+
+<h2>六腿风险排名<small>按命中概率从低到高</small></h2>
+<table><thead><tr><th>场次</th><th>对阵</th><th>选项</th><th>失败概率</th><th>风险</th><th>模型概率</th><th>比市场高</th><th>公平赔率</th><th>实赔</th><th>概率×赔率</th><th>本场最佳</th></tr></thead>
+<tbody><tr><td class="no">周日020</td><td class="teams">维塞乌<i>vs</i>里奥阿维</td><td class="pick">客胜</td><td class="num"><span class="fail hi"><i style="width:79%"></i></span>78.9%</td><td class="num"><span class="tag hi">高风险</span></td><td class="num">21.1%</td><td class="num">+0.5</td><td class="num">4.74</td><td class="num">4.26</td><td class="num" style="color:#b91c1c">0.898</td><td class="num">主胜 54.1%</td></tr><tr><td class="no">周日023</td><td class="teams">毕尔巴鄂竞技<i>vs</i>皇家社会</td><td class="pick draw">平局</td><td class="num"><span class="fail mid"><i style="width:75%"></i></span>74.6%</td><td class="num"><span class="tag mid">中高</span></td><td class="num">25.4%</td><td class="num">-0.1</td><td class="num">3.94</td><td class="num">3.45</td><td class="num" style="color:#b91c1c">0.875</td><td class="num">主胜 45.4%</td></tr><tr><td class="no">周日008</td><td class="teams">赫塔费<i>vs</i>塞维利亚</td><td class="pick">主胜</td><td class="num"><span class="fail mid"><i style="width:72%"></i></span>72.3%</td><td class="num"><span class="tag mid">中高</span></td><td class="num">27.7%</td><td class="num">+0.8</td><td class="num">3.61</td><td class="num">3.26</td><td class="num" style="color:#475569">0.903</td><td class="num">客胜 41.7%</td></tr><tr><td class="no">周日018</td><td class="teams">莱切<i>vs</i>热那亚</td><td class="pick">主胜</td><td class="num"><span class="fail mid"><i style="width:71%"></i></span>70.8%</td><td class="num"><span class="tag mid">中高</span></td><td class="num">29.2%</td><td class="num">+1.0</td><td class="num">3.43</td><td class="num">3.12</td><td class="num" style="color:#475569">0.910</td><td class="num">客胜 41.4%</td></tr><tr><td class="no">周日014</td><td class="teams">柏林联合<i>vs</i>科隆</td><td class="pick">客胜</td><td class="num"><span class="fail mid"><i style="width:61%"></i></span>61.1%</td><td class="num"><span class="tag mid">中</span></td><td class="num">38.9%</td><td class="num">+0.9</td><td class="num">2.57</td><td class="num">2.31</td><td class="num" style="color:#b91c1c">0.899</td><td class="num">客胜 38.9%</td></tr><tr><td class="no">周日021</td><td class="teams">尤文图斯<i>vs</i>那不勒斯</td><td class="pick">主胜</td><td class="num"><span class="fail lo"><i style="width:60%"></i></span>59.7%</td><td class="num"><span class="tag lo">低</span></td><td class="num">40.3%</td><td class="num">+2.2</td><td class="num">2.48</td><td class="num">2.30</td><td class="num" style="color:#475569">0.928</td><td class="num">主胜 40.3%</td></tr></tbody></table>
+
+<div class="two">
+<div class="panel"><h3>020 维塞乌-里奥阿维 · 客胜 21.1%@4.26</h3>
+模型 λ 1.85–1.01，主胜 54.1%、平 24.8%、客胜 21.1%；市场去水后客胜 20.6%，几乎和模型一致。
+这不是“模型看好客胜”，而是为了把赔率堆到 4 倍以上，硬挑了本场概率最低的一项。本场最佳选项是主胜 54.1%，为这张票放弃了 33.1 个百分点，六腿里让得最多。
+</div>
+<div class="panel"><h3>023 毕尔巴鄂-皇家社会 · 平局 25.4%@3.45</h3>
+模型 λ 1.84–1.46，主胜 45.4%、平 25.4%、客胜 29.2%；市场去水 25.4%，价格没占便宜。
+真正的隐患在模型侧：43 场回测里，模型一次都没把平局排到第一，平局校准是已知短板；这场还是巴斯克德比，平局本身就不罕见但也难押。概率×赔率 0.875，六腿最低。
+</div>
+</div>
+
+<h2>换掉最险一腿会怎样<small>每次只换一腿，其余不变</small></h2>
+<table><thead><tr><th>调整</th><th>组合赔率</th><th>联合概率</th><th>约多少场中一次</th><th>2 元返还</th><th>期望</th></tr></thead>
+<tbody><tr><td>020 客胜 → 主胜 54.1%@1.63</td><td class="num">303.89 倍</td><td class="num">0.174%</td><td class="num">1 / 574</td><td class="num">608 元</td><td class="num" style="color:#b91c1c">-47.1%</td></tr><tr><td>023 平局 → 主胜 45.4%@1.97</td><td class="num">453.51 倍</td><td class="num">0.121%</td><td class="num">1 / 824</td><td class="num">907 元</td><td class="num" style="color:#b91c1c">-45.0%</td></tr><tr><td>018 主胜 → 客胜 41.4%@2.20</td><td class="num">560.03 倍</td><td class="num">0.096%</td><td class="num">1 / 1038</td><td class="num">1120 元</td><td class="num" style="color:#b91c1c">-46.1%</td></tr><tr><td>008 主胜 → 客胜 41.7%@2.09</td><td class="num">509.18 倍</td><td class="num">0.102%</td><td class="num">1 / 979</td><td class="num">1018 元</td><td class="num" style="color:#b91c1c">-48.0%</td></tr>
+<tr><td><b>原 H6</b></td><td class="num"><b>794.22 倍</b></td><td class="num">0.068%</td><td class="num">1 / 1475</td><td class="num">1588 元</td><td class="num" style="color:#b91c1c">−46.0%</td></tr>
+</tbody></table>
+
+<div class="note"><b>结论</b>
+<ol>
+<li><b>最容易断的是 020 客胜</b>：21.1%，全场最低，约 4/5 会错；它也是六腿里对本场最佳选项让步最大的一腿（33.1pt）。</li>
+<li><b>最不值得买的是 023 平局</b>：EV 0.875 最低，且撞上模型“从不首选平局”的结构短板；25.4% 只是市场价，不是模型的强项。</li>
+<li><b>008 与 018 是逆市场腿</b>：两场模型和市场都更看好客胜（41.7% / 41.4%），票里却押了主胜（27.7% / 29.2%），属于主动选择少数派，价格公道但没有安全垫。</li>
+<li>把 020 换成主胜，赔率从 794 降到 304，联合概率从 0.068% 升到 0.174%（约 1/574），但期望只从 −46.0% 变成 −47.1%——因为每腿的返还率折价差不多，换腿主要换的是波动，不是价值。</li>
+<li>六腿的“概率×赔率”都在 0.875–0.928 之间，整张票的期望就是把六个数乘起来，约 −46%。不管怎么调腿，这个量级不会变。</li>
+</ol></div>
+
+<footer>生成于 2026-11-01 18:55 · 数据来源 500.com 竞彩 · 概率为模型无条件概率，市场值为赔率去水后的隐含概率。</footer>
+</div></body></html>

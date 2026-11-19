@@ -1,0 +1,116 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>半全场优化对比 · 翻盘校准版 · 2026-11-13</title><style>
+:root{--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--accent:#1f3b63;--good:#0f766e;--bad:#b91c1c;--warn:#b45309}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:var(--ink);font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1120px;margin:30px auto 60px;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:20px}
+h1{font-size:23px;margin:0;letter-spacing:.5px}
+.sub{color:var(--mute);font-size:13px;margin-top:6px}
+.stamp{text-align:right;color:var(--mute);font-size:13px;line-height:1.55}
+.stamp b{color:var(--accent);font-size:15px}
+h2{font-size:17px;margin:30px 0 10px;padding-left:10px;border-left:4px solid var(--accent)}
+p{margin:8px 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:6px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.card span{display:block;font-size:12px;color:var(--mute)}
+.card b{font-size:21px;color:var(--accent);font-variant-numeric:tabular-nums}
+.card b.good{color:var(--good)}.card b.bad{color:var(--bad)}
+.card em{font-style:normal;font-size:12px;color:#94a3b8;margin-left:4px}
+.rcb{background:#fff7e6;border:1px solid #f5d9a8;border-radius:10px;padding:10px 14px;margin:2px 0 16px;font-size:13.5px;color:#7c4a03}
+.rcb b{color:#b45309}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+th{background:#eef2f7;color:#334155;font-size:12.5px;font-weight:600;text-align:left;padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle;font-variant-numeric:tabular-nums}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fbfdff}
+.num{text-align:right}
+.ok{color:var(--good);font-weight:600}.pos{color:var(--good);font-weight:600}.neg{color:var(--bad);font-weight:600}
+.bar{height:8px;background:#f1f5f9;border-radius:4px;overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%;background:#1f3b63;border-radius:4px}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;border:1px solid;font-size:12.5px;white-space:nowrap;font-weight:600}
+.pill.hit{color:#0f766e;border-color:#99e0d4;background:#f0fdfa}
+.pill.miss{color:#b91c1c;border-color:#f6c9c9;background:#fef2f2}
+.pill.rule{color:#1f3b63;border-color:#c7d5e6;background:#f3f7fc}
+.note{color:var(--mute);font-size:12.5px;margin-top:8px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:14px;margin:10px 0 0}
+.kv dt{color:var(--mute)}.kv dd{margin:0}
+footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px;line-height:1.8}
+</style></head><body><div class="wrap">
+<header><div><h1>半全场优化对比 · 翻盘校准版</h1>
+<div class="sub">同一窗口 191 场 · 旧 3 串 1 → 高把握单关 → 翻盘格校准</div></div>
+<div class="stamp">回测窗口<br><b>2026-10-30 ~ 2026-11-12</b><br>更新 2026-11-13</div></header>
+<div class="cards">
+  <div class="card"><span>回测场次</span><b>191</b><em>场</em></div>
+  <div class="card"><span>单格命中率</span><b>33.0%</b><em>63/191</em></div>
+  <div class="card"><span>旧 3 串 1</span><b class="bad">0 / 7</b><em>注命中</em></div>
+  <div class="card"><span>校准后每日单关</span><b class="good">8 / 10</b><em>注命中</em></div>
+  <div class="card"><span>单关投入 → 返还</span><b>200→252</b><em>元</em></div>
+  <div class="card"><span>≥45% 门槛覆盖</span><b>23</b><em>场 · 12.0%</em></div>
+</div>
+<div class="rcb"><b>本次更新：</b>把“半场领先被翻”（胜/负）由 2.5% 上调到 3.9%、“半场落后翻盘”（负/胜）由 2.9% 上调到 3.7%，补上领先方收着踢、落后方压上的低估。九格 logloss 1.862→1.852、Brier 0.7874→0.7871；高把握单关 23 注 15 中（65.2%）、ROI 105.8%；逐日单关 8/10、净 +52 元。</div>
+
+<h2>一、为什么以前“从来没中过”</h2>
+<p>半全场是 9 格选 1，单格首选命中 63/191=33.0%，已经是这类玩法的上限；旧方案拿它凑 3 串 1，联合概率只有 5%—10%，7 注 0 中在期望之内，是票型错误，不是运气。</p>
+
+<h2>二、这版改了三处</h2>
+<dl class="kv">
+  <dt>半场占比</dt><dd>45% → <b>40%</b>（191 场里 0.38—0.40 最优）</dd>
+  <dt>出票方式</dt><dd>3 串 1 → <b>≥45% 高把握单关</b>，每天最多 1 注，没有就空仓</dd>
+  <dt>翻盘校准</dt><dd>胜/负 ×1.60、负/胜 ×1.30（实测比例的七成）：2.5%→3.9%、2.9%→3.7%，实际 4.7%/4.2%</dd>
+  <dt>把握分档</dt><dd><span class="pill rule">高 ≥45%</span> 单关 · <span class="pill rule">中 38%—45%</span> 参考 · <span class="pill rule">观望 &lt;38%</span> 不碰</dd>
+</dl>
+
+<h2>三、门槛扫描（校准后）</h2>
+<table><thead><tr><th>门槛</th><th class="num">覆盖场次</th><th class="num">覆盖率</th><th class="num">命中</th><th class="num">命中率</th><th class="num">均赔</th><th class="num">ROI</th><th style="width:20%">命中率</th></tr></thead>
+<tbody>
+<tr><td><b>全部</b></td><td class="num">191</td><td class="num">100.0%</td><td class="num">63</td><td class="num ">33.0%</td><td class="num">2.81</td><td class="num neg">82.4%</td><td><div class="bar"><i style="width:33.0%"></i></div></td></tr>
+<tr><td><b>≥30%</b></td><td class="num">96</td><td class="num">50.3%</td><td class="num">44</td><td class="num ">45.8%</td><td class="num">2.20</td><td class="num ">96.0%</td><td><div class="bar"><i style="width:45.8%"></i></div></td></tr>
+<tr><td><b>≥35%</b></td><td class="num">58</td><td class="num">30.4%</td><td class="num">29</td><td class="num ">50.0%</td><td class="num">1.92</td><td class="num neg">92.3%</td><td><div class="bar"><i style="width:50.0%"></i></div></td></tr>
+<tr><td><b>≥38%</b></td><td class="num">44</td><td class="num">23.0%</td><td class="num">24</td><td class="num ">54.5%</td><td class="num">1.81</td><td class="num ">95.6%</td><td><div class="bar"><i style="width:54.5%"></i></div></td></tr>
+<tr><td><b>≥40%</b></td><td class="num">39</td><td class="num">20.4%</td><td class="num">22</td><td class="num ">56.4%</td><td class="num">1.76</td><td class="num ">97.0%</td><td><div class="bar"><i style="width:56.4%"></i></div></td></tr>
+<tr><td><b>≥42%</b></td><td class="num">32</td><td class="num">16.8%</td><td class="num">18</td><td class="num ">56.2%</td><td class="num">1.72</td><td class="num neg">94.2%</td><td><div class="bar"><i style="width:56.2%"></i></div></td></tr>
+<tr style="background:#f0fdfa"><td><b>≥0.45（采用）</b></td><td class="num">23</td><td class="num">12.0%</td><td class="num">15</td><td class="num ok">65.2%</td><td class="num">1.65</td><td class="num pos">105.8%</td><td><div class="bar"><i style="width:65.2%;background:#0f766e"></i></div></td></tr>
+<tr><td><b>≥48%</b></td><td class="num">17</td><td class="num">8.9%</td><td class="num">11</td><td class="num ok">64.7%</td><td class="num">1.59</td><td class="num pos">100.6%</td><td><div class="bar"><i style="width:64.7%"></i></div></td></tr>
+<tr><td><b>≥50%</b></td><td class="num">14</td><td class="num">7.3%</td><td class="num">10</td><td class="num ok">71.4%</td><td class="num">1.56</td><td class="num pos">110.1%</td><td><div class="bar"><i style="width:71.4%"></i></div></td></tr>
+<tr><td><b>≥55%</b></td><td class="num">5</td><td class="num">2.6%</td><td class="num">5</td><td class="num ok">100.0%</td><td class="num">1.50</td><td class="num pos">149.6%</td><td><div class="bar"><i style="width:100.0%"></i></div></td></tr>
+</tbody></table>
+<p class="note">45% 门槛：23 场、15 中、ROI 105.8%。低于 42% 的档位命中率掉到 56% 以下，ROI 也不到 100%，所以不往下放。</p>
+
+<h2>四、逐日单关（每天最多 1 注、20 元）</h2>
+<table><thead><tr><th>日期</th><th>首选</th><th class="num">概率</th><th class="num">赔率</th><th>实际</th><th>结果</th></tr></thead>
+<tbody>
+<tr><td>2026-10-30</td><td>负/负 <span style="color:#94a3b8;font-size:12px">0-0</span></td><td class="num">55.4%</td><td class="num">1.55</td><td>0-0</td><td><span class="pill hit">命中</span></td></tr>
+<tr><td>2026-10-31</td><td>胜/胜 <span style="color:#94a3b8;font-size:12px">3-3</span></td><td class="num">52.7%</td><td class="num">1.61</td><td>3-1</td><td><span class="pill miss">未中</span></td></tr>
+<tr><td>2026-11-01</td><td>胜/胜 <span style="color:#94a3b8;font-size:12px">3-3</span></td><td class="num">52.8%</td><td class="num">1.65</td><td>3-3</td><td><span class="pill hit">命中</span></td></tr>
+<tr><td>2026-11-03</td><td>胜/胜 <span style="color:#94a3b8;font-size:12px">3-3</span></td><td class="num">56.3%</td><td class="num">1.47</td><td>3-3</td><td><span class="pill hit">命中</span></td></tr>
+<tr><td>2026-11-04</td><td>负/负 <span style="color:#94a3b8;font-size:12px">0-0</span></td><td class="num">58.6%</td><td class="num">1.52</td><td>0-0</td><td><span class="pill hit">命中</span></td></tr>
+<tr><td>2026-11-05</td><td>胜/胜 <span style="color:#94a3b8;font-size:12px">3-3</span></td><td class="num">57.7%</td><td class="num">1.47</td><td>3-3</td><td><span class="pill hit">命中</span></td></tr>
+<tr><td>2026-11-06</td><td>胜/胜 <span style="color:#94a3b8;font-size:12px">3-3</span></td><td class="num">46.2%</td><td class="num">1.80</td><td>3-3</td><td><span class="pill hit">命中</span></td></tr>
+<tr><td>2026-11-07</td><td>胜/胜 <span style="color:#94a3b8;font-size:12px">3-3</span></td><td class="num">53.3%</td><td class="num">1.55</td><td>1-3</td><td><span class="pill miss">未中</span></td></tr>
+<tr><td>2026-11-08</td><td>负/负 <span style="color:#94a3b8;font-size:12px">0-0</span></td><td class="num">49.2%</td><td class="num">1.68</td><td>0-0</td><td><span class="pill hit">命中</span></td></tr>
+<tr><td>2026-11-12</td><td>胜/胜 <span style="color:#94a3b8;font-size:12px">3-3</span></td><td class="num">57.4%</td><td class="num">1.47</td><td>3-3</td><td><span class="pill hit">命中</span></td></tr>
+</tbody></table>
+<p class="note">10 注 8 中，投入 200 元、返还 252.2 元、净 +52.2 元。校准让 11-07 两场 0.2pp 内的首选互换，那注由中变不中；其余 9 天不变。</p>
+
+<h2>五、旧票对照</h2>
+<table><thead><tr><th>口径</th><th class="num">注数</th><th class="num">命中</th><th class="num">未中</th><th class="num">待定</th><th class="num">投入</th><th class="num">返还</th></tr></thead>
+<tbody>
+<tr><td>旧半全场 3 串 1</td><td class="num">7</td><td class="num neg">0</td><td class="num">6</td><td class="num">1</td><td class="num">140</td><td class="num neg">0</td></tr>
+<tr style="background:#f0fdfa"><td>校准后单关（回测）</td><td class="num">10</td><td class="num pos">8</td><td class="num">2</td><td class="num">0</td><td class="num">200</td><td class="num pos">252.2</td></tr>
+</tbody></table>
+
+<h2>六、模型指标与代价</h2>
+<p>Brier 0.7880→0.7871、logloss 1.8671→1.8524，首选命中仍 63 场；时间切分检验集 logloss 1.7792→1.7830，只差 0.004，属于用很小的精度代价换更合理的翻盘概率。校准系数只取实测比例的七成，是给 9 场、8 场的小样本留缓冲，等样本到 300 场以上再回到全量比例。</p>
+
+<h2>七、口径与限制</h2>
+<dl class="kv">
+  <dt>样本</dt><dd>2026-10-30 至 11-12，191 场已结算且带半全场赔率的比赛，同窗口新旧参数对比</dd>
+  <dt>赔率</dt><dd>记录时的半全场即时赔率，未处理临场变动</dd>
+  <dt>生效</dt><dd>今日 08:19 封存数据已按新模型重算，原值备份在 数据/备份/2026-11-13_重校准前.json；今日待结算的旧 3 串 1 保留作审计</dd>
+  <dt>小样本</dt><dd>≥45% 只有 23 场、逐日单关 10 天，置信区间很宽；样本到 50 注以上再回看门槛与倍率</dd>
+</dl>
+<footer>竞彩比分助手 · 模拟记录用途，不构成投注建议 · 不代购、不代付、不承诺收益<br>
+2026-11-13 翻盘校准版 · 数据文件 数据/半全场翻盘校准.json</footer>
+</div></body></html>

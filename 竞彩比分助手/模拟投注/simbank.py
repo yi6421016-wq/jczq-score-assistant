@@ -1,0 +1,691 @@
+#!/usr/bin/env python3
+"""模拟投注台账：每天 100 元（正常 60 / 高赔 40），四玩法自动选腿、自动兑奖。只记账，不涉及真实投注。"""
+import argparse
+import csv
+import fcntl
+import itertools
+import json
+import math
+import os
+import subprocess
+import sys
+from datetime import datetime, timedelta
+from pathlib import Path
+
+BASE = Path(os.environ.get("SIMBANK_HOME") or (Path.home() / "竞彩比分助手"))
+SIM = Path(os.environ.get("SIMBANK_DIR") or (BASE / "模拟投注"))
+LEDGER = SIM / "台账.json"
+HTML = Path(os.environ.get("SIMBANK_HTML") or (BASE / "报告" / "模拟投注战绩.html"))
+CSV_OUT = SIM / "模拟投注明细.csv"
+LOG = SIM / "运行.log"
+STATUS = SIM / "自动运行状态.json"
+JOB = "com.sequoia.jczq.simbank"
+SCHEDULE = "每天 10:40 / 11:45 / 14:20 / 18:50"
+APP_DIR = Path(__file__).resolve().parent
+BUDGET = 100.0
+HF_VALUES = ["3-3", "3-1", "3-0", "1-3", "1-1", "1-0", "0-3", "0-1", "0-0"]
+HF_TXT = {"3": "胜", "1": "平", "0": "负"}
+WDL = ["主胜", "平局", "客胜"]
+
+# 每天固定四注：正常盘两注（胜平负、总进球各 30），高赔盘两注（比分 2串1、半全场单关各 20）
+TICKETS = [
+    {"id": "H1", "bucket": "高赔", "play": "比分", "type": "2串1", "stake": 20.0,
+     "n": 2, "lo": 20.0, "hi": 1e9, "parts": [("比分", 0.0), ("比分", 0.0)]},
+    # 半全场 9 选 1，单格命中率只有三成左右；只打模型 ≥45% 的高把握场次，且不串关。
+    {"id": "H2", "bucket": "高赔", "play": "半全场", "type": "单关", "stake": 20.0,
+     "n": 1, "lo": 1.40, "hi": 3.20, "hard": True, "objective": "p",
+     "parts": [("半全场", 0.45)]},
+    {"id": "N1", "bucket": "正常", "play": "胜平负", "type": "单关", "stake": 30.0,
+     "n": 1, "lo": 1.3, "hi": 3.2, "parts": [("胜平负", 0.55)]},
+    {"id": "N2", "bucket": "正常", "play": "总进球", "type": "单关", "stake": 30.0,
+     "n": 1, "lo": 2.4, "hi": 5.0, "parts": [("总进球", 0.10)]},
+]
+ORDER = ["H1", "H2", "N1", "N2"]
+
+
+def now_str():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def log(msg):
+    line = "[%s] %s" % (now_str(), msg)
+    print(line, file=sys.stderr)
+    try:
+        SIM.mkdir(parents=True, exist_ok=True)
+        with open(LOG, "a", encoding="utf-8") as f:
+            f.write(line + "\n")
+    except Exception:
+        pass
+
+
+def load_ledger():
+    if not LEDGER.exists():
+        return []
+    try:
+        return json.loads(LEDGER.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+
+def save_ledger(bets):
+    SIM.mkdir(parents=True, exist_ok=True)
+    tmp = LEDGER.with_suffix(".tmp")
+    tmp.write_text(json.dumps(bets, ensure_ascii=False, indent=1), encoding="utf-8")
+    os.replace(tmp, LEDGER)
+
+
+def parse_kick(s):
+    try:
+        return datetime.strptime(s, "%Y-%m-%d %H:%M")
+    except Exception:
+        return datetime(2099, 1, 1)
+
+
+def opt(no, play, code, label, p, odds):
+    return {"no": no, "play": play, "code": code, "label": label,
+            "p": round(float(p), 4), "odds": round(float(odds), 2)}
+
+
+def options_for(play, m):
+    out = []
+    if play == "胜平负":
+        for k in range(3):
+            out.append(opt(m["no"], play, k, WDL[k], m["probs"][k], m["odds"][k]))
+    elif play == "总进球":
+        js = m.get("jq_odds") or {}
+        jm = m.get("jq_model") or []
+        for n in range(8):
+            o = js.get(str(n))
+            p = jm[n] if n < len(jm) else 0.0
+            if o and o > 1.0 and p > 0:
+                out.append(opt(m["no"], play, str(n), "7+ 球" if n == 7 else "%d 球" % n, p, o))
+    elif play == "半全场":
+        # 只用半全场模型首选，避免为了凑赔率选与胜平负方向相反的项
+        bq = m.get("bq_odds") or []
+        hf = m.get("hf") or []
+        code = m.get("hf_pick") or ""
+        if len(bq) == 9 and len(hf) == 9 and code in HF_VALUES:
+            i = HF_VALUES.index(code)
+            lab = "%s/%s" % (HF_TXT[code[0]], HF_TXT[code[2]])
+            if bq[i] and bq[i] > 1.0 and hf[i] > 0:
+                out.append(opt(m["no"], play, code, lab, hf[i], bq[i]))
+    elif play == "比分":
+        # 只用模型与胜平负同向的最高比分（same_score），不再取全局最高（常是 1-1）
+        bfs = m.get("bf_odds") or {}
+        lab = m.get("same_score") or ""
+        o = bfs.get(lab.replace("-", ":"))
+        p = m.get("same_score_p") or 0.0
+        if lab and o and o > 1.0 and p > 0:
+            out.append(opt(m["no"], play, lab.replace("-", ":"), lab, p, o))
+    return out
+
+
+def build_pool(day, refresh=True, cutoff=None):
+    sys.path.insert(0, str(APP_DIR))
+    import jczq_app as J
+    J.prepare_model()
+    rows, source = None, ""
+    if refresh:
+        try:
+            rows = J.fetch_day(day, quiet=True)
+            source = "实时抓取 %s" % datetime.now().strftime("%H:%M")
+        except Exception as e:
+            log("实时抓取失败，改用已封存数据：%s" % e)
+    if rows:
+        pool = [J.predict_match(dict(r)) for r in rows]
+    else:
+        data = J.load_day(day)
+        if not data:
+            raise RuntimeError("%s 没有数据，先跑一次 --daily" % day)
+        pool = data["matches"]
+        source = "封存数据 %s" % str(data.get("sealed_at", ""))[:16]
+    cutoff = cutoff or (datetime.now() + timedelta(minutes=15))
+    pool = [m for m in pool
+            if m.get("odds") and len(m["odds"]) == 3
+            and all(o and o > 1.0 for o in m["odds"])
+            and m.get("probs") and len(m["probs"]) == 3
+            and parse_kick(m.get("kickoff", "")) > cutoff]
+    pool.sort(key=lambda m: m.get("kickoff", ""))
+    return pool, source
+
+
+def best_ticket(spec, pool, used):
+    """used 存 (场次, 玩法) 对：同一场可以出现在不同玩法里，但同场同玩法不重复。"""
+    best = None
+    relaxes = (1.0,) if spec.get("hard") else (1.0, 0.75, 0.55)
+    for relax in relaxes:
+        lo = spec["lo"] * relax
+        parts = [(pl, mp * relax) for pl, mp in spec["parts"]]
+        for combo in itertools.permutations(pool, spec["n"]):
+            if len({m["no"] for m in combo}) < spec["n"]:
+                continue
+            if any((m["no"], pl) in used for (pl, _), m in zip(parts, combo)):
+                continue
+            opts = [options_for(pl, m) for (pl, _), m in zip(parts, combo)]
+            if any(not o for o in opts):
+                continue
+            for pick in itertools.product(*opts):
+                if any(o["p"] < mp for o, (_, mp) in zip(pick, parts)):
+                    continue
+                O = 1.0
+                P = 1.0
+                for o in pick:
+                    O *= o["odds"]
+                    P *= o["p"]
+                if O < lo or O > spec["hi"]:
+                    continue
+                ev = P * O
+                # 半全场按命中率优先（objective=p），其余玩法仍按 EV 最优。
+                score = P if spec.get("objective") == "p" else ev
+                if best is None:
+                    best = {"legs": [dict(o) for o in pick],
+                            "odds": round(O, 4), "p": P, "ev": ev, "_s": score}
+                elif score > best["_s"] + 1e-12 or (abs(score - best["_s"]) <= 1e-12 and ev > best["ev"]):
+                    best = {"legs": [dict(o) for o in pick],
+                            "odds": round(O, 4), "p": P, "ev": ev, "_s": score}
+        if best:
+            break
+    if best:
+        best.pop("_s", None)
+    return best
+
+
+def cmd_plan(args):
+    day = args.day or datetime.now().strftime("%Y-%m-%d")
+    backfill = getattr(args, "backfill", False)
+    bets = load_ledger()
+    mine = [b for b in bets if b.get("day") == day]
+    if mine and not args.force:
+        log("%s 已有 %d 注记录，跳过（--force 可重出）" % (day, len(mine)))
+        cmd_report(argparse.Namespace(quiet=True))
+        return 0
+    if backfill:
+        # 补录：只用当天封存数据，并把「现在+15分钟」的截单线换成当天 10:55（首个定时时点），
+        # 否则历史场次全在截单线之前，pool 会被清空。
+        cut = datetime.strptime(day, "%Y-%m-%d") + timedelta(hours=10, minutes=55)
+        pool, source = build_pool(day, refresh=False, cutoff=cut)
+        source = "补录 · " + source
+    else:
+        pool, source = build_pool(day, refresh=not args.no_refresh)
+    if not pool:
+        log("%s 没有可投场次，今天不出票" % day)
+        return 1
+    used, out = set(), []
+    stamp = day.replace("-", "")
+    for tid in ORDER:
+        spec = next(t for t in TICKETS if t["id"] == tid)
+        got = best_ticket(spec, pool, used)
+        if not got:
+            log("%s 凑不出符合条件的组合" % tid)
+            continue
+        used |= {(o["no"], o["play"]) for o in got["legs"]}
+        mmap = {m["no"]: m for m in pool}
+        legs = []
+        for o in got["legs"]:
+            m = mmap[o["no"]]
+            legs.append({
+                "no": o["no"], "match": "%s-%s" % (m["home"], m["away"]),
+                "league": m.get("league", ""), "play": o["play"],
+                "pick": o["label"], "code": o["code"],
+                "p": o["p"], "odds": o["odds"], "kickoff": m.get("kickoff", ""),
+                "score_pred": m.get("same_score", ""), "score": "", "hit": None,
+            })
+        bet = {
+            "id": "M%s-%s" % (stamp, tid), "day": day, "created": now_str(),
+            "bucket": spec["bucket"], "play": spec["play"], "type": spec["type"],
+            "legs": legs, "odds": got["odds"], "p": round(got["p"], 6),
+            "stake": spec["stake"],
+            "ev": round(got["p"] * got["odds"] - 1.0, 4),
+            "status": "待结算", "payout": 0.0, "settled": "",
+        }
+        if backfill:
+            bet["backfill"] = True
+        out.append(bet)
+    if not out:
+        log("今天没有生成任何票")
+        return 1
+    bets = [b for b in bets if b.get("day") != day] + out
+    save_ledger(bets)
+    plan_file = SIM / ("方案_%s.json" % day)
+    plan_file.write_text(json.dumps({"day": day, "source": source, "budget": BUDGET,
+                                     "bets": out}, ensure_ascii=False, indent=1),
+                         encoding="utf-8")
+    total = sum(b["stake"] for b in out)
+    log("%s 出票 %d 注，合计 %.0f 元（%s）" % (day, len(out), total, source))
+    cmd_report(argparse.Namespace(quiet=True))
+    return 0
+
+
+def outcome(gh, ga):
+    return 0 if gh > ga else (1 if gh == ga else 2)
+
+
+def split_score(s):
+    try:
+        a, b = str(s).split(":")
+        return int(a), int(b)
+    except Exception:
+        return None
+
+
+def leg_hit(leg, m):
+    if not m:
+        return None
+    score = m.get("score") or ""
+    if not score:
+        return None
+    play, code = leg["play"], leg["code"]
+    if play == "比分":
+        return score == str(code)
+    if play == "胜平负":
+        res = m.get("wdl_result")
+        if res not in WDL:
+            got = split_score(score)
+            if not got:
+                return None
+            res = WDL[outcome(*got)]
+        return res == WDL[int(code)]
+    if play == "总进球":
+        res = m.get("jq_result")
+        if res is None:
+            got = split_score(score)
+            if not got:
+                return None
+            res = str(min(got[0] + got[1], 7))
+        return str(res) == str(code)
+    if play == "半全场":
+        res = m.get("hf_result")
+        return res == code if res in HF_VALUES else None
+    return None
+
+
+def cmd_settle(args):
+    days = [args.day] if args.day else None
+    bets = load_ledger()
+    changed = False
+    for b in bets:
+        if b.get("status") != "待结算":
+            continue
+        if days and b.get("day") not in days:
+            continue
+        sys.path.insert(0, str(APP_DIR))
+        import jczq_app as J
+        data = J.load_day(b["day"])
+        if not data:
+            continue
+        smap = {m["no"]: m for m in data["matches"]}
+        hits = []
+        for leg in b["legs"]:
+            h = leg_hit(leg, smap.get(leg["no"]))
+            leg["hit"] = h
+            m = smap.get(leg["no"]) or {}
+            leg["score"] = m.get("score", "")
+            hits.append(h)
+        if any(h is None for h in hits):
+            continue
+        win = all(hits)
+        b["status"] = "中" if win else "未中"
+        b["payout"] = round(b["stake"] * b["odds"], 2) if win else 0.0
+        b["settled"] = now_str()
+        changed = True
+        log("兑奖 %s：%s，返还 %.2f 元" % (b["id"], b["status"], b["payout"]))
+    if changed:
+        save_ledger(bets)
+        cmd_report(argparse.Namespace(quiet=True))
+    else:
+        log("没有可兑奖的票")
+    return 0
+
+
+def write_status(n_today, n_pend, rc):
+    """给战绩页留一条自动运行凭据：谁跑的、几点跑的、跑出了什么。"""
+    try:
+        SIM.mkdir(parents=True, exist_ok=True)
+        STATUS.write_text(json.dumps({
+            "job": JOB, "schedule": SCHEDULE, "at": now_str(),
+            "rc": rc, "today": n_today, "pending": n_pend,
+        }, ensure_ascii=False, indent=1), encoding="utf-8")
+    except Exception as e:
+        log("写自动运行状态失败：%s" % e)
+
+
+def cmd_daily(args):
+    """定时任务入口：兑奖 → 出票 → 战绩。两步都幂等，一天跑几次也不会重复记票。"""
+    rc = 0
+    try:
+        cmd_settle(argparse.Namespace(day=None, quiet=True))
+        rc = cmd_plan(argparse.Namespace(day=None, force=False,
+                                         no_refresh=getattr(args, "no_refresh", False),
+                                         quiet=True))
+        if rc != 0:
+            # 没场次/凑不出票是正常空仓，不算失败；仍刷新一次战绩页。
+            cmd_report(argparse.Namespace(quiet=True))
+    except Exception as e:
+        log("每日任务执行失败（票可能已记账）：%s" % e)
+        rc = 1
+    bets = load_ledger()
+    today = datetime.now().strftime("%Y-%m-%d")
+    todays = [b for b in bets if b.get("day") == today]
+    pend = [b for b in bets if b.get("status") == "待结算"]
+    if pend:
+        days = sorted({str(b.get("day") or "") for b in pend})
+        log("每日任务：今日 %d 注、待结算 %d 注（最早 %s）" % (
+            len(todays), len(pend), days[0] or "—"))
+    else:
+        log("每日任务：今日 %d 注、无待结算" % len(todays))
+    write_status(len(todays), len(pend), rc)
+    # 再刷一次战绩页，让页面里的“最近一次自动运行”就是本次。
+    cmd_report(argparse.Namespace(quiet=True))
+    return 0 if rc == 0 else 1
+
+
+def money(x):
+    return "%.2f" % x
+
+
+def cmd_report(args):
+    bets = load_ledger()
+    settled = [b for b in bets if b.get("status") in ("中", "未中")]
+    pending = [b for b in bets if b.get("status") == "待结算"]
+    stake = sum(b["stake"] for b in settled)
+    payout = sum(b["payout"] for b in settled)
+    profit = payout - stake
+    roi = profit / stake if stake else 0.0
+    wins = sum(1 for b in settled if b["status"] == "中")
+    hit_rate = wins / len(settled) if settled else 0.0
+
+    daily = {}
+    for b in settled:
+        d = daily.setdefault(b["day"], {"stake": 0.0, "payout": 0.0, "win": 0, "n": 0})
+        d["stake"] += b["stake"]
+        d["payout"] += b["payout"]
+        d["n"] += 1
+        d["win"] += 1 if b["status"] == "中" else 0
+    for b in pending:
+        d = daily.setdefault(b["day"], {"stake": 0.0, "payout": 0.0, "win": 0, "n": 0})
+        d["pending"] = d.get("pending", 0) + b["stake"]
+
+    plays = {}
+    for b in settled:
+        p = plays.setdefault(b["play"], {"stake": 0.0, "payout": 0.0, "n": 0, "win": 0})
+        p["stake"] += b["stake"]
+        p["payout"] += b["payout"]
+        p["n"] += 1
+        p["win"] += 1 if b["status"] == "中" else 0
+
+    def badge(b):
+        if b["status"] == "中":
+            return '<span class="bd win">中</span>'
+        if b["status"] == "未中":
+            return '<span class="bd lose">未中</span>'
+        return '<span class="bd pend">待结算</span>'
+
+    def leg_rows(b):
+        rows = ""
+        for leg in b["legs"]:
+            h = leg.get("hit")
+            mark = "" if h is None else ('<span class="ok">✓</span>' if h else '<span class="no">×</span>')
+            rows += ('<tr><td class="mono">%s</td><td>%s</td><td class="mono">%s %s</td>'
+                     '<td class="num">%.1f%%</td><td class="num">%.2f</td>'
+                     '<td class="num">%s</td><td class="c">%s</td></tr>'
+                     % (leg["no"], leg["match"], leg["play"], leg["pick"],
+                        leg["p"] * 100, leg["odds"], leg.get("score") or "—", mark))
+        return rows
+
+    def ticket_card(b):
+        return ('<div class="ticket"><div class="thead"><b>%s · %s %s%s</b>'
+                '<span>%s</span></div>'
+                '<div class="tmeta">赔率 <b>%.2f</b> · 联合概率 <b>%.2f%%</b> · 本金 <b>%.0f</b> 元'
+                ' · 中则返还 <b>%.0f</b> 元 · 期望 <b class="%s">%+.1f%%</b> %s</div>'
+                '<table><thead><tr><th>场次</th><th>对阵</th><th>选项</th><th>概率</th>'
+                '<th>赔率</th><th>比分</th><th></th></tr></thead><tbody>%s</tbody></table></div>'
+                % (b["id"], b["bucket"], b["play"],
+                   ' <span class="bd bf">补录</span>' if b.get("backfill") else "",
+                   b["type"], b["odds"], b["p"] * 100,
+                   b["stake"], b["stake"] * b["odds"],
+                   "pos" if b.get("ev", 0) > 0 else "neg", b.get("ev", 0) * 100,
+                   badge(b), leg_rows(b)))
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    todays = [b for b in sorted(bets, key=lambda x: x.get("created", "")) if b.get("day") == today]
+    if not todays and bets:
+        latest = max(b["day"] for b in bets)
+        todays = [b for b in sorted(bets, key=lambda x: x.get("created", "")) if b.get("day") == latest]
+        today = latest
+
+    # 余额曲线（按已结算日累计盈亏）
+    curve = []
+    acc = 0.0
+    for d in sorted(daily):
+        if daily[d]["n"] == 0:
+            continue
+        acc += daily[d]["payout"] - daily[d]["stake"]
+        curve.append((d, acc))
+    svg = ""
+    if len(curve) >= 2:
+        w, h = 760, 180
+        lo = min(0.0, min(v for _, v in curve))
+        hi = max(0.0, max(v for _, v in curve))
+        span = (hi - lo) or 1.0
+        pts = []
+        for i, (_, v) in enumerate(curve):
+            x = 40 + i * (w - 80) / (len(curve) - 1)
+            y = 20 + (hi - v) / span * (h - 50)
+            pts.append("%.1f,%.1f" % (x, y))
+        zero = 20 + (hi - 0) / span * (h - 50)
+        svg = ('<svg viewBox="0 0 %d %d" class="curve">'
+               '<line x1="40" y1="%.1f" x2="%d" y2="%.1f" class="zero"/>'
+               '<polyline points="%s" class="line"/>'
+               '<text x="40" y="%d" class="axis">%s</text>'
+               '<text x="%d" y="%d" class="axis" text-anchor="end">%s</text></svg>'
+               % (w, h, zero, w - 40, zero, " ".join(pts),
+                  h - 6, curve[0][0], w - 40, h - 6, curve[-1][0]))
+
+    day_rows = ""
+    bf_days = {d for d in daily
+               if all(b.get("backfill") for b in bets if b.get("day") == d)}
+    for d in sorted(daily, reverse=True):
+        v = daily[d]
+        pl = v["payout"] - v["stake"]
+        cls = "pos" if pl > 0 else ("neg" if pl < 0 else "")
+        pend = v.get("pending", 0)
+        day_rows += ('<tr><td class="mono">%s%s</td><td class="num">%.0f</td>'
+                     '<td class="num">%.0f</td><td class="num %s">%+.2f</td>'
+                     '<td class="num">%d/%d</td><td class="num">%s</td></tr>'
+                     % (d, ' <span class="bd bf">补录</span>' if d in bf_days else "",
+                        v["stake"], v["payout"], cls, pl, v["win"], v["n"],
+                        ("%.0f（待）" % pend) if pend else "—"))
+
+    play_rows = ""
+    for name in ("胜平负", "比分", "总进球", "半全场"):
+        v = plays.get(name)
+        if not v:
+            continue
+        p_roi = (v["payout"] - v["stake"]) / v["stake"] if v["stake"] else 0
+        play_rows += ('<tr><td>%s</td><td class="num">%d</td><td class="num">%.0f</td>'
+                      '<td class="num">%.0f</td><td class="num %s">%+.1f%%</td>'
+                      '<td><div class="bar"><i style="width:%.0f%%"></i></div></td></tr>'
+                      % (name, v["n"], v["stake"], v["payout"],
+                         "pos" if p_roi > 0 else "neg", p_roi * 100,
+                         min(100, max(0, (v["payout"] / v["stake"] * 100 if v["stake"] else 0)))))
+
+    settle_rows = ""
+    for b in sorted(settled, key=lambda x: x.get("settled", ""), reverse=True)[:12]:
+        marks = " ".join(("✓" if leg.get("hit") else "×") for leg in b["legs"])
+        settle_rows += ('<tr><td class="mono">%s%s</td><td>%s %s</td><td class="num">%.0f</td>'
+                        '<td class="num">%.2f</td><td class="mono">%s</td>'
+                        '<td class="c">%s</td><td class="num">%.2f</td></tr>'
+                        % (b["id"], ' <span class="bd bf">补录</span>' if b.get("backfill") else "",
+                           b["bucket"], b["play"], b["stake"], b["odds"],
+                           marks, badge(b), b["payout"]))
+
+    try:
+        st = json.loads(STATUS.read_text(encoding="utf-8"))
+    except Exception:
+        st = {}
+    if st:
+        auto_txt = ("launchd %s · %s · 最近一次 %s，今日 %d 注，待结算 %d 注"
+                    % (st.get("job", JOB), st.get("schedule", SCHEDULE),
+                       st.get("at", "—"), int(st.get("today") or 0),
+                       int(st.get("pending") or 0)))
+        auto_cls = "ok"
+    else:
+        auto_txt = "定时任务尚未运行：launchd %s · %s" % (JOB, SCHEDULE)
+        auto_cls = "warn"
+
+    doc = """<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>模拟投注战绩</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#1d2129;
+font:14px/1.6 -apple-system,"PingFang SC","Helvetica Neue",sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 22px 48px}
+h1{font-size:24px;margin:0 0 4px}h1 small{font-weight:400;color:#86909c;font-size:13px;margin-left:8px}
+h2{font-size:16px;margin:28px 0 10px;padding-left:9px;border-left:3px solid #2f6fed}
+.kpis{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:16px 0}
+.kpi{background:#fff;border:1px solid #e8eaee;border-radius:10px;padding:12px 14px}
+.kpi .k{color:#86909c;font-size:12px}.kpi .v{font-size:20px;font-weight:700;margin-top:2px}
+.kpi .v small{font-size:12px;color:#86909c;font-weight:400}
+.pos{color:#0f9d58}.neg{color:#d93025}
+.ticket{background:#fff;border:1px solid #e8eaee;border-radius:10px;padding:14px 16px;margin:12px 0}
+.thead{display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.tmeta{color:#4e5969;font-size:12.5px;margin:6px 0 10px}
+table{width:100%%;border-collapse:collapse}
+th,td{padding:7px 8px;border-bottom:1px solid #eef0f3;text-align:left;font-size:12.5px}
+th{color:#86909c;font-weight:500;background:#fafbfc}
+tr:last-child td{border-bottom:none}
+.num{text-align:right}.c{text-align:center}.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+.ok{color:#0f9d58;font-weight:700}.no{color:#d93025;font-weight:700}
+.bd{display:inline-block;padding:1px 8px;border-radius:9px;font-size:11.5px}
+.bd.win{background:#e6f4ea;color:#0f9d58}.bd.lose{background:#fdecea;color:#d93025}
+.bd.pend{background:#fff4e5;color:#b26a00}.bd.bf{background:#eef2ff;color:#2f6fed}
+.curve{width:100%%;height:180px;background:#fff;border:1px solid #e8eaee;border-radius:10px}
+.curve .line{fill:none;stroke:#2f6fed;stroke-width:2}
+.curve .zero{stroke:#d5d8dd;stroke-dasharray:4 4}
+.curve .axis{fill:#86909c;font-size:11px}
+.bar{height:7px;background:#eef0f3;border-radius:4px;overflow:hidden;width:120px}
+.bar i{display:block;height:100%%;background:#2f6fed}
+.note{background:#fff;border:1px solid #e8eaee;border-left:3px solid #f0a020;border-radius:8px;
+padding:12px 16px;color:#4e5969;font-size:12.5px;margin-top:14px}
+.empty{color:#86909c;padding:14px 0}
+.auto{margin-top:10px;padding:8px 12px;border-radius:8px;font-size:12.5px;
+border:1px solid #e8eaee;background:#fff;color:#1d2129}
+.auto.ok{border-left:3px solid #0f9d58}
+.auto.warn{border-left:3px solid #f0a020;color:#4e5969}
+footer{color:#a9aeb8;font-size:12px;margin-top:26px}
+</style></head><body><div class="wrap">
+<h1>模拟投注战绩 <small>每天 100 元 · 正常 60 / 高赔 40 · 只记账不下注</small></h1>
+<div class="auto %(autocls)s">自动运行：%(auto)s</div>
+<div class="kpis">
+<div class="kpi"><div class="k">已结算投入</div><div class="v">¥%(stake).0f</div></div>
+<div class="kpi"><div class="k">结算返还</div><div class="v">¥%(payout).0f</div></div>
+<div class="kpi"><div class="k">累计盈亏</div><div class="v %(pcls)s">%(psign)s¥%(pprof).0f</div></div>
+<div class="kpi"><div class="k">回报率</div><div class="v %(pcls)s">%(roi).1f<small>%%</small></div></div>
+<div class="kpi"><div class="k">中票</div><div class="v">%(wins)d<small>/%(nbet)d</small></div></div>
+<div class="kpi"><div class="k">命中率</div><div class="v">%(hit).1f<small>%%</small></div></div>
+<div class="kpi"><div class="k">待结算</div><div class="v">%(pendn)d<small> 注 · ¥%(pendamt).0f</small></div></div>
+</div>
+%(curve)s
+<h2>%(today)s 方案</h2>
+%(today_cards)s
+<h2>最近兑奖</h2>
+<div class="ticket"><table><thead><tr><th>编号</th><th>类型</th><th>本金</th><th>赔率</th>
+<th>每腿</th><th>结果</th><th>返还</th></tr></thead><tbody>%(settle_rows)s</tbody></table>
+%(settle_empty)s</div>
+<h2>每日汇总</h2>
+<div class="ticket"><table><thead><tr><th>日期</th><th>投入</th><th>返还</th>
+<th>盈亏</th><th>中票</th><th>待结算</th></tr></thead><tbody>%(day_rows)s</tbody></table></div>
+<h2>玩法分布</h2>
+<div class="ticket"><table><thead><tr><th>玩法</th><th>票数</th><th>投入</th>
+<th>返还</th><th>回报率</th><th>返还/投入</th></tr></thead><tbody>%(play_rows)s</tbody></table></div>
+<div class="note">分配规则：每天 100 元固定拆成四注——正常盘 60 元（胜平负单关、总进球单关各 30 元，取模型概率×赔率最优）；
+高赔盘 40 元（比分 2 串 1 20 元，每场只用模型同向最高比分；半全场单关 20 元，只打模型 ≥45%% 的高把握场次，没有就不出票）。
+半全场单格是 9 选 1，命中率天然只有三成左右；过去用 3 串 1，联合概率只剩 5%%—10%%，所以几乎不中，现改为单关。
+11-07 的票仍是旧规则（胜平负 2 串 1），11-08 起正常盘改为两注单关，少一层串关、命中率不被平方。
+11-16 为补录：当天定时任务因程序路径失效未出票，事后用当日封存赛事数据按同一规则重算，票面标注「补录」，兑奖照常按赛果结算。
+所有票按“模型概率 × 赔率”取最优，不再为凑赔率反向选腿。同一场的不同玩法可以同时出票，同场同玩法不重复。
+当天可投场次不足时（如只有 1—2 场）只出能凑齐的注，总金额会低于 100 元。兑奖按竞彩规则：全中返还 = 本金 × 赔率乘积。
+全部为模拟记录，不构成投注建议。</div>
+<footer>生成于 %(at)s · 台账 %(ledger)s</footer>
+</div></body></html>""" % {
+        "stake": stake, "payout": payout, "pprof": abs(profit),
+        "pcls": "pos" if profit > 0 else ("neg" if profit < 0 else ""),
+        "psign": "+" if profit > 0 else ("−" if profit < 0 else ""),
+        "roi": roi * 100, "wins": wins, "nbet": len(settled), "hit": hit_rate * 100,
+        "pendn": len(pending),
+        "pendamt": sum(float(b.get("stake") or 0) for b in pending),
+        "curve": ('<h2>余额曲线</h2>' + svg) if svg else "",
+        "today": today,
+        "today_cards": "".join(ticket_card(b) for b in todays) or '<div class="empty">今天还没有出票。</div>',
+        "settle_rows": settle_rows,
+        "settle_empty": "" if settle_rows else '<tr><td colspan="7" class="empty">还没有已结算的票，明早 10:40 自动兑奖。</td></tr>',
+        "day_rows": day_rows or '<tr><td colspan="6" class="empty">暂无记录</td></tr>',
+        "play_rows": play_rows or '<tr><td colspan="6" class="empty">暂无记录</td></tr>',
+        "at": now_str(), "ledger": LEDGER,
+        "auto": auto_txt, "autocls": auto_cls,
+    }
+    SIM.mkdir(parents=True, exist_ok=True)
+    HTML.write_text(doc, encoding="utf-8")
+
+    with open(CSV_OUT, "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["编号", "日期", "类型", "玩法", "串法", "本金", "赔率", "联合概率",
+                    "状态", "返还", "盈亏", "兑奖时间", "腿", "来源"])
+        for b in sorted(bets, key=lambda x: (x["day"], x["id"])):
+            legs = " | ".join("%s %s %s@%.2f" % (l["no"], l["play"], l["pick"], l["odds"])
+                              for l in b["legs"])
+            w.writerow([b["id"], b["day"], b["bucket"], b["play"], b["type"],
+                        "%.2f" % b["stake"], "%.2f" % b["odds"], "%.4f" % (b["p"] * 100),
+                        b["status"], "%.2f" % b["payout"],
+                        "%.2f" % (b["payout"] - b["stake"] if b["status"] in ("中", "未中") else 0),
+                        b.get("settled", ""), legs,
+                        "补录" if b.get("backfill") else "自动"])
+    if not getattr(args, "quiet", False):
+        log("战绩页：%s" % HTML)
+        try:
+            subprocess.Popen(["open", str(HTML)])
+        except Exception as e:
+            log("打开失败：%s" % e)
+    return 0
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description="模拟投注台账")
+    sub = ap.add_subparsers(dest="cmd")
+    p = sub.add_parser("plan", help="生成当天 100 元方案")
+    p.add_argument("--day")
+    p.add_argument("--force", action="store_true")
+    p.add_argument("--no-refresh", action="store_true")
+    p.add_argument("--backfill", action="store_true", help="补录历史某天：只用封存数据，截单线取当天 10:55")
+    p.add_argument("--quiet", action="store_true")
+    s = sub.add_parser("settle", help="按赛果兑奖")
+    s.add_argument("--day")
+    s.add_argument("--quiet", action="store_true")
+    r = sub.add_parser("report", help="重出战绩页")
+    r.add_argument("--quiet", action="store_true")
+    d = sub.add_parser("daily", help="定时任务入口：兑奖 + 出票 + 战绩")
+    d.add_argument("--no-refresh", action="store_true")
+    d.add_argument("--quiet", action="store_true")
+    a = ap.parse_args(argv)
+
+    # 定时任务和手动运行可能撞车：拿不到锁就跳过本次，保证台账只被一个进程写。
+    SIM.mkdir(parents=True, exist_ok=True)
+    with open(SIM / ".run.lock", "w") as lock_fh:
+        try:
+            fcntl.flock(lock_fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            log("另一个模拟投注进程正在跑，本次跳过")
+            return 0
+        if a.cmd == "plan":
+            return cmd_plan(a)
+        if a.cmd == "settle":
+            return cmd_settle(a)
+        if a.cmd == "report":
+            return cmd_report(a)
+        if a.cmd == "daily":
+            return cmd_daily(a)
+    ap.print_help()
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())

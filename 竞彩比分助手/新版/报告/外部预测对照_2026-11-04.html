@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>2026-11-04 比分预测外部对照</title>
+<style>
+:root{--bg:#f5f7fa;--card:#ffffff;--line:#e2e8f0;--txt:#1f2937;--dim:#64748b;--green:#15803d;--amber:#b45309;--red:#b91c1c;--blue:#1d4ed8;--purple:#6d28d9;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,"PingFang SC","Helvetica Neue",Arial,sans-serif;line-height:1.55}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 22px 60px}
+  h1{font-size:23px;margin:0 0 6px;color:#0f172a}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:24px}
+  h2{font-size:15px;margin:28px 0 12px;padding-left:10px;border-left:3px solid var(--blue);color:#0f172a}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .kpi .n{font-size:24px;font-weight:700;color:#0f172a}
+  .kpi .l{font-size:12px;color:var(--dim);margin-top:2px}
+  .kpi.g .n{color:var(--green)}.kpi.a .n{color:var(--amber)}.kpi.b .n{color:var(--blue)}.kpi.r .n{color:var(--red)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--dim);font-weight:500;font-size:12px;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;background:#f8fafc}
+  td{padding:10px;border-bottom:1px solid #eef2f7;vertical-align:top}
+  tr:hover td{background:#f8fafc}
+  tr.sel td{background:#f0fdf4}
+  .no{color:var(--dim);font-size:12px;white-space:nowrap}
+  .team{font-weight:600}
+  .vs{color:var(--dim);font-size:12px}
+  .ours{font-family:"SF Mono",Menlo,monospace;font-size:14px;font-weight:700;color:#0f172a}
+  .pct{color:var(--dim);font-size:12px;margin-left:6px;font-weight:400}
+  .odds{color:#0f766e;font-size:12px;margin-left:6px;font-weight:400}
+  .ext,.vote{color:#334155;font-size:12px}
+  .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;white-space:nowrap}
+  .t-ok,.t-strong,.t-in{background:#ecfdf3;color:#15803d;border:1px solid #bbe5c8}
+  .t-part,.t-mid,.t-half{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
+  .t-bad,.t-none,.t-out{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+  .note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px 18px;margin:14px 0;font-size:13.5px;color:#334155;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .note b{color:#0f172a}
+  .plans{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .plan h3{margin:0 0 8px;font-size:14px;color:#0f172a}
+  .plan .big{font-size:24px;font-weight:700;margin:6px 0;color:#0f172a}
+  .plan .big small{font-size:12px;color:var(--dim);font-weight:400;margin-left:6px}
+  .legs{color:#334155;font-size:13px;line-height:1.9}
+  .legs span{font-family:"SF Mono",Menlo,monospace;color:#0f766e}
+  .rec{border-color:#86efac;box-shadow:0 0 0 1px rgba(21,128,61,.10) inset}
+  .badge{font-size:11px;color:var(--green);border:1px solid #bbe5c8;background:#ecfdf3;padding:1px 7px;border-radius:999px;margin-left:6px}
+  .ticket{background:#fff;border:1px solid #bbe5c8;border-left:4px solid var(--green);border-radius:14px;padding:20px 22px;margin-top:8px;box-shadow:0 1px 3px rgba(15,23,42,.06)}
+  .ticket .leg{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #e2e8f0;font-size:14px}
+  .ticket .leg:last-of-type{border-bottom:none}
+  .ticket .sc{font-family:"SF Mono",Menlo,monospace;font-size:17px;font-weight:700;color:#0f172a}
+  .ticket .meta{color:var(--dim);font-size:12px}
+  .sum{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  .sum div{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px}
+  .sum .k{font-size:23px;font-weight:700}
+  .sum .l{font-size:12px;color:var(--dim);margin-top:2px}
+  .k.g{color:var(--green)}.k.a{color:var(--amber)}.k.b{color:var(--blue)}
+  .bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin-top:5px;background:#e8edf3;min-width:132px}
+  .bar i{display:block;height:100%}
+  .b1{background:#2563eb}.b2{background:#94a3b8}.b3{background:#d97706}
+  .nums{font-family:"SF Mono",Menlo,monospace;font-size:12px;color:#334155}
+  .nums em{font-style:normal;color:var(--dim);font-size:11px}
+  .alt{background:#fff;border:1px solid #bfdbfe;border-left:4px solid var(--blue);border-radius:12px;padding:16px 18px;margin-top:10px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .alt h3{margin:0 0 8px;font-size:14px;color:#0f172a}
+  .alt .legs{font-size:13px;line-height:1.95;color:#334155}
+  .alt .legs span{font-family:"SF Mono",Menlo,monospace;color:#0f766e}
+  .foot{color:var(--dim);font-size:12px;margin-top:28px;line-height:1.8}
+  @media (max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.plans,.sum{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>今日比分预测 · 外部模型对照</h1>
+  <div class="sub">2026-11-04 · 12 场 · 我们的四模型集成 vs Sports Mole / Forebet / Football Whispers / Statz.ai / 中文 AI 前瞻 · 赔率取 500.com 封存值（未去水）</div>
+
+  <div class="kpis">
+    <div class="kpi a"><div class="n">7 / 12</div><div class="l">我们首选为 1-1 的场次</div></div>
+    <div class="kpi b"><div class="n">3 / 12</div><div class="l">外部首选也是 1-1</div></div>
+    <div class="kpi g"><div class="n">9 / 12</div><div class="l">胜平负方向一致</div></div>
+    <div class="kpi r"><div class="n">3</div><div class="l">外部彼此矛盾</div></div>
+  </div>
+
+  <h2>逐场对照</h2>
+  <table>
+    <thead>
+      <tr><th>场次</th><th>对阵</th><th>我们的首选比分</th><th>外部预测</th><th>一致度</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="no">周三001<br>18:00</td>
+        <td><span class="team">浦项制铁</span> <span class="vs">vs</span> <span class="team">大阪钢巴</span></td>
+        <td><span class="ours">1-1</span><span class="pct">12.0%</span><span class="odds">@6.50</span></td>
+        <td class="ext">中文 AI：让胜，1-1 / 2-1 / 2-2<br>海外情报：0-2 / 1-2</td>
+        <td><span class="tag t-bad">分歧</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三002<br>20:15</td>
+        <td><span class="team">布里兰</span> <span class="vs">vs</span> <span class="team">鹿岛鹿角</span></td>
+        <td><span class="ours">1-1</span><span class="pct">11.1%</span><span class="odds">@7.00</span></td>
+        <td class="ext">中文 AI：负，0-1 / 0-2 / 1-2<br>Forebet：胜负各 40%</td>
+        <td><span class="tag t-part">方向偏客</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三003<br>23:30</td>
+        <td><span class="team">雷恩</span> <span class="vs">vs</span> <span class="team">奥林匹亚科斯</span></td>
+        <td><span class="ours">1-1</span><span class="pct">11.7%</span><span class="odds">@7.00</span></td>
+        <td class="ext">Forebet：雷恩 2-1<br>Whispers：1-2 奥林匹亚科斯</td>
+        <td><span class="tag t-bad">外部互斥</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三004<br>01:45</td>
+        <td><span class="team">费内巴切</span> <span class="vs">vs</span> <span class="team">利物浦</span></td>
+        <td><span class="ours">1-2</span><span class="pct">8.3%</span><span class="odds">@6.70</span></td>
+        <td class="ext">Sports Mole：2-4 利物浦</td>
+        <td><span class="tag t-ok">方向一致</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三005<br>01:45</td>
+        <td><span class="team">莱比锡红牛</span> <span class="vs">vs</span> <span class="team">曼城</span></td>
+        <td><span class="ours">1-2</span><span class="pct">7.6%</span><span class="odds">@7.00</span></td>
+        <td class="ext">Sports Mole：2-4 曼城<br>中文 AI：负，0-2 / 1-2 / 1-3</td>
+        <td><span class="tag t-ok">方向一致</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三006<br>01:45</td>
+        <td><span class="team">波尔图</span> <span class="vs">vs</span> <span class="team">那不勒斯</span></td>
+        <td><span class="ours">1-1</span><span class="pct">9.2%</span><span class="odds">@6.50</span></td>
+        <td class="ext">Sports Mole：1-1（11.86%）<br>Whispers：2-1 波尔图</td>
+        <td><span class="tag t-ok">比分一致</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三007<br>01:45</td>
+        <td><span class="team">PSV</span> <span class="vs">vs</span> <span class="team">布鲁日</span></td>
+        <td><span class="ours">1-1</span><span class="pct">7.4%</span><span class="odds">@8.50</span></td>
+        <td class="ext">Sports Mole：2-1 PSV（7.74%）</td>
+        <td><span class="tag t-part">方向一致</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三008<br>01:45</td>
+        <td><span class="team">多特蒙德</span> <span class="vs">vs</span> <span class="team">皇家贝蒂斯</span></td>
+        <td><span class="ours">2-1</span><span class="pct">9.1%</span><span class="odds">@6.50</span></td>
+        <td class="ext">Sports Mole：2-1<br>DeepSeek：2-1</td>
+        <td><span class="tag t-ok">完全一致</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三009<br>01:45</td>
+        <td><span class="team">维京</span> <span class="vs">vs</span> <span class="team">萨巴赫</span></td>
+        <td><span class="ours">2-1</span><span class="pct">8.6%</span><span class="odds">@6.70</span></td>
+        <td class="ext">Sports Mole：2-2<br>Forebet：50 / 17 / 33</td>
+        <td><span class="tag t-bad">分歧</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三010<br>01:45</td>
+        <td><span class="team">朗斯</span> <span class="vs">vs</span> <span class="team">科莫</span></td>
+        <td><span class="ours">1-1</span><span class="pct">10.3%</span><span class="odds">@7.50</span></td>
+        <td class="ext">Whispers：1-2 科莫<br>Sports Mole：1-2（8.51%）<br>JetBet：1-1</td>
+        <td><span class="tag t-part">方向客胜</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三011<br>01:45</td>
+        <td><span class="team">布拉格斯拉维亚</span> <span class="vs">vs</span> <span class="team">阿森纳</span></td>
+        <td><span class="ours">0-2</span><span class="pct">8.8%</span><span class="odds">@6.00</span></td>
+        <td class="ext">Sports Mole：0-1（11.99%）<br>Whispers：0-2</td>
+        <td><span class="tag t-ok">完全一致</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三012<br>03:45</td>
+        <td><span class="team">布里斯托尔城</span> <span class="vs">vs</span> <span class="team">伍尔弗汉普顿</span></td>
+        <td><span class="ours">1-1</span><span class="pct">12.8%</span><span class="odds">@6.00</span></td>
+        <td class="ext">Sports Mole：1-1（12.83%）<br>Statz.ai：1-1</td>
+        <td><span class="tag t-ok">几乎完全一致</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>先说清楚：1-1 不是模型坏了</h2>
+  <div class="note">
+    12 场里有 7 场我们的首选是 1-1，原因是 <b>1-1 是足球比分分布的众数</b>，不是四场比赛会被踢成同一个样子。<br>
+    证据一：首选与次选的概率差普遍只有 <b>0.4–3.2 个百分点</b>，模型并没有真正“看好”1-1，只是在一堆几乎并列的比分里必须挑一个。<br>
+    证据二：外部模型同样指向 1-1。布里斯托 vs 狼队，Sports Mole 给 1-1 的概率是 <b>12.83%</b>，我们 12.8%；波尔图 vs 那不勒斯，Sports Mole 也是 1-1（11.86%）。<br>
+    真正的问题在组合方式：<b>把 12 个 8%–13% 的事件相乘，四关就只剩 0.02%</b>。比分四串一本身接近彩票，换哪个模型都救不回来。
+  </div>
+
+  <h2>三个可执行方案</h2>
+  <div class="plans">
+    <div class="plan rec">
+      <h3>方案 A · 胜平负四串一 <span class="badge">推荐</span></h3>
+      <div class="legs">
+        周三005 曼城 客胜 <span>59.2% @1.35</span><br>
+        周三008 多特 主胜 <span>60.0% @1.60</span><br>
+        周三009 维京 主胜 <span>68.1% @1.24</span><br>
+        周三011 阿森纳 客胜 <span>79.0% @1.10</span>
+      </div>
+      <div class="big">19.1% <small>命中率</small></div>
+      <div class="legs">总赔率 <span>2.95</span> · 期望回报 <span>0.56</span> 倍 · 4 场里 4 场方向都有外部支持</div>
+    </div>
+    <div class="plan">
+      <h3>方案 B · 胜平负四串一（赔率版）</h3>
+      <div class="legs">
+        周三006 波尔图 主胜 <span>57.6% @1.88</span><br>
+        周三008 多特 主胜 <span>60.0% @1.60</span><br>
+        周三009 维京 主胜 <span>68.1% @1.24</span><br>
+        周三011 阿森纳 客胜 <span>79.0% @1.10</span>
+      </div>
+      <div class="big">18.6% <small>命中率</small></div>
+      <div class="legs">总赔率 <span>4.10</span> · 期望回报 <span>0.76</span> 倍 · 波尔图这一关外部只给 48.98%，是分歧点</div>
+    </div>
+    <div class="plan">
+      <h3>方案 C · 比分四串一（共识版，彩票）</h3>
+      <div class="legs">
+        周三006 波尔图 vs 那不勒斯 <span>1-1 @6.50</span><br>
+        周三008 多特 vs 贝蒂斯 <span>2-1 @6.50</span><br>
+        周三011 斯拉维亚 vs 阿森纳 <span>0-2 @6.00</span><br>
+        周三012 布里斯托 vs 狼队 <span>1-1 @6.00</span>
+      </div>
+      <div class="big">0.009% <small>命中率</small></div>
+      <div class="legs">总赔率 <span>1521</span> · 期望回报 <span>0.14</span> 倍 · 四关都有外部同向，但赔率吃掉太多</div>
+    </div>
+    <div class="plan">
+      <h3>方案 D · 原来那注（全 1-1）</h3>
+      <div class="legs">
+        周三001 浦项 vs 钢巴 <span>1-1 @6.50</span><br>
+        周三002 布里兰 vs 鹿岛 <span>1-1 @7.00</span><br>
+        周三003 雷恩 vs 奥林匹亚科斯 <span>1-1 @7.00</span><br>
+        周三012 布里斯托 vs 狼队 <span>1-1 @6.00</span>
+      </div>
+      <div class="big">0.020% <small>命中率</small></div>
+      <div class="legs">总赔率 <span>1911</span> · 期望回报 <span>0.38</span> 倍 · 四关里 001/003 外部明确不看好平局</div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:16px">
+    <b>怎么选：</b>要“实际”，走方案 A（约 5 次中 1 次，赔率 2.95）；想多拿赔率、能接受波尔图这一关的分歧，走方案 B；比分四串一只能是娱乐小注，方案 C 的概率反而低于方案 D，因为它把 011 的 8.8% 也乘了进去。<br>
+    <b>口径：</b>概率为四模型集成输出，赔率为 500.com 竞彩封存赔率（未去水），期望回报 = 命中率 × 总赔率。外部预测为赛前公开模型/编辑观点，会随阵容变化。
+  </div>
+
+  <div class="foot">
+    数据生成：2026-11-04 · 竞彩比分助手 · 仅做概率计算与记录，不代下单、不承诺命中。
+  </div>
+</div>
+</body>
+</html>

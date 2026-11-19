@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>四模型走步回测 · 2026-10-06 至 2026-11-08</title>
+<style>
+:root{--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--accent:#1f3b63}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:var(--ink);
+  font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1280px;margin:30px auto 60px;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:18px;gap:16px}
+h1{font-size:23px;margin:0;letter-spacing:.5px}
+.sub{color:var(--mute);font-size:13px;margin-top:6px}
+.stamp{text-align:right;color:var(--mute);font-size:13px;line-height:1.55;white-space:nowrap}
+.stamp b{color:var(--accent);font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.card span{display:block;font-size:12px;color:var(--mute)}
+.card b{font-size:20px;color:var(--accent);font-variant-numeric:tabular-nums}
+.card em{font-style:normal;font-size:12px;color:#94a3b8;margin-left:4px}
+.note{background:#fff7e6;border:1px solid #f5d9a8;border-radius:10px;padding:10px 14px;
+  margin:0 0 18px;font-size:13px;color:#7c4a03}
+.note b{color:#b45309}
+h2{font-size:17px;margin:28px 0 12px;color:var(--accent)}
+h2 small{font-weight:400;font-size:12.5px;color:var(--mute);margin-left:8px}
+.mcard{background:#fff;border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px 12px;margin-bottom:12px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.mhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.no{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.lg{font-size:12px;padding:2px 8px;border-radius:6px;background:#eef2f7;color:#475569;white-space:nowrap}
+.teams{font-weight:600;font-size:15.5px}
+.teams span{color:#cbd5e1;margin:0 6px;font-size:12px;font-weight:400}
+.kick{margin-left:auto;color:var(--mute);font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.probbar{display:flex;height:9px;border-radius:5px;overflow:hidden;background:#f1f5f9;margin:6px 0 3px}
+.seg{display:block;height:100%}
+.nums{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);
+  font-variant-numeric:tabular-nums;margin-bottom:8px}
+.nums i{font-style:normal}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;table-layout:fixed}
+th{background:#eef2f7;color:#334155;font-size:12px;font-weight:600;text-align:left;
+  padding:8px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 9px;border-bottom:1px solid #f1f5f9;vertical-align:middle;font-size:13px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fbfdff}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.mname{font-weight:600;white-space:nowrap}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid;
+  font-size:12.5px;white-space:nowrap}
+.score{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scores{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--mute);align-items:center}
+.scores b{color:var(--ink);font-variant-numeric:tabular-nums}
+.chip{background:#f8fafc;border:1px solid #e8eef5;border-radius:7px;padding:2px 8px;white-space:nowrap}
+.muted{color:#94a3b8;font-size:12px}
+.modelnote{margin-top:6px;font-size:12px;color:#94a3b8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}.kick{margin-left:0}}
+footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);
+  color:#94a3b8;font-size:12px;line-height:1.8}
+.best{background:#ecfdf3;font-weight:600}
+details{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+</style></head><body><div class="wrap">
+<header><div><h1>四模型走步回测</h1>
+<div class="sub">每场预测只使用开球前的赛果、赔率与射门数据</div></div>
+<div class="stamp">生成 <b>2026-11-08 19:00:52</b><br>评估起点 2026-10-06</div></header>
+<div class="card"><span>评估场次</span><b>499</b><em>场</em></div><div class="card"><span>评估区间</span><b style="font-size:14px">2026-10-06</b><em>至 2026-11-08</em></div><div class="card"><span>ML 训练行</span><b>4185</b><em>行</em></div><div class="card"><span>模型分歧率</span><b>42%</b><em>场</em></div>
+<div class="note"><b>解读：</b>DC 的 1X2 由竞彩赔率反解，和“市场去水”同源，LogLoss 几乎相同是预期结果；
+Elo 与赔率独立，LogLoss 略差但能提供不同信号；xG 只在有射门数据的联赛启用，覆盖率明显偏低；
+ML 受样本与特征质量限制，实际权重不高。集成用滚动 LogLoss 优化权重，追求的是概率质量与比分分布的平衡。</div>
+<h2>指标对比 <small>绿色为该列最优</small></h2>
+<table><colgroup><col style="width:19%"><col style="width:9%"><col style="width:9%"><col style="width:11%"><col style="width:10%"><col style="width:11%"><col style="width:10%"><col style="width:10%"><col style="width:11%"></colgroup><thead><tr><th>模型</th><th class='n'>覆盖</th><th class='n'>样本</th><th class='n'>LogLoss</th><th class='n'>Brier</th><th class='n'>1X2 命中</th><th class='n'>比分 Top1</th><th class='n'>Top3</th><th class='n'>Top5</th></tr></thead><tbody><tr><td class="mname">Dixon-Coles</td><td class="n">100%</td><td class="n">499</td><td class="n best">0.9602</td><td class="n">0.5681</td><td class="n">55.91%</td><td class="n">11.02%</td><td class="n">33.27%</td><td class="n">46.49%</td></tr><tr><td class="mname">Elo 评分</td><td class="n">100%</td><td class="n">499</td><td class="n">1.0178</td><td class="n">0.6092</td><td class="n">49.30%</td><td class="n best">12.02%</td><td class="n">30.46%</td><td class="n">43.49%</td></tr><tr><td class="mname">xG 射门</td><td class="n">34%</td><td class="n">171</td><td class="n">0.9900</td><td class="n">0.5941</td><td class="n">52.05%</td><td class="n">7.60%</td><td class="n">19.88%</td><td class="n">30.41%</td></tr><tr><td class="mname">机器学习</td><td class="n">100%</td><td class="n">499</td><td class="n">0.9773</td><td class="n">0.5775</td><td class="n">53.31%</td><td class="n">9.02%</td><td class="n">24.05%</td><td class="n">38.88%</td></tr><tr><td class="mname">四模型集成</td><td class="n">100%</td><td class="n">499</td><td class="n">0.9633</td><td class="n">0.5707</td><td class="n">55.91%</td><td class="n">10.82%</td><td class="n">32.46%</td><td class="n">47.09%</td></tr><tr><td class="mname">市场比分盘</td><td class="n">100%</td><td class="n">499</td><td class="n">0.9606</td><td class="n">0.5679</td><td class="n best">56.11%</td><td class="n">10.82%</td><td class="n">31.26%</td><td class="n">48.90%</td></tr><tr><td class="mname">市场去水</td><td class="n">100%</td><td class="n">499</td><td class="n best">0.9602</td><td class="n">0.5681</td><td class="n">55.91%</td><td class="n muted">—</td><td class="n muted">—</td><td class="n muted">—</td></tr></tbody></table><h2>集成校准 <small>按预测类概率分箱</small></h2><table><colgroup><col style="width:26%"><col style="width:18%"><col style="width:18%"><col style="width:19%"><col style="width:19%"></colgroup><thead><tr><th>预测概率区间</th><th class="n">场次</th><th class="n">预测均值</th><th class="n">实际命中</th><th class="n">偏差</th></tr></thead><tbody><tr><td>33%-50%</td><td class="n">252</td><td class="n">42.9%</td><td class="n">46.4%</td><td class="n">+3.5%</td></tr><tr><td>50%-67%</td><td class="n">160</td><td class="n">58.2%</td><td class="n">61.3%</td><td class="n">+3.1%</td></tr><tr><td>67%-83%</td><td class="n">84</td><td class="n">72.4%</td><td class="n">73.8%</td><td class="n">+1.4%</td></tr><tr><td>83%-100%</td><td class="n">3</td><td class="n">84.5%</td><td class="n">66.7%</td><td class="n">-17.8%</td></tr></tbody></table>
+<h2>最终集成权重 <small>最近 220 场样本外优化，向先验收缩 0.6</small></h2>
+<div class="scores"><span class="chip">Dixon-Coles <b>40.8%</b></span><span class="chip">Elo 评分 <b>14.3%</b></span><span class="chip">xG 射门 <b>17.3%</b></span><span class="chip">机器学习 <b>27.6%</b></span></div>
+<h2>口径与限制</h2>
+<details open><summary>哪些结论能信、哪些不能</summary>
+<p><b>1X2：</b>集成命中率与市场基线接近，提升主要来自 Elo/ML 在部分场次纠正市场偏差，不是系统性优势。</p>
+<p><b>比分：</b>Top1 约 10%–11%、Top3 约 33%、Top5 约 45%，这是比分玩法的结构上限：31 个选项中单格概率很难超过 15%。</p>
+<p><b>xG：</b>射正代理 xG 的 R² 只有约 0.32，定位是“比单看进球稳一点的强度指标”，不是精确 xG。</p>
+<p><b>ML：</b>HistGradientBoosting 在 3000 多场上训练，特征以赔率为主；如果去掉赔率特征，表现会明显下降。它的价值在于非线性组合，不在替代市场。</p>
+<p><b>未覆盖：</b>亚冠、欧冠正赛没有外部射门数据；伤停、轮换、天气均未纳入。任何概率都不应视为确定结果。</p>
+</details>
+<footer>由 jczq_pro 生成 · 旧版系统与定时任务未改动 · 概率为模型计算，不构成投注建议</footer>
+</div></body></html>

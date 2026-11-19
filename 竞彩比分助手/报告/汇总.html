@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>竞彩比分助手 · 累计校准</title><style>
+:root{--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--accent:#1f3b63}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:var(--ink);
+  font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1280px;margin:30px auto 60px;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:20px}
+h1{font-size:23px;margin:0;letter-spacing:.5px}
+.sub{color:var(--mute);font-size:13px;margin-top:6px}
+.stamp{text-align:right;color:var(--mute);font-size:13px;line-height:1.55}
+.stamp b{color:var(--accent);font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;margin-bottom:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.card span{display:block;font-size:12px;color:var(--mute)}
+.card b{font-size:20px;color:var(--accent);font-variant-numeric:tabular-nums}
+.card em{font-style:normal;font-size:12px;color:#94a3b8;margin-left:4px}
+.rcb{background:#fff7e6;border:1px solid #f5d9a8;border-radius:10px;padding:10px 14px;
+  margin:-8px 0 18px;font-size:13px;color:#7c4a03;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rcb b{color:#b45309}
+.rcb a{margin-left:auto;color:#1f3b63;font-weight:600;text-decoration:none;white-space:nowrap}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;table-layout:fixed;
+  box-shadow:0 1px 2px rgba(15,23,42,.04)}
+th{background:#eef2f7;color:#334155;font-size:12.5px;font-weight:600;text-align:left;
+  padding:11px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+td:nth-child(5){padding-left:18px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fbfdff}
+.no{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg{font-size:12px;padding:2px 8px;border-radius:6px;white-space:nowrap;display:inline-block}
+.teams{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.teams b{font-weight:600}
+.teams span{color:#cbd5e1;margin:0 6px;font-size:12px}
+.kick{white-space:nowrap;color:#64748b;font-size:13px;font-variant-numeric:tabular-nums}
+.segs{display:flex;height:7px;border-radius:4px;overflow:hidden;background:#f1f5f9}
+.seg{display:block;height:100%}
+.nums{display:flex;justify-content:space-between;font-size:11.5px;margin-top:4px}
+.nums i{font-style:normal;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:4px 9px;border-radius:999px;border:1px solid;
+  font-size:13px;white-space:nowrap}
+.pill b{margin-left:5px;font-variant-numeric:tabular-nums}
+.score{white-space:nowrap}
+.score b{font-size:16px;font-variant-numeric:tabular-nums}
+.score em{font-style:normal;margin-left:6px;font-size:12px;padding:1px 6px;border-radius:5px;
+  background:#eef2f7;color:#475569;font-variant-numeric:tabular-nums}
+.score em.hit{background:#e8f7ee;color:#15803d;font-weight:600}
+.score em.miss{background:#fdf1f1;color:#b91c1c}
+.score .alt{font-size:10.5px;color:#94a3b8;margin-top:2px;font-variant-numeric:tabular-nums;white-space:normal;line-height:1.4;max-width:100%}
+.hf{white-space:nowrap;text-align:center;font-variant-numeric:tabular-nums}
+.hf b{font-size:14px}
+.hf em{font-style:normal;margin-left:4px;font-size:11.5px;color:#64748b}
+.hf small{display:block;font-size:10.5px;color:#94a3b8;margin-top:2px}
+.hf small.next{color:#64748b;font-size:9.5px;line-height:1.35}
+.hf small.ok{color:#15803d;font-weight:600}
+.hf small.no{color:#b91c1c}
+.chips{display:flex;gap:3px;flex-wrap:wrap}
+.chip{white-space:nowrap;font-size:11px;color:#475569;background:#f8fafc;
+  border:1px solid var(--line);border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums}
+.chip b{font-weight:500;color:#94a3b8;margin-left:3px}
+.chip.on{background:#fff7e6;border-color:#e9c46a;color:#7a5c00}
+.chip.on b{color:#a97f1a}
+.act{text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums;color:#94a3b8}
+.act.hit{color:#15803d;font-weight:700}
+.act.miss{color:#b91c1c;font-weight:700}
+.badge{display:inline-block;font-size:11.5px;padding:2px 7px;border-radius:5px;
+  background:#f1f5f9;color:#64748b;white-space:nowrap}
+.badge.ok{background:#e8f7ee;color:#15803d}
+.badge.mid{background:#eef6ff;color:#1d4ed8}
+.badge.no{color:#b91c1c;background:#fef2f2;font-weight:600}
+footer{margin-top:18px;color:var(--mute);font-size:12.5px;line-height:1.95}
+footer b{color:#334155}
+.late{display:inline-block;background:#fff7e6;color:#a16207;border:1px solid #f2d08a;
+  border-radius:6px;padding:1px 8px;font-size:12px;margin-left:8px}
+.h2{font-size:17px;margin:28px 0 6px;color:#1f3b63}
+.hint{color:var(--mute);font-size:12.5px;margin:0 0 10px;line-height:1.8}
+td.hfc{text-align:center;padding:7px 3px;font-size:11.5px;
+  font-variant-numeric:tabular-nums;border-left:1px solid #fff}
+.hftop{font-size:11px;color:#475569;line-height:1.55;white-space:nowrap;font-variant-numeric:tabular-nums}
+.hftop b{color:#1e3a8a;font-weight:600;margin-left:3px}
+.hfstats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.hfstats div{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 12px;min-width:112px}
+.hfstats span{display:block;font-size:11.5px;color:var(--mute)}
+.hfstats b{font-size:17px;color:var(--accent);font-variant-numeric:tabular-nums}
+.hfstats em{font-style:normal;font-size:11px;color:#94a3b8;margin-left:4px}
+.mc{font-size:13px;text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mc em{display:block;font-style:normal;font-size:10.5px;color:#94a3b8;line-height:1.3}
+.mc small{display:block;font-size:9.5px;color:#b6bec9;line-height:1.25}
+.mc.ens{background:#f4f8ff}
+.oc{text-align:center;font-variant-numeric:tabular-nums;padding:7px 4px;line-height:1.25}
+.oc b{display:block;font-size:13.5px}
+.oc small{display:block;font-size:9.5px;color:#94a3b8;white-space:nowrap}
+.oc.on{background:#f4f8ff}
+.ochip{display:inline-block;white-space:nowrap;font-size:10.5px;color:#475569;
+  background:#f8fafc;border:1px solid var(--line);border-radius:5px;padding:1px 4px;
+  margin:1px 2px 1px 0;font-variant-numeric:tabular-nums}
+.ochip b{color:#334155;font-weight:600;margin-left:3px}
+.ochip i{font-style:normal;color:#94a3b8;margin-left:3px;font-size:9px}
+.ochip.hot{background:#fff7e6;border-color:#e9c46a;color:#7a5c00}
+.ochip.hot b{color:#a97f1a}
+.ochip.win{background:#d9f2e3;border-color:#86c79a;color:#166534}
+.ochip.win b,.ochip.win i{color:#166534}
+.odcell{padding:7px 9px;line-height:1.65}
+.hfc .od{display:block;font-size:9.5px;color:#7f8ea3;font-weight:400;line-height:1.25;margin-top:1px}
+h3.subh{font-size:15px;margin:22px 0 8px;color:#334155;font-weight:600}
+@media(max-width:1000px){.card{flex:1 1 46%}}
+</style></head>
+<body><div class="wrap">
+<header><div><h1>累计校准汇总</h1>
+  <div class="sub">逐日核对比分、胜负、总进球与半全场；样本越多，命中率越接近模型给出的期望值</div></div>
+  <div class="stamp"><b>20 个比赛日</b><br>2026-11-19 15:21:24</div></header>
+<div class="cards">
+  <div class="card"><span>累计已核对</span><b>248</b><em>场</em></div>
+  <div class="card"><span>胜负命中</span><b>60.1%</b><em>149/248</em></div>
+  <div class="card"><span>同向比分命中</span><b>13.7%</b><em>34/248</em></div>
+  <div class="card"><span>全场最高格命中</span><b>12.5%</b><em>31/248</em></div>
+  <div class="card"><span>TOP3 命中</span><b>35.9%</b><em>89/248</em></div>
+  <div class="card"><span>TOP5 命中</span><b>53.6%</b><em>133/248</em></div>
+  <div class="card"><span>总进球命中</span><b>23.8%</b><em>59/248</em></div>
+  <div class="card"><span>总进球 log / Brier</span><b>-1.866</b><em>0.8263</em></div>
+  <div class="card"><span>半全场命中</span><b>34.7%</b><em>86/248</em></div>
+  <div class="card"><span>半全场前三</span><b>66.5%</b><em>165/248</em></div>
+  <div class="card"><span>半全场 log / Brier</span><b>-1.823</b><em>0.7781</em></div>
+  <div class="card"><span>1X2 Brier</span><b>0.5345</b></div></div>
+<table><colgroup><col style="width:104px"><col style="width:50px"><col style="width:60px">
+<col style="width:88px"><col style="width:88px"><col style="width:88px"><col style="width:86px"><col style="width:86px"><col style="width:88px">
+<col style="width:86px"><col style="width:78px"><col style="width:84px"><col style="width:140px"><col style="width:76px"></colgroup>
+<thead><tr><th>日期</th><th>场次</th><th>已核对</th><th>胜负命中</th><th>同向比分</th>
+<th>全场最高</th><th>TOP3 命中</th><th>TOP5 命中</th><th>半全场命中</th><th>半全场前三</th><th>半全场 log</th><th>半全场 Brier</th>
+<th>平均 log 概率 / 均匀盲猜</th><th>Brier</th></tr></thead>
+<tbody><tr>
+  <td class="no"><a href="比分日报_2026-11-19.html">2026-11-19</a></td>
+  <td>4</td><td>0</td>
+  <td>0 <span class="badge">—</span></td>
+  <td>0 <span class="badge">—</span></td>
+  <td>0 <span class="badge">—</span></td>
+  <td>0 <span class="badge">—</span></td>
+  <td>0 <span class="badge">—</span></td>
+  <td>0 <span class="badge">—</span></td>
+  <td>0 <span class="badge">—</span></td>
+  <td style="color:#94a3b8">—</td>
+  <td style="color:#94a3b8">—</td>
+  <td>— / -4.394</td>
+  <td>—</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-18.html">2026-11-18</a></td>
+  <td>4</td><td>4</td>
+  <td>3 <span class="badge">75.0%</span></td>
+  <td>0 <span class="badge">0.0%</span></td>
+  <td>0 <span class="badge">0.0%</span></td>
+  <td>1 <span class="badge">25.0%</span></td>
+  <td>2 <span class="badge">50.0%</span></td>
+  <td>2 <span class="badge">50.0%</span></td>
+  <td>3 <span class="badge">75.0%</span></td>
+  <td style="color:#15803d">-1.356</td>
+  <td style="color:#15803d">0.6235</td>
+  <td>-2.961 / -4.394</td>
+  <td>0.4136</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-17.html">2026-11-17</a></td>
+  <td>9</td><td>9</td>
+  <td>4 <span class="badge">44.4%</span></td>
+  <td>1 <span class="badge">11.1%</span></td>
+  <td>1 <span class="badge">11.1%</span></td>
+  <td>4 <span class="badge">44.4%</span></td>
+  <td>4 <span class="badge">44.4%</span></td>
+  <td>1 <span class="badge">11.1%</span></td>
+  <td>4 <span class="badge">44.4%</span></td>
+  <td style="color:#b45309">-2.211</td>
+  <td style="color:#b45309">0.9047</td>
+  <td>-2.700 / -4.394</td>
+  <td>0.6358</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-16.html">2026-11-16</a></td>
+  <td>8</td><td>8</td>
+  <td>7 <span class="badge">87.5%</span></td>
+  <td>1 <span class="badge">12.5%</span></td>
+  <td>1 <span class="badge">12.5%</span></td>
+  <td>4 <span class="badge">50.0%</span></td>
+  <td>5 <span class="badge">62.5%</span></td>
+  <td>5 <span class="badge">62.5%</span></td>
+  <td>7 <span class="badge">87.5%</span></td>
+  <td style="color:#15803d">-1.400</td>
+  <td style="color:#15803d">0.6292</td>
+  <td>-2.783 / -4.394</td>
+  <td>0.3174</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-15.html">2026-11-15</a></td>
+  <td>10</td><td>10</td>
+  <td>5 <span class="badge">50.0%</span></td>
+  <td>0 <span class="badge">0.0%</span></td>
+  <td>2 <span class="badge">20.0%</span></td>
+  <td>4 <span class="badge">40.0%</span></td>
+  <td>5 <span class="badge">50.0%</span></td>
+  <td>4 <span class="badge">40.0%</span></td>
+  <td>7 <span class="badge">70.0%</span></td>
+  <td style="color:#15803d">-1.703</td>
+  <td style="color:#15803d">0.7501</td>
+  <td>-3.254 / -4.394</td>
+  <td>0.5780</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-14.html">2026-11-14</a></td>
+  <td>16</td><td>16</td>
+  <td>11 <span class="badge">68.8%</span></td>
+  <td>2 <span class="badge">12.5%</span></td>
+  <td>2 <span class="badge">12.5%</span></td>
+  <td>4 <span class="badge">25.0%</span></td>
+  <td>7 <span class="badge">43.8%</span></td>
+  <td>6 <span class="badge">37.5%</span></td>
+  <td>11 <span class="badge">68.8%</span></td>
+  <td style="color:#15803d">-1.647</td>
+  <td style="color:#15803d">0.7447</td>
+  <td>-3.161 / -4.394</td>
+  <td>0.4675</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-13.html">2026-11-13</a></td>
+  <td>10</td><td>10</td>
+  <td>6 <span class="badge">60.0%</span></td>
+  <td>0 <span class="badge">0.0%</span></td>
+  <td>0 <span class="badge">0.0%</span></td>
+  <td>1 <span class="badge">10.0%</span></td>
+  <td>5 <span class="badge">50.0%</span></td>
+  <td>5 <span class="badge">50.0%</span></td>
+  <td>8 <span class="badge">80.0%</span></td>
+  <td style="color:#15803d">-1.559</td>
+  <td style="color:#15803d">0.7379</td>
+  <td>-3.261 / -4.394</td>
+  <td>0.5681</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-12.html">2026-11-12</a></td>
+  <td>5</td><td>5</td>
+  <td>4 <span class="badge">80.0%</span></td>
+  <td>1 <span class="badge">20.0%</span></td>
+  <td>2 <span class="badge">40.0%</span></td>
+  <td>2 <span class="badge">40.0%</span></td>
+  <td>5 <span class="badge">100.0%</span></td>
+  <td>3 <span class="badge">60.0%</span></td>
+  <td>4 <span class="badge">80.0%</span></td>
+  <td style="color:#15803d">-1.464</td>
+  <td style="color:#15803d">0.6570</td>
+  <td>-2.261 / -4.394</td>
+  <td>0.3082</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-11.html">2026-11-11</a></td>
+  <td>6</td><td>6</td>
+  <td>4 <span class="badge">66.7%</span></td>
+  <td>1 <span class="badge">16.7%</span></td>
+  <td>0 <span class="badge">0.0%</span></td>
+  <td>1 <span class="badge">16.7%</span></td>
+  <td>3 <span class="badge">50.0%</span></td>
+  <td>1 <span class="badge">16.7%</span></td>
+  <td>3 <span class="badge">50.0%</span></td>
+  <td style="color:#b45309">-2.199</td>
+  <td style="color:#b45309">0.9045</td>
+  <td>-3.740 / -4.394</td>
+  <td>0.6019</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-10.html">2026-11-10</a></td>
+  <td>2</td><td>2</td>
+  <td>1 <span class="badge">50.0%</span></td>
+  <td>1 <span class="badge">50.0%</span></td>
+  <td>1 <span class="badge">50.0%</span></td>
+  <td>1 <span class="badge">50.0%</span></td>
+  <td>1 <span class="badge">50.0%</span></td>
+  <td>0 <span class="badge">0.0%</span></td>
+  <td>2 <span class="badge">100.0%</span></td>
+  <td style="color:#15803d">-1.692</td>
+  <td style="color:#15803d">0.8183</td>
+  <td>-2.992 / -4.394</td>
+  <td>0.4680</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-08.html">2026-11-08</a></td>
+  <td>30</td><td>30</td>
+  <td>17 <span class="badge">56.7%</span></td>
+  <td>7 <span class="badge">23.3%</span></td>
+  <td>7 <span class="badge">23.3%</span></td>
+  <td>13 <span class="badge">43.3%</span></td>
+  <td>22 <span class="badge">73.3%</span></td>
+  <td>10 <span class="badge">33.3%</span></td>
+  <td>22 <span class="badge">73.3%</span></td>
+  <td style="color:#15803d">-1.726</td>
+  <td style="color:#15803d">0.7697</td>
+  <td>-2.788 / -4.394</td>
+  <td>0.5267</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-07.html">2026-11-07</a></td>
+  <td>28</td><td>28</td>
+  <td>13 <span class="badge">46.4%</span></td>
+  <td>5 <span class="badge">17.9%</span></td>
+  <td>6 <span class="badge">21.4%</span></td>
+  <td>16 <span class="badge">57.1%</span></td>
+  <td>21 <span class="badge">75.0%</span></td>
+  <td>7 <span class="badge">25.0%</span></td>
+  <td>17 <span class="badge">60.7%</span></td>
+  <td style="color:#15803d">-1.825</td>
+  <td style="color:#15803d">0.7891</td>
+  <td>-2.523 / -4.394</td>
+  <td>0.5787</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-06.html">2026-11-06</a></td>
+  <td>14</td><td>14</td>
+  <td>9 <span class="badge">64.3%</span></td>
+  <td>2 <span class="badge">14.3%</span></td>
+  <td>1 <span class="badge">7.1%</span></td>
+  <td>4 <span class="badge">28.6%</span></td>
+  <td>5 <span class="badge">35.7%</span></td>
+  <td>4 <span class="badge">28.6%</span></td>
+  <td>8 <span class="badge">57.1%</span></td>
+  <td style="color:#15803d">-1.861</td>
+  <td style="color:#15803d">0.7963</td>
+  <td>-2.871 / -4.394</td>
+  <td>0.5689</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-05.html">2026-11-05</a></td>
+  <td>12</td><td>12</td>
+  <td>5 <span class="badge">41.7%</span></td>
+  <td>1 <span class="badge">8.3%</span></td>
+  <td>0 <span class="badge">0.0%</span></td>
+  <td>4 <span class="badge">33.3%</span></td>
+  <td>7 <span class="badge">58.3%</span></td>
+  <td>3 <span class="badge">25.0%</span></td>
+  <td>4 <span class="badge">33.3%</span></td>
+  <td style="color:#b45309">-2.362</td>
+  <td style="color:#b45309">0.9113</td>
+  <td>-3.098 / -4.394</td>
+  <td>0.7044</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-04.html">2026-11-04</a></td>
+  <td>12</td><td>12</td>
+  <td>7 <span class="badge">58.3%</span></td>
+  <td>2 <span class="badge">16.7%</span></td>
+  <td>1 <span class="badge">8.3%</span></td>
+  <td>3 <span class="badge">25.0%</span></td>
+  <td>4 <span class="badge">33.3%</span></td>
+  <td>3 <span class="badge">25.0%</span></td>
+  <td>9 <span class="badge">75.0%</span></td>
+  <td style="color:#15803d">-1.925</td>
+  <td style="color:#15803d">0.8116</td>
+  <td>-3.939 / -4.394</td>
+  <td>0.5319</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-03.html">2026-11-03</a></td>
+  <td>11</td><td>11</td>
+  <td>9 <span class="badge">81.8%</span></td>
+  <td>0 <span class="badge">0.0%</span></td>
+  <td>0 <span class="badge">0.0%</span></td>
+  <td>2 <span class="badge">18.2%</span></td>
+  <td>2 <span class="badge">18.2%</span></td>
+  <td>6 <span class="badge">54.5%</span></td>
+  <td>8 <span class="badge">72.7%</span></td>
+  <td style="color:#15803d">-1.712</td>
+  <td style="color:#15803d">0.6780</td>
+  <td>-3.893 / -4.394</td>
+  <td>0.4245</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-02.html">2026-11-02</a></td>
+  <td>8</td><td>8</td>
+  <td>5 <span class="badge">62.5%</span></td>
+  <td>2 <span class="badge">25.0%</span></td>
+  <td>1 <span class="badge">12.5%</span></td>
+  <td>3 <span class="badge">37.5%</span></td>
+  <td>3 <span class="badge">37.5%</span></td>
+  <td>2 <span class="badge">25.0%</span></td>
+  <td>4 <span class="badge">50.0%</span></td>
+  <td style="color:#15803d">-2.016</td>
+  <td style="color:#15803d">0.8505</td>
+  <td>-3.630 / -4.394</td>
+  <td>0.5604</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-11-01.html">2026-11-01</a></td>
+  <td>25</td><td>25</td>
+  <td>16 <span class="badge">64.0%</span></td>
+  <td>3 <span class="badge">12.0%</span></td>
+  <td>3 <span class="badge">12.0%</span></td>
+  <td>10 <span class="badge">40.0%</span></td>
+  <td>15 <span class="badge">60.0%</span></td>
+  <td>7 <span class="badge">28.0%</span></td>
+  <td>16 <span class="badge">64.0%</span></td>
+  <td style="color:#15803d">-2.038</td>
+  <td style="color:#15803d">0.8318</td>
+  <td>-3.160 / -4.394</td>
+  <td>0.5145</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-10-31.html">2026-10-31</a></td>
+  <td>27</td><td>27</td>
+  <td>16 <span class="badge">59.3%</span></td>
+  <td>2 <span class="badge">7.4%</span></td>
+  <td>2 <span class="badge">7.4%</span></td>
+  <td>8 <span class="badge">29.6%</span></td>
+  <td>11 <span class="badge">40.7%</span></td>
+  <td>13 <span class="badge">48.1%</span></td>
+  <td>21 <span class="badge">77.8%</span></td>
+  <td style="color:#15803d">-1.702</td>
+  <td style="color:#15803d">0.7348</td>
+  <td>-3.018 / -4.394</td>
+  <td>0.5529</td></tr><tr>
+  <td class="no"><a href="比分日报_2026-10-30.html">2026-10-30</a></td>
+  <td>11</td><td>11</td>
+  <td>7 <span class="badge">63.6%</span></td>
+  <td>3 <span class="badge">27.3%</span></td>
+  <td>1 <span class="badge">9.1%</span></td>
+  <td>4 <span class="badge">36.4%</span></td>
+  <td>6 <span class="badge">54.5%</span></td>
+  <td>4 <span class="badge">36.4%</span></td>
+  <td>7 <span class="badge">63.6%</span></td>
+  <td style="color:#15803d">-1.862</td>
+  <td style="color:#15803d">0.7499</td>
+  <td>-3.183 / -4.394</td>
+  <td>0.5322</td></tr></tbody></table>
+
+<h2 class="h2">四玩法累计校准</h2>
+<p class="hint">胜平负取三个方向里概率最高的一档；比分“首选”用同向比分（预测胜负方向内的最高比分），log / Brier 按整张 9×9 矩阵计；
+总进球取 0—7+ 八档里概率最高的一档；半全场取九档里概率最高的一档。绿字为优于均匀盲猜、橙字为不如盲猜。</p>
+<table><colgroup><col style="width:110px"><col style="width:66px"><col style="width:76px">
+<col style="width:66px"><col style="width:74px"><col style="width:78px"><col style="width:74px">
+<col style="width:74px"><col style="width:80px"></colgroup>
+<thead><tr><th>玩法</th><th>已核对</th><th>首选命中</th><th>命中率</th><th>期望命中</th>
+<th>平均 log</th><th>盲猜 log</th><th>Brier</th><th>盲猜 Brier</th></tr></thead>
+<tbody><tr><td>胜平负</td><td>248</td><td>149</td><td>60.1%</td><td>137.03</td><td style="color:#15803d">-0.914</td><td>-1.099</td><td style="color:#15803d">0.5345</td><td>0.6667</td></tr><tr><td>比分</td><td>248</td><td>34</td><td>13.7%</td><td>26.74</td><td style="color:#15803d">-3.121</td><td>-4.394</td><td style="color:#15803d">0.9223</td><td>0.9877</td></tr><tr><td>总进球</td><td>248</td><td>59</td><td>23.8%</td><td>59.11</td><td style="color:#15803d">-1.866</td><td>-2.079</td><td style="color:#15803d">0.8263</td><td>0.8750</td></tr><tr><td>半全场</td><td>248</td><td>86</td><td>34.7%</td><td>87.06</td><td style="color:#15803d">-1.823</td><td>-2.197</td><td style="color:#15803d">0.7781</td><td>0.8889</td></tr></tbody></table>
+
+<h2 class="h2">多模型累计校准</h2>
+<p class="hint">“同向命中”是各模型在自己预测的胜负方向内挑最高比分后的命中；“最高格命中”是整张矩阵最高格（常为 1-1）的命中。
+log 与 Brier 衡量整张矩阵，和挑哪一格无关；均匀盲猜基准为 log −4.394、Brier 0.9877，log 越高、Brier 越低越好。
+市场、总进球只统计有对应赔率的场次。共识是 DC 30% / 泊松 10% / 市场 35% / 总进球 25% 的加权矩阵。</p>
+<table><colgroup><col style="width:130px"><col style="width:76px"><col style="width:80px">
+<col style="width:76px"><col style="width:80px"><col style="width:92px"><col style="width:90px"><col style="width:88px"></colgroup>
+<thead><tr><th>模型</th><th>已核对</th><th>同向命中</th><th>命中率</th><th>期望命中</th><th>最高格命中</th><th>平均 log</th><th>Brier</th></tr></thead>
+<tbody><tr><td>Dixon-Coles</td><td>248</td>
+  <td>34</td><td>13.7%</td><td>23.74</td>
+  <td>33/248</td>
+  <td>-3.138</td>
+  <td>0.9239</td></tr><tr><td>泊松</td><td>248</td>
+  <td>32</td><td>12.9%</td><td>28.05</td>
+  <td>32/248</td>
+  <td>-3.144</td>
+  <td>0.9256</td></tr><tr><td>市场比分</td><td>240</td>
+  <td>35</td><td>14.6%</td><td>27.74</td>
+  <td>36/240</td>
+  <td>-3.122</td>
+  <td>0.9204</td></tr><tr><td>总进球</td><td>240</td>
+  <td>32</td><td>13.3%</td><td>25.94</td>
+  <td>30/240</td>
+  <td>-3.132</td>
+  <td>0.9231</td></tr><tr><td>共识</td><td>248</td>
+  <td>34</td><td>13.7%</td><td>26.36</td>
+  <td>31/248</td>
+  <td>-3.121</td>
+  <td>0.9223</td></tr></tbody></table>
+<footer>
+<b>基准值：</b>整张 9×9 比分矩阵均匀盲猜（81 格各 1.23%）的平均 log 为 −4.394、Brier 为 0.9877；表内 log 在 −3.1 左右、Brier 在 0.93—0.95，已经好于盲猜。−2.137 是 1-1 单格（11.8%）的 log 价格，不是整张矩阵的平均 log 基准，两者不能直接对比。胜负 Brier 分数 0.60 上下属于典型水平。<br>
+<b>比分口径：</b>“同向比分”是限定在预测胜负方向内的最高比分；“全场最高”是整张矩阵的最高格，常为 1-1，但单格通常只有 10%—14%。两个命中率不要混着看。<br>
+<b>多模型：</b>“同向命中”按各模型自己的胜负方向取比分；“最高格命中”取整张矩阵最高格。市场比分与总进球两个口径只统计有对应赔率的场次，与 DC/泊松的样本数可能不同；比较 log、Brier 时先看样本数。<br>
+<b>半全场基准：</b>九档均匀猜的平均 log 约 −2.197、Brier 0.889；log 越高（越接近 0）越好，Brier 越低越好。绿字表示优于盲猜，橙字表示还不如盲猜。半全场命中只看第一档；半全场前三看实际结果是否落在概率最高的三档里，更接近“九种组合都在算”的真实用法。<br>
+<b>四玩法基准：</b>胜平负三档盲猜 log −1.099、Brier 0.667；比分 81 格盲猜 log −4.394、Brier 0.9877；总进球八档盲猜 log −2.079、Brier 0.875；半全场九档盲猜 log −2.197、Brier 0.889。比分行的 log / Brier 按整张矩阵计，命中按同向比分计。<br>
+<b>命中率参考：</b>同向比分 7%—12%，全场最高格 10%—14%，TOP3 28%—34%，TOP5 42%—50%，胜负 50%—55%，半全场首选 20%—35%，半全场前三 65%—75%。半全场单格是 9 选 1，天然只有三成左右；191 场里模型≥42% 的高把握档单关命中 55.8%（24/43），≥50% 档 65%（13/20），所以低把握场次不再串关。低于或高于都是正常波动，样本到 200 场以上才有统计意义。覆盖口径的检验见 <a href="比分口径回测.html" style="color:#1f3b63">比分口径回测</a>。<br>
+<b>声明：</b>只做概率与校准记录，不构成任何投注建议。
+</footer></div></body></html>

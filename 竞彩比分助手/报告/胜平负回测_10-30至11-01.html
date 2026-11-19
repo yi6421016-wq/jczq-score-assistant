@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>胜平负回测 · 10-30 至 11-01</title><style>
+:root{--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--accent:#1f3b63}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fa;color:var(--ink);font:15px/1.65 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1180px;margin:30px auto 60px;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:18px}
+h1{font-size:23px;margin:0}
+.sub{color:var(--mute);font-size:13px;margin-top:6px}
+.stamp{text-align:right;color:var(--mute);font-size:13px;line-height:1.55}.stamp b{color:var(--accent);font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.card span{display:block;font-size:12px;color:var(--mute)}
+.card b{font-size:20px;color:var(--accent);font-variant-numeric:tabular-nums}
+.card em{font-style:normal;font-size:12px;color:#94a3b8;margin-left:3px}
+.warn{background:#fff7e6;border:1px solid #f5d9a8;border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#7c4a03}
+.warn b{color:#b45309}
+h2{font-size:17px;margin:26px 0 4px}
+h2 small{font-weight:400;color:var(--mute);font-size:12px;margin-left:8px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:10px}
+th{background:#eef2f7;color:#475569;font-size:12px;font-weight:600;text-align:left;padding:8px 10px;white-space:nowrap}
+td{padding:9px 10px;border-top:1px solid #f1f5f9;font-size:13px;vertical-align:middle}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+td b.hl{color:var(--accent)}
+.bar{display:inline-block;width:86px;height:8px;background:#eef2f7;border-radius:4px;vertical-align:middle;margin-right:7px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#93b4d8,#1f3b63);border-radius:4px}
+.bar.act i{background:linear-gradient(90deg,#f0b46a,#b45309)}
+.neg{color:#b91c1c;font-weight:600}.pos{color:#15803d;font-weight:600}.muted{color:#94a3b8}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.panel h3{font-size:14px;margin:0 0 10px;color:#334155}
+.drow{display:grid;grid-template-columns:44px 1fr 54px;gap:8px;align-items:center;font-size:12.5px;margin:7px 0}
+.drow .lab{color:#475569}
+.drow .val{text-align:right;color:#64748b;font-variant-numeric:tabular-nums}
+.note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:20px;font-size:13px;color:#475569}
+.note b{color:#1e293b}
+.note ol{margin:8px 0 0;padding-left:20px}.note li{margin:5px 0}
+footer{margin-top:24px;color:#94a3b8;font-size:12px;line-height:1.8}
+</style></head>
+<body><div class="wrap">
+<header><div><h1>胜平负回测 · 10-30 至 11-01</h1>
+<div class="sub">封存的赛前预测 vs 实际赛果 · 按每注 2 元平注计算 · 只做记录，不构成投注建议</div></div>
+<div class="stamp"><b>43 场</b><br>3 个比赛日<br>生成 2026-11-01 18:39</div></header>
+
+<div class="cards">
+<div class="card"><span>样本</span><b>43</b><em>场</em></div>
+<div class="card"><span>首选命中</span><b>24</b><em>/ 43</em></div>
+<div class="card"><span>命中率 · 95% 区间</span><b>55.8%</b><em>41–70</em></div>
+<div class="card"><span>平均自信 · 偏差</span><b>53.3%</b><em>+2.5pt</em></div>
+<div class="card"><span>Brier（市场）</span><b>0.189</b><em>0.190</em></div>
+<div class="card"><span>平注 ROI</span><b class="neg">-5.6%</b><em>43 注</em></div>
+</div>
+
+<div class="warn"><b>样本只有 43 场，命中率 56% 的 95% 区间是 40%—71%。</b>
+这不是“模型稳定 56%”，而是“这几天大约五五开、略偏对”。三分类 Brier 0.189，市场去水 0.190，两者几乎一样；
+而且 43 场里模型首选和市场最低赔率的选择 <b>100% 一致</b>——胜平负这一块，模型实际上没有独立于市场的判断。</div>
+
+<h2>按置信度分档<small>置信度越高，命中越集中，但样本更少</small></h2>
+<table><thead><tr><th>首选概率</th><th>场次</th><th>命中</th><th>命中率</th><th>95% 区间</th><th>平均预测</th><th>平均赔率</th><th>平注 ROI</th></tr></thead>
+<tbody><tr><td>≥60%</td><td class="num">9</td><td class="num"><b class="hl">7</b></td><td class="num"><span class="bar"><i style="width:78%"></i></span>78%</td><td class="num">45–94%</td><td class="num">72.6%</td><td class="num">1.27</td><td class="num pos">+0.7%</td></tr><tr><td>50–60%</td><td class="num">16</td><td class="num"><b class="hl">8</b></td><td class="num"><span class="bar"><i style="width:50%"></i></span>50%</td><td class="num">28–72%</td><td class="num">54.3%</td><td class="num">1.68</td><td class="num neg">-17.0%</td></tr><tr><td><50%</td><td class="num">18</td><td class="num"><b class="hl">9</b></td><td class="num"><span class="bar"><i style="width:50%"></i></span>50%</td><td class="num">29–71%</td><td class="num">42.9%</td><td class="num">2.10</td><td class="num pos">+1.5%</td></tr></tbody></table>
+
+<h2>各模型对比<small>同一批 43 场，看谁更准</small></h2>
+<table><thead><tr><th>模型</th><th>场次</th><th>命中</th><th>命中率</th><th>Brier</th><th>LogLoss</th><th>平注 ROI</th></tr></thead>
+<tbody><tr><td>Dixon-Coles</td><td class="num">43</td><td class="num"><b class="hl">24</b></td><td class="num"><span class="bar"><i style="width:56%"></i></span>56%</td><td class="num">0.190</td><td class="num">0.961</td><td class="num neg">-5.6%</td></tr><tr><td>泊松</td><td class="num">43</td><td class="num"><b class="hl">24</b></td><td class="num"><span class="bar"><i style="width:56%"></i></span>56%</td><td class="num">0.190</td><td class="num">0.961</td><td class="num neg">-5.6%</td></tr><tr><td>市场比分</td><td class="num">43</td><td class="num"><b class="hl">24</b></td><td class="num"><span class="bar"><i style="width:56%"></i></span>56%</td><td class="num">0.190</td><td class="num">0.965</td><td class="num neg">-5.6%</td></tr><tr><td>总进球约束</td><td class="num">43</td><td class="num"><b class="hl">24</b></td><td class="num"><span class="bar"><i style="width:56%"></i></span>56%</td><td class="num">0.188</td><td class="num">0.953</td><td class="num neg">-5.6%</td></tr><tr><td>共识</td><td class="num">43</td><td class="num"><b class="hl">24</b></td><td class="num"><span class="bar"><i style="width:56%"></i></span>56%</td><td class="num">0.189</td><td class="num">0.960</td><td class="num neg">-5.6%</td></tr><tr><td>市场去水（基线）</td><td class="num">43</td><td class="num"><b class="hl">24</b></td><td class="num"><span class="bar"><i style="width:56%"></i></span>56%</td><td class="num">0.190</td><td class="num">0.963</td><td class="num neg">-5.6%</td></tr></tbody></table>
+
+<h2>三分类校准<small>所有 129 个结果格子的预测概率 vs 实际频率</small></h2>
+<table><thead><tr><th>预测概率区间</th><th>格子数</th><th>预测均值</th><th>实际频率</th><th>偏差</th></tr></thead>
+<tbody><tr><td>0–30%</td><td class="num">76</td><td class="num">22.0%</td><td class="num">19.7%</td><td class="num muted">-2.3pt</td></tr><tr><td>30–40%</td><td class="num">14</td><td class="num">34.8%</td><td class="num">35.7%</td><td class="num muted">+0.9pt</td></tr><tr><td>40–50%</td><td class="num">14</td><td class="num">44.3%</td><td class="num">57.1%</td><td class="num neg">+12.9pt</td></tr><tr><td>50–60%</td><td class="num">16</td><td class="num">54.3%</td><td class="num">50.0%</td><td class="num muted">-4.3pt</td></tr><tr><td>60%+</td><td class="num">9</td><td class="num">72.6%</td><td class="num">77.8%</td><td class="num neg">+5.2pt</td></tr></tbody></table>
+
+<div class="two">
+<div class="panel"><h3>方向分布：预测 vs 实际</h3>
+<div class="drow"><span class="lab">主胜</span><span class="bar " style="width:100%"><i style="width:100%"></i></span><span class="val">24</span></div><div class="drow"><span class="lab">平局</span><span class="bar " style="width:100%"><i style="width:0%"></i></span><span class="val">0</span></div><div class="drow"><span class="lab">客胜</span><span class="bar " style="width:100%"><i style="width:79%"></i></span><span class="val">19</span></div>
+<div style="border-top:1px dashed #e2e8f0;margin:10px 0 4px"></div>
+<div class="drow"><span class="lab">主胜</span><span class="bar act" style="width:100%"><i style="width:83%"></i></span><span class="val">20</span></div><div class="drow"><span class="lab">平局</span><span class="bar act" style="width:100%"><i style="width:29%"></i></span><span class="val">7</span></div><div class="drow"><span class="lab">客胜</span><span class="bar act" style="width:100%"><i style="width:67%"></i></span><span class="val">16</span></div>
+<div style="margin-top:10px;font-size:12px;color:#94a3b8">上三条为模型预测，下三条为实际赛果。</div>
+</div>
+<div class="panel"><h3>每日</h3>
+<table style="margin-top:0"><thead><tr><th>日期</th><th>场次</th><th>命中</th><th>命中率</th><th>ROI</th></tr></thead><tbody><tr><td>2026-10-30</td><td class="num">11</td><td class="num"><b class="hl">7</b></td><td class="num">64%</td><td class="num pos">+3.5%</td></tr><tr><td>2026-10-31</td><td class="num">27</td><td class="num"><b class="hl">16</b></td><td class="num">59%</td><td class="num pos">+0.9%</td></tr><tr><td>2026-11-01</td><td class="num">5</td><td class="num"><b class="hl">1</b></td><td class="num">20%</td><td class="num neg">-60.0%</td></tr></tbody></table>
+<div style="margin-top:12px;font-size:12.5px;color:#64748b;line-height:1.7">
+11-01 只统计了已开赛的 5 场（1 中 4 错），把这天的数字拉低了；剩下 20 场还没打。<br>
+平局在模型的排序里：第 2 位 18 场、第 3 位 25 场，<b>一场都没排到第 1</b>；实际出了 7 场平局（16%）。这是结构性的漏项。
+</div>
+</div>
+</div>
+
+<div class="note"><b>结论</b>
+<ol>
+<li>整体 24/43 = 55.8%，比“随便猜”好，但和市场热门几乎同一水平；模型没有跑赢市场。</li>
+<li>高置信度确实更准：≥60% 的 9 场中 7 场（78%），但平均赔率只有 1.27，ROI 基本打平（+0.7%）。</li>
+<li>50%—60% 这一档最差：16 场中 8 场（50%），平均赔率 1.68，ROI −17%。这个区间赔率不够高、把握又不够大，是性价比最低的。</li>
+<li>模型从不首选平局，实际平局占 16%。遇到两队实力接近的场次，模型给主/客胜 40% 左右、平局 28% 左右，仍会把主/客胜排第一，这是命中率上不去的主因之一。</li>
+<li>三分类校准在 40%—50% 档偏高 12.9pt（n=14），其余档位偏差在 ±5pt 内；等样本到 100 场以上再看才稳。</li>
+</ol>
+<b>口径：</b>“命中”指模型概率最高的那一项与实际胜平负一致；平注 ROI =（2 元 × 命中赔率 之和 − 总投入）/ 总投入，赔率取封存时的赛前值，返还率约 87.8%。</div>
+
+<footer>生成于 2026-11-01 18:39 · 数据来源 500.com 竞彩 · 样本 2026-10-30、10-31 全部场次 + 11-01 已开赛 5 场。</footer>
+</div></body></html>

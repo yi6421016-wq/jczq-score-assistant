@@ -1,0 +1,64 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>模拟投注战绩</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#1d2129;
+font:14px/1.6 -apple-system,"PingFang SC","Helvetica Neue",sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 22px 48px}
+h1{font-size:24px;margin:0 0 4px}h1 small{font-weight:400;color:#86909c;font-size:13px;margin-left:8px}
+h2{font-size:16px;margin:28px 0 10px;padding-left:9px;border-left:3px solid #2f6fed}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:16px 0}
+.kpi{background:#fff;border:1px solid #e8eaee;border-radius:10px;padding:12px 14px}
+.kpi .k{color:#86909c;font-size:12px}.kpi .v{font-size:20px;font-weight:700;margin-top:2px}
+.kpi .v small{font-size:12px;color:#86909c;font-weight:400}
+.pos{color:#0f9d58}.neg{color:#d93025}
+.ticket{background:#fff;border:1px solid #e8eaee;border-radius:10px;padding:14px 16px;margin:12px 0}
+.thead{display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.tmeta{color:#4e5969;font-size:12.5px;margin:6px 0 10px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:7px 8px;border-bottom:1px solid #eef0f3;text-align:left;font-size:12.5px}
+th{color:#86909c;font-weight:500;background:#fafbfc}
+tr:last-child td{border-bottom:none}
+.num{text-align:right}.c{text-align:center}.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+.ok{color:#0f9d58;font-weight:700}.no{color:#d93025;font-weight:700}
+.bd{display:inline-block;padding:1px 8px;border-radius:9px;font-size:11.5px}
+.bd.win{background:#e6f4ea;color:#0f9d58}.bd.lose{background:#fdecea;color:#d93025}
+.bd.pend{background:#fff4e5;color:#b26a00}
+.curve{width:100%;height:180px;background:#fff;border:1px solid #e8eaee;border-radius:10px}
+.curve .line{fill:none;stroke:#2f6fed;stroke-width:2}
+.curve .zero{stroke:#d5d8dd;stroke-dasharray:4 4}
+.curve .axis{fill:#86909c;font-size:11px}
+.bar{height:7px;background:#eef0f3;border-radius:4px;overflow:hidden;width:120px}
+.bar i{display:block;height:100%;background:#2f6fed}
+.note{background:#fff;border:1px solid #e8eaee;border-left:3px solid #f0a020;border-radius:8px;
+padding:12px 16px;color:#4e5969;font-size:12.5px;margin-top:14px}
+.empty{color:#86909c;padding:14px 0}
+footer{color:#a9aeb8;font-size:12px;margin-top:26px}
+</style></head><body><div class="wrap">
+<h1>模拟投注战绩 <small>每天 100 元 · 正常 60 / 高赔 40 · 只记账不下注</small></h1>
+<div class="kpis">
+<div class="kpi"><div class="k">累计投入</div><div class="v">¥0</div></div>
+<div class="kpi"><div class="k">累计返还</div><div class="v">¥0</div></div>
+<div class="kpi"><div class="k">累计盈亏</div><div class="v ">¥0</div></div>
+<div class="kpi"><div class="k">回报率</div><div class="v ">0.0<small>%</small></div></div>
+<div class="kpi"><div class="k">中票</div><div class="v">0<small>/0</small></div></div>
+<div class="kpi"><div class="k">命中率</div><div class="v">0.0<small>%</small></div></div>
+</div>
+
+<h2>2026-11-05 方案</h2>
+<div class="ticket"><div class="thead"><b>M20261105-H1 · 高赔 比分</b><span>2串1</span></div><div class="tmeta">赔率 <b>26.00</b> · 联合概率 <b>2.24%</b> · 本金 <b>20</b> 元 · 中则返还 <b>520</b> 元 · 期望 <b class="neg">-41.7%</b> <span class="bd pend">待结算</span></div><table><thead><tr><th>场次</th><th>对阵</th><th>选项</th><th>概率</th><th>赔率</th><th>比分</th><th></th></tr></thead><tbody><tr><td class="mono">周四009</td><td>维戈塞尔塔-圣吉尔联合</td><td class="mono">比分 1-1</td><td class="num">14.3%</td><td class="num">5.20</td><td class="num">—</td><td class="c"></td></tr><tr><td class="mono">周四013</td><td>帕尔梅拉斯-里莫</td><td class="mono">比分 2-0</td><td class="num">15.7%</td><td class="num">5.00</td><td class="num">—</td><td class="c"></td></tr></tbody></table></div><div class="ticket"><div class="thead"><b>M20261105-H2 · 高赔 半全场</b><span>2串1</span></div><div class="tmeta">赔率 <b>16.32</b> · 联合概率 <b>5.30%</b> · 本金 <b>20</b> 元 · 中则返还 <b>326</b> 元 · 期望 <b class="neg">-13.5%</b> <span class="bd pend">待结算</span></div><table><thead><tr><th>场次</th><th>对阵</th><th>选项</th><th>概率</th><th>赔率</th><th>比分</th><th></th></tr></thead><tbody><tr><td class="mono">周四002</td><td>水晶宫-霍芬海姆</td><td class="mono">半全场 平/平</td><td class="num">13.8%</td><td class="num">6.40</td><td class="num">—</td><td class="c"></td></tr><tr><td class="mono">周四004</td><td>奈梅亨-奥莫尼亚</td><td class="mono">半全场 胜/胜</td><td class="num">38.4%</td><td class="num">2.55</td><td class="num">—</td><td class="c"></td></tr></tbody></table></div><div class="ticket"><div class="thead"><b>M20261105-N1 · 正常 胜平负</b><span>2串1</span></div><div class="tmeta">赔率 <b>1.45</b> · 联合概率 <b>57.65%</b> · 本金 <b>30</b> 元 · 中则返还 <b>44</b> 元 · 期望 <b class="neg">-16.4%</b> <span class="bd pend">待结算</span></div><table><thead><tr><th>场次</th><th>对阵</th><th>选项</th><th>概率</th><th>赔率</th><th>比分</th><th></th></tr></thead><tbody><tr><td class="mono">周四003</td><td>布拉格斯巴达-伯恩茅斯</td><td class="mono">胜平负 客胜</td><td class="num">73.2%</td><td class="num">1.25</td><td class="num">—</td><td class="c"></td></tr><tr><td class="mono">周四012</td><td>勒沃库森-马赛</td><td class="mono">胜平负 主胜</td><td class="num">78.8%</td><td class="num">1.16</td><td class="num">—</td><td class="c"></td></tr></tbody></table></div><div class="ticket"><div class="thead"><b>M20261105-N2 · 正常 混合</b><span>2串1</span></div><div class="tmeta">赔率 <b>3.77</b> · 联合概率 <b>18.53%</b> · 本金 <b>30</b> 元 · 中则返还 <b>113</b> 元 · 期望 <b class="neg">-30.1%</b> <span class="bd pend">待结算</span></div><table><thead><tr><th>场次</th><th>对阵</th><th>选项</th><th>概率</th><th>赔率</th><th>比分</th><th></th></tr></thead><tbody><tr><td class="mono">周四006</td><td>AC米兰-费伦茨瓦罗斯</td><td class="mono">胜平负 主胜</td><td class="num">78.0%</td><td class="num">1.16</td><td class="num">—</td><td class="c"></td></tr><tr><td class="mono">周四008</td><td>桑德兰-萨格勒布迪纳摩</td><td class="mono">总进球 3 球</td><td class="num">23.8%</td><td class="num">3.25</td><td class="num">—</td><td class="c"></td></tr></tbody></table></div>
+<h2>最近兑奖</h2>
+<div class="ticket"><table><thead><tr><th>编号</th><th>类型</th><th>本金</th><th>赔率</th>
+<th>每腿</th><th>结果</th><th>返还</th></tr></thead><tbody></tbody></table>
+<tr><td colspan="7" class="empty">还没有已结算的票，明早 09:10 自动兑奖。</td></tr></div>
+<h2>每日汇总</h2>
+<div class="ticket"><table><thead><tr><th>日期</th><th>投入</th><th>返还</th>
+<th>盈亏</th><th>中票</th><th>待结算</th></tr></thead><tbody><tr><td class="mono">2026-11-05</td><td class="num">0</td><td class="num">0</td><td class="num ">+0.00</td><td class="num">0/0</td><td class="num">100（待）</td></tr></tbody></table></div>
+<h2>玩法分布</h2>
+<div class="ticket"><table><thead><tr><th>玩法</th><th>票数</th><th>投入</th>
+<th>返还</th><th>回报率</th><th>返还/投入</th></tr></thead><tbody><tr><td colspan="6" class="empty">暂无记录</td></tr></tbody></table></div>
+<div class="note">分配规则：每天 100 元固定拆成四注——正常盘 60 元（胜平负 2 串 1 30 元，按模型概率最大化选腿；
+胜平负×总进球混合 2 串 1 30 元，限赔率 2.4—4.5 取联合概率最高）；高赔盘 40 元
+（比分 2 串 1、半全场 2 串 1 各 20 元，分别在 25 倍、15 倍赔率门槛以上取联合概率最高）。同一场票不重复使用。兑奖按竞彩规则：全中返还 = 本金 × 赔率乘积。
+全部为模拟记录，不构成投注建议。</div>
+<footer>生成于 2026-11-05 19:43:52 · 台账 /Users/sequoia/Documents/竞彩比分助手/模拟投注/台账.json</footer>
+</div></body></html>

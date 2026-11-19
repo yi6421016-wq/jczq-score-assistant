@@ -1,0 +1,20 @@
+{
+ "date": "2026-11-10",
+ "generated_at": "2026-11-10 18:45:36",
+ "stake_per_bet": 2.0,
+ "legs": [],
+ "bets": [],
+ "summary": {
+  "total_stake": 0.0,
+  "p_any": 0.0,
+  "p_all": 0.0,
+  "max_payout": 0.0,
+  "expected_return": 0.0,
+  "roi": 0.0
+ },
+ "rule": {
+  "text": "每日爆冷三注 + EV 最高的另一场备选，凑成四场；同一场只取一个比分；四串五 = 4 注三串一 + 1 注四串一"
+ },
+ "dup_score": false,
+ "note": "今日满足条件的爆冷场次不足 4 场，凑不出四串五。"
+}

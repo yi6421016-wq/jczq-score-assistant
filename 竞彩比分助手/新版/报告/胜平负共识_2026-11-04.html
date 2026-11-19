@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>2026-11-04 胜平负共识 12 场</title>
+<style>
+:root{--bg:#f5f7fa;--card:#ffffff;--line:#e2e8f0;--txt:#1f2937;--dim:#64748b;--green:#15803d;--amber:#b45309;--red:#b91c1c;--blue:#1d4ed8;--purple:#6d28d9;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,"PingFang SC","Helvetica Neue",Arial,sans-serif;line-height:1.55}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 22px 60px}
+  h1{font-size:23px;margin:0 0 6px;color:#0f172a}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:24px}
+  h2{font-size:15px;margin:28px 0 12px;padding-left:10px;border-left:3px solid var(--blue);color:#0f172a}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .kpi .n{font-size:24px;font-weight:700;color:#0f172a}
+  .kpi .l{font-size:12px;color:var(--dim);margin-top:2px}
+  .kpi.g .n{color:var(--green)}.kpi.a .n{color:var(--amber)}.kpi.b .n{color:var(--blue)}.kpi.r .n{color:var(--red)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--dim);font-weight:500;font-size:12px;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;background:#f8fafc}
+  td{padding:10px;border-bottom:1px solid #eef2f7;vertical-align:top}
+  tr:hover td{background:#f8fafc}
+  tr.sel td{background:#f0fdf4}
+  .no{color:var(--dim);font-size:12px;white-space:nowrap}
+  .team{font-weight:600}
+  .vs{color:var(--dim);font-size:12px}
+  .ours{font-family:"SF Mono",Menlo,monospace;font-size:14px;font-weight:700;color:#0f172a}
+  .pct{color:var(--dim);font-size:12px;margin-left:6px;font-weight:400}
+  .odds{color:#0f766e;font-size:12px;margin-left:6px;font-weight:400}
+  .ext,.vote{color:#334155;font-size:12px}
+  .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;white-space:nowrap}
+  .t-ok,.t-strong,.t-in{background:#ecfdf3;color:#15803d;border:1px solid #bbe5c8}
+  .t-part,.t-mid,.t-half{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
+  .t-bad,.t-none,.t-out{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+  .note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px 18px;margin:14px 0;font-size:13.5px;color:#334155;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .note b{color:#0f172a}
+  .plans{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .plan h3{margin:0 0 8px;font-size:14px;color:#0f172a}
+  .plan .big{font-size:24px;font-weight:700;margin:6px 0;color:#0f172a}
+  .plan .big small{font-size:12px;color:var(--dim);font-weight:400;margin-left:6px}
+  .legs{color:#334155;font-size:13px;line-height:1.9}
+  .legs span{font-family:"SF Mono",Menlo,monospace;color:#0f766e}
+  .rec{border-color:#86efac;box-shadow:0 0 0 1px rgba(21,128,61,.10) inset}
+  .badge{font-size:11px;color:var(--green);border:1px solid #bbe5c8;background:#ecfdf3;padding:1px 7px;border-radius:999px;margin-left:6px}
+  .ticket{background:#fff;border:1px solid #bbe5c8;border-left:4px solid var(--green);border-radius:14px;padding:20px 22px;margin-top:8px;box-shadow:0 1px 3px rgba(15,23,42,.06)}
+  .ticket .leg{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #e2e8f0;font-size:14px}
+  .ticket .leg:last-of-type{border-bottom:none}
+  .ticket .sc{font-family:"SF Mono",Menlo,monospace;font-size:17px;font-weight:700;color:#0f172a}
+  .ticket .meta{color:var(--dim);font-size:12px}
+  .sum{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  .sum div{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px}
+  .sum .k{font-size:23px;font-weight:700}
+  .sum .l{font-size:12px;color:var(--dim);margin-top:2px}
+  .k.g{color:var(--green)}.k.a{color:var(--amber)}.k.b{color:var(--blue)}
+  .bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin-top:5px;background:#e8edf3;min-width:132px}
+  .bar i{display:block;height:100%}
+  .b1{background:#2563eb}.b2{background:#94a3b8}.b3{background:#d97706}
+  .nums{font-family:"SF Mono",Menlo,monospace;font-size:12px;color:#334155}
+  .nums em{font-style:normal;color:var(--dim);font-size:11px}
+  .alt{background:#fff;border:1px solid #bfdbfe;border-left:4px solid var(--blue);border-radius:12px;padding:16px 18px;margin-top:10px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .alt h3{margin:0 0 8px;font-size:14px;color:#0f172a}
+  .alt .legs{font-size:13px;line-height:1.95;color:#334155}
+  .alt .legs span{font-family:"SF Mono",Menlo,monospace;color:#0f766e}
+  .foot{color:var(--dim);font-size:12px;margin-top:28px;line-height:1.8}
+  @media (max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.plans,.sum{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>胜平负共识 · 12 场</h1>
+  <div class="sub">2026-11-04 · 左：我们的四模型集成；右：外部来源（Sports Mole / Forebet / Football Whispers / Statz.ai / DeepSeek / 中文 AI 前瞻）· 市场为 500.com 赔率去水后的隐含概率</div>
+
+  <div class="kpis">
+    <div class="kpi g"><div class="n">4 场</div><div class="l">强共识（≥2 家明确同向且市场同向）</div></div>
+    <div class="kpi a"><div class="n">5 场</div><div class="l">中等共识（1 家 + 市场，或模型独撑）</div></div>
+    <div class="kpi r"><div class="n">3 场</div><div class="l">外部互斥（001 / 003 / 009）</div></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>场次</th><th>对阵</th><th>模型 主/平/客</th><th>市场去水</th><th>外部票</th><th>共识</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="no">周三001</td>
+        <td><span class="team">浦项制铁</span> <span class="vs">vs</span> <span class="team">大阪钢巴</span></td>
+        <td><div class="nums">31 / 26 / <b>43</b></div><div class="bar"><i class="b1" style="width:31%"></i><i class="b2" style="width:26%"></i><i class="b3" style="width:43%"></i></div></td>
+        <td class="nums">29 / 27 / <b>44</b></td>
+        <td class="ext">中文 AI：让胜（主不败，1-1/2-1/2-2）<br>海外情报：0-2 / 1-2（客胜）</td>
+        <td><span class="tag t-none">互斥</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三002</td>
+        <td><span class="team">布里兰</span> <span class="vs">vs</span> <span class="team">鹿岛鹿角</span></td>
+        <td><div class="nums">26 / 26 / <b>48</b></div><div class="bar"><i class="b1" style="width:26%"></i><i class="b2" style="width:26%"></i><i class="b3" style="width:48%"></i></div></td>
+        <td class="nums">23 / 24 / <b>53</b></td>
+        <td class="ext">中文 AI：负（0-1 / 0-2 / 1-2）<br>Forebet：胜负各 40%</td>
+        <td><span class="tag t-mid">客胜（弱）</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三003</td>
+        <td><span class="team">雷恩</span> <span class="vs">vs</span> <span class="team">奥林匹亚科斯</span></td>
+        <td><div class="nums"><b>41</b> / 28 / 31</div><div class="bar"><i class="b1" style="width:41%"></i><i class="b2" style="width:28%"></i><i class="b3" style="width:31%"></i></div></td>
+        <td class="nums"><b>40</b> / 27 / 33</td>
+        <td class="ext">Forebet：雷恩 2-1（主胜）<br>Whispers：1-2（客胜）</td>
+        <td><span class="tag t-none">互斥</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三004</td>
+        <td><span class="team">费内巴切</span> <span class="vs">vs</span> <span class="team">利物浦</span></td>
+        <td><div class="nums">23 / 18 / <b>58</b></div><div class="bar"><i class="b1" style="width:23%"></i><i class="b2" style="width:18%"></i><i class="b3" style="width:58%"></i></div></td>
+        <td class="nums">15 / 18 / <b>67</b></td>
+        <td class="ext">Sports Mole：2-4 利物浦（客胜）</td>
+        <td><span class="tag t-mid">客胜（中）</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三005</td>
+        <td><span class="team">莱比锡红牛</span> <span class="vs">vs</span> <span class="team">曼城</span></td>
+        <td><div class="nums">23 / 18 / <b>59</b></div><div class="bar"><i class="b1" style="width:23%"></i><i class="b2" style="width:18%"></i><i class="b3" style="width:59%"></i></div></td>
+        <td class="nums">17 / 18 / <b>65</b></td>
+        <td class="ext">Sports Mole：2-4 曼城<br>中文 AI：负（0-2 / 1-2 / 1-3）</td>
+        <td><span class="tag t-strong">客胜（强）</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三006</td>
+        <td><span class="team">波尔图</span> <span class="vs">vs</span> <span class="team">那不勒斯</span></td>
+        <td><div class="nums"><b>58</b> / 21 / 22</div><div class="bar"><i class="b1" style="width:58%"></i><i class="b2" style="width:21%"></i><i class="b3" style="width:22%"></i></div></td>
+        <td class="nums"><b>47</b> / 25 / 28</td>
+        <td class="ext">Whispers：2-1 波尔图<br>Sports Mole：波尔图胜 48.98%，但比分首选 1-1</td>
+        <td><span class="tag t-mid">主胜（分歧）</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三007</td>
+        <td><span class="team">PSV</span> <span class="vs">vs</span> <span class="team">布鲁日</span></td>
+        <td><div class="nums"><b>41</b> / 20 / 39</div><div class="bar"><i class="b1" style="width:41%"></i><i class="b2" style="width:20%"></i><i class="b3" style="width:39%"></i></div></td>
+        <td class="nums"><b>46</b> / 23 / 32</td>
+        <td class="ext">Sports Mole：2-1 PSV（46.47%）</td>
+        <td><span class="tag t-mid">主胜（弱）</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三008</td>
+        <td><span class="team">多特蒙德</span> <span class="vs">vs</span> <span class="team">皇家贝蒂斯</span></td>
+        <td><div class="nums"><b>60</b> / 20 / 20</div><div class="bar"><i class="b1" style="width:60%"></i><i class="b2" style="width:20%"></i><i class="b3" style="width:20%"></i></div></td>
+        <td class="nums"><b>55</b> / 22 / 23</td>
+        <td class="ext">Sports Mole：2-1<br>DeepSeek：2-1</td>
+        <td><span class="tag t-strong">主胜（强）</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三009</td>
+        <td><span class="team">维京</span> <span class="vs">vs</span> <span class="team">萨巴赫</span></td>
+        <td><div class="nums"><b>68</b> / 17 / 15</div><div class="bar"><i class="b1" style="width:68%"></i><i class="b2" style="width:17%"></i><i class="b3" style="width:15%"></i></div></td>
+        <td class="nums"><b>71</b> / 16 / 13</td>
+        <td class="ext">Sports Mole：2-2（平）<br>Forebet：主胜 50%</td>
+        <td><span class="tag t-none">互斥</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三010</td>
+        <td><span class="team">朗斯</span> <span class="vs">vs</span> <span class="team">科莫</span></td>
+        <td><div class="nums">27 / 24 / <b>48</b></div><div class="bar"><i class="b1" style="width:27%"></i><i class="b2" style="width:24%"></i><i class="b3" style="width:48%"></i></div></td>
+        <td class="nums">28 / 23 / <b>49</b></td>
+        <td class="ext">Sports Mole：1-2（8.51%）<br>Whispers：1-2</td>
+        <td><span class="tag t-strong">客胜（强）</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三011</td>
+        <td><span class="team">布拉格斯拉维亚</span> <span class="vs">vs</span> <span class="team">阿森纳</span></td>
+        <td><div class="nums">8 / 13 / <b>79</b></div><div class="bar"><i class="b1" style="width:8%"></i><i class="b2" style="width:13%"></i><i class="b3" style="width:79%"></i></div></td>
+        <td class="nums">7 / 13 / <b>80</b></td>
+        <td class="ext">Sports Mole：0-1（11.99%）<br>Whispers：0-2</td>
+        <td><span class="tag t-strong">客胜（强）</span></td>
+      </tr>
+      <tr>
+        <td class="no">周三012</td>
+        <td><span class="team">布里斯托尔城</span> <span class="vs">vs</span> <span class="team">伍尔弗汉普顿</span></td>
+        <td><div class="nums">30 / 28 / <b>43</b></div><div class="bar"><i class="b1" style="width:30%"></i><i class="b2" style="width:28%"></i><i class="b3" style="width:43%"></i></div></td>
+        <td class="nums">27 / 28 / <b>45</b></td>
+        <td class="ext">Sports Mole：狼队胜 36.89%，比分 1-1<br>Statz.ai：1-1，但称狼队略占优</td>
+        <td><span class="tag t-mid">客胜（弱）</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>四场强共识 → 四串一</h2>
+  <div class="ticket">
+    <div class="leg"><div><div class="sc">周三005 曼城 客胜</div><div class="meta">Sports Mole + 中文 AI + 市场 65%</div></div><div class="meta">59.2% · 1.35</div></div>
+    <div class="leg"><div><div class="sc">周三008 多特 主胜</div><div class="meta">Sports Mole + DeepSeek + 市场 55%</div></div><div class="meta">60.0% · 1.60</div></div>
+    <div class="leg"><div><div class="sc">周三010 科莫 客胜</div><div class="meta">Sports Mole + Whispers + 市场 49%</div></div><div class="meta">48.5% · 1.80</div></div>
+    <div class="leg"><div><div class="sc">周三011 阿森纳 客胜</div><div class="meta">Sports Mole + Whispers + 市场 80%</div></div><div class="meta">79.0% · 1.10</div></div>
+    <div class="sum">
+      <div><div class="k a">13.6%</div><div class="l">命中率（约 1/7.4）</div></div>
+      <div><div class="k b">4.28</div><div class="l">总赔率</div></div>
+      <div><div class="k g">0.58</div><div class="l">期望回报倍数</div></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>唯一值得单独说的一场：006 波尔图。</b>我们给主胜 57.6%，市场只给 46.7%，Sports Mole 给 48.98% 且比分首选 1-1，Whispers 却给 2-1。三方不一致，但赔率 1.88 已经把分歧定价进去了。若把 005 换成 006，四串一变 13.2% @5.96（期望 0.79），赔率接近翻倍，代价是这一关最容易被推翻。<br>
+    <b>三场互斥不要碰：</b>001、003、009。001 是“主不败 vs 客胜”，003 是“主胜 vs 客胜”，009 是“平 vs 主胜”，外部自己都没统一，模型和市场在这些场次也不是独立证据。
+  </div>
+
+  <div class="foot">
+    市场和模型概率均为 500.com 封存赔率与四模型集成输出；外部预测为赛前公开模型/编辑观点，会随阵容变化。<br>
+    仅做概率计算与记录，不代下单、不承诺命中。
+  </div>
+</div>
+</body>
+</html>
