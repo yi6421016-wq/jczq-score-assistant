@@ -1,0 +1,25 @@
+name: 口径回测
+# 每周日 18:45 北京时间（UTC 10:45）
+on:
+  schedule:
+    - cron: "45 10 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: jczq-state
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/pipeline
+        with:
+          mode: backtest

@@ -6,6 +6,9 @@ cd "$(dirname "$0")"
 export JCZQ_HOME="$PWD/竞彩比分助手"
 export SIMBANK_HOME="$JCZQ_HOME"
 export PYTHONUNBUFFERED=1
+# 运行器默认 UTC，比赛日/日报日期必须按北京时间算
+export TZ=Asia/Shanghai
+export LC_ALL=C.UTF-8
 MODE="${1:---daily}"
 
 APP="$JCZQ_HOME/模拟投注/jczq_app.py"
