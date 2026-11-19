@@ -47,5 +47,9 @@ rc=${rc:-0}
 python "$JCZQ_HOME/手机版/build_mobile.py"
 perl -pi -e 's{api/data}{data.json}g' "$JCZQ_HOME/手机版/site/index.html"
 
+# 站点里附上安卓安装包，手机浏览器可直接下载（路径由 .gitignore 之外单独存放）
+APK="$JCZQ_HOME/手机版/下载/竞彩比分助手.apk"
+[ -f "$APK" ] && cp -f "$APK" "$JCZQ_HOME/手机版/site/jczq.apk"
+
 echo "流水线结束，退出码 $rc"
 exit $rc
