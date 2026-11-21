@@ -2054,8 +2054,8 @@
     "odds": 7.0,
     "kickoff": "2026-11-21 03:45",
     "score_pred": "2-1",
-    "score": "",
-    "hit": null
+    "score": "3:1",
+    "hit": false
    },
    {
     "no": "周五008",
@@ -2068,17 +2068,17 @@
     "odds": 6.0,
     "kickoff": "2026-11-21 04:00",
     "score_pred": "2-0",
-    "score": "",
-    "hit": null
+    "score": "0:1",
+    "hit": false
    }
   ],
   "odds": 42.0,
   "p": 0.013062,
   "stake": 20.0,
   "ev": -0.4514,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-21 18:08:26"
  },
  {
   "id": "M20261120-H2",
@@ -2099,17 +2099,17 @@
     "odds": 1.82,
     "kickoff": "2026-11-21 04:00",
     "score_pred": "2-0",
-    "score": "",
-    "hit": null
+    "score": "0:1",
+    "hit": false
    }
   ],
   "odds": 1.82,
   "p": 0.4549,
   "stake": 20.0,
   "ev": -0.1721,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-21 18:08:26"
  },
  {
   "id": "M20261120-N1",
@@ -2130,17 +2130,17 @@
     "odds": 2.08,
     "kickoff": "2026-11-21 03:00",
     "score_pred": "2-1",
-    "score": "",
-    "hit": null
+    "score": "1:0",
+    "hit": true
    }
   ],
   "odds": 2.08,
   "p": 0.4659,
   "stake": 30.0,
   "ev": -0.0309,
-  "status": "待结算",
-  "payout": 0.0,
-  "settled": ""
+  "status": "中",
+  "payout": 62.4,
+  "settled": "2026-11-21 18:08:26"
  },
  {
   "id": "M20261120-N2",
@@ -2161,17 +2161,17 @@
     "odds": 3.95,
     "kickoff": "2026-11-21 01:30",
     "score_pred": "2-1",
-    "score": "",
-    "hit": null
+    "score": "1:2",
+    "hit": false
    }
   ],
   "odds": 3.95,
   "p": 0.217,
   "stake": 30.0,
   "ev": -0.1428,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-21 18:08:26"
  },
  {
   "id": "M20261121-H1",
@@ -2268,17 +2268,17 @@
     "odds": 1.37,
     "kickoff": "2026-11-21 13:00",
     "score_pred": "2-1",
-    "score": "",
-    "hit": null
+    "score": "2:2",
+    "hit": false
    }
   ],
   "odds": 1.37,
   "p": 0.6762,
   "stake": 30.0,
   "ev": -0.0736,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-21 18:08:26"
  },
  {
   "id": "M20261121-N2",
