@@ -19,9 +19,11 @@ HTML = Path(os.environ.get("SIMBANK_HTML") or (BASE / "报告" / "模拟投注�
 CSV_OUT = SIM / "模拟投注明细.csv"
 LOG = SIM / "运行.log"
 STATUS = SIM / "自动运行状态.json"
-JOB = "com.sequoia.jczq.simbank"
-SCHEDULE = "每天 10:40 / 11:45 / 14:20 / 18:50"
+JOB = "GitHub Actions · 模拟投注"
+SCHEDULE = "云端 11:00 / 12:20 / 15:00 / 19:20（北京）"
 APP_DIR = Path(__file__).resolve().parent
+# 云端为准：本机设了这把锁就只重出报表，出票/兑奖一律交给 GitHub Actions。
+READ_ONLY = os.environ.get("SIMBANK_READ_ONLY") == "1"
 BUDGET = 100.0
 HF_VALUES = ["3-3", "3-1", "3-0", "1-3", "1-1", "1-0", "0-3", "0-1", "0-0"]
 HF_TXT = {"3": "胜", "1": "平", "0": "负"}
@@ -199,6 +201,12 @@ def cmd_plan(args):
         log("%s 已有 %d 注记录，跳过（--force 可重出）" % (day, len(mine)))
         cmd_report(argparse.Namespace(quiet=True))
         return 0
+    settled_mine = [b for b in mine if b.get("status") in ("中", "未中")]
+    if settled_mine:
+        # 重出会按天整段替换，已结算票连返还一起丢，所以 --force 也不能动它们。
+        log("%s 已有 %d 注已结算，重出会删掉兑奖记录，已跳过（要重来请先手工改台账）"
+            % (day, len(settled_mine)))
+        return 1
     if backfill:
         # 补录：只用当天封存数据，并把「现在+15分钟」的截单线换成当天 10:55（首个定时时点），
         # 否则历史场次全在截单线之前，pool 会被清空。
@@ -524,13 +532,13 @@ def cmd_report(args):
     except Exception:
         st = {}
     if st:
-        auto_txt = ("launchd %s · %s · 最近一次 %s，今日 %d 注，待结算 %d 注"
+        auto_txt = ("%s · %s · 最近一次 %s，今日 %d 注，待结算 %d 注"
                     % (st.get("job", JOB), st.get("schedule", SCHEDULE),
                        st.get("at", "—"), int(st.get("today") or 0),
                        int(st.get("pending") or 0)))
         auto_cls = "ok"
     else:
-        auto_txt = "定时任务尚未运行：launchd %s · %s" % (JOB, SCHEDULE)
+        auto_txt = "云端还没回写过台账：%s · %s" % (JOB, SCHEDULE)
         auto_cls = "warn"
 
     doc = """<!doctype html><html lang="zh"><head><meta charset="utf-8">
@@ -648,6 +656,12 @@ footer{color:#a9aeb8;font-size:12px;margin-top:26px}
     return 0
 
 
+def _refuse_write():
+    """本机只读端：不出票、不兑奖，只把拉下来的云端台账重画成页面。"""
+    log("本机为只读端（SIMBANK_READ_ONLY=1）：出票/兑奖由云端流水线负责，本次只重出战绩页")
+    return cmd_report(argparse.Namespace(quiet=True))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="模拟投注台账")
     sub = ap.add_subparsers(dest="cmd")
@@ -676,12 +690,18 @@ def main(argv=None):
             log("另一个模拟投注进程正在跑，本次跳过")
             return 0
         if a.cmd == "plan":
+            if READ_ONLY:
+                return _refuse_write()
             return cmd_plan(a)
         if a.cmd == "settle":
+            if READ_ONLY:
+                return _refuse_write()
             return cmd_settle(a)
         if a.cmd == "report":
             return cmd_report(a)
         if a.cmd == "daily":
+            if READ_ONLY:
+                return _refuse_write()
             return cmd_daily(a)
     ap.print_help()
     return 2

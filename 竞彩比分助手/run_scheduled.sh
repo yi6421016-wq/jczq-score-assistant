@@ -1,7 +1,7 @@
 #!/bin/zsh
 # 定时任务兜底：先等网络可用再执行，避免刚唤醒/刚开机时 DNS 未就绪直接失败。
 # 用法：run_scheduled.sh --verify|--recheck|--daily
-# 模拟投注（兑奖+出票）由独立任务 com.sequoia.jczq.simbank 负责，不在这里调用。
+# 模拟投注以云端为准：出票/兑奖由 GitHub Actions 的 simbank.yml 负责，本机那个定时任务只重出页面。
 set -u
 APP="/Users/sequoia/Applications/竞彩比分助手.app/Contents/MacOS/竞彩比分助手"
 ROOT="/Users/sequoia/竞彩比分助手"
@@ -48,7 +48,10 @@ case "$MODE" in
     "$APP" --daily; rc=$?
     "$APP" --pro-daily --no-backtest
     "$APP" --pro-recommend --no-open
-    "/Users/sequoia/竞彩比分助手/手机版/同步到站点.sh" >> "/Users/sequoia/竞彩比分助手/手机版/同步日志.log" 2>&1 || true
+    if ! "/Users/sequoia/竞彩比分助手/手机版/同步到站点.sh" >> "/Users/sequoia/竞彩比分助手/手机版/同步日志.log" 2>&1; then
+      rc=1
+      log "站点同步失败，手机版发布目录未更新（详见 手机版/同步日志.log）"
+    fi
     ;;
 esac
 rc=${rc:-0}
