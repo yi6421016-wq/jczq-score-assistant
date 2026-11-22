@@ -34,7 +34,12 @@ runs:
           git commit -m "状态更新 $(date -u '+%F %H:%M UTC')"
           ok=0
           for i in 1 2 3 4 5; do
-            if git pull --rebase --autostash origin main && git push; then
+            opts=""
+            if [ "$i" -ge 4 ]; then
+              opts="-X theirs"
+              echo "连续冲突，改为本次生成快照优先重试…"
+            fi
+            if git pull --rebase --autostash ${opts:+$opts} origin main && git push; then
               echo "回写成功（第 ${i} 次尝试）"
               ok=1
               break
