@@ -15,9 +15,6 @@ REPO="yi6421016-wq/jczq-score-assistant"
 if ! command -v gh >/dev/null 2>&1; then
   print -r -- "[$(date '+%F %T')] 找不到 gh，跳过本次" >> "$LOG"; exit 0
 fi
-if ! gh run list --repo "$REPO" --workflow 模拟投注 --limit 1 >/dev/null 2>&1; then
-  print -r -- "[$(date '+%F %T')] gh 取不到运行记录（凭据或网络问题），跳过本次" >> "$LOG"; exit 0
-fi
 
 python3 - "$REPO" "$LOG" <<'PY'
 import datetime
