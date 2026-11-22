@@ -1,7 +1,7 @@
 {
- "job": "com.sequoia.jczq.simbank",
- "schedule": "每天 10:40 / 11:45 / 14:20 / 18:50",
- "at": "2026-11-22 12:00:36",
+ "job": "GitHub Actions · 模拟投注",
+ "schedule": "云端 11:00 / 12:20 / 15:00 / 19:20（北京）",
+ "at": "2026-11-22 12:56:30",
  "rc": 0,
  "today": 4,
  "pending": 4
