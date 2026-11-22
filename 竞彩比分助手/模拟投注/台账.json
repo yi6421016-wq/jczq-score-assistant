@@ -2437,16 +2437,16 @@
     "odds": 3.6,
     "kickoff": "2026-11-22 13:00",
     "score_pred": "2-1",
-    "score": "",
-    "hit": null
+    "score": "4:2",
+    "hit": false
    }
   ],
   "odds": 3.6,
   "p": 0.2445,
   "stake": 30.0,
   "ev": -0.1198,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-22 19:32:28"
  }
 ]
