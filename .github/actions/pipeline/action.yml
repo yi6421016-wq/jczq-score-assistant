@@ -18,6 +18,18 @@ runs:
       shell: bash
       run: pip install -q -r requirements.txt
 
+    - name: 同步到分支最新
+      # 排在队列里的运行检出的是“触发那一刻”的提交，不是分支最新：不等步就开工，
+      # 会拿隔夜台账开奖，回写时又跟别的运行抢同一批生成文件，冲突就出在这儿。
+      shell: bash
+      run: |
+        git fetch -q origin main
+        if git merge --ff-only -q origin/main; then
+          echo "已快进到 $(git rev-parse --short origin/main)"
+        else
+          echo "检出提交与分支最新分叉，保留当前快照继续"
+        fi
+
     - name: 执行任务
       shell: bash
       run: bash 云端流水线.sh "${{ inputs.mode }}"
