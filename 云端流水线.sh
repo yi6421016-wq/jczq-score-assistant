@@ -51,5 +51,10 @@ perl -pi -e 's{api/data}{data.json}g' "$JCZQ_HOME/手机版/site/index.html"
 APK="$JCZQ_HOME/手机版/下载/竞彩比分助手.apk"
 [ -f "$APK" ] && cp -f "$APK" "$JCZQ_HOME/手机版/site/jczq.apk"
 
+# 战绩页同步给旧入口：本机和手机端仍在读 模拟投注/战绩.html
+if [ -f "$JCZQ_HOME/报告/模拟投注战绩.html" ]; then
+  cp -f "$JCZQ_HOME/报告/模拟投注战绩.html" "$JCZQ_HOME/模拟投注/战绩.html"
+fi
+
 echo "流水线结束，退出码 $rc"
 exit $rc
