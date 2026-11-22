@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>竞彩比分口径回测 · 2026-10-05~2026-11-15</title><style>
+<title>竞彩比分口径回测 · 2026-10-05~2026-11-22</title><style>
 :root{--ink:#1e293b;--mute:#64748b;--line:#e2e8f0;--accent:#1f3b63}
 *{box-sizing:border-box}
 body{margin:0;background:#f5f7fa;color:var(--ink);
@@ -110,14 +110,14 @@ h3.subh{font-size:15px;margin:22px 0 8px;color:#334155;font-weight:600}
 </style></head>
 <body><div class="wrap">
 <header><div><h1>比分口径配对回测</h1>
-<div class="sub">同一批 572 场已完赛比赛上逐场对比各种选号口径；差异用 McNemar 精确检验给出 p 值</div></div>
-<div class="stamp">生成 2026-11-15 18:47:10<br><b>41 个比赛日</b></div></header>
+<div class="sub">同一批 636 场已完赛比赛上逐场对比各种选号口径；差异用 McNemar 精确检验给出 p 值</div></div>
+<div class="stamp">生成 2026-11-23 02:06:45<br><b>48 个比赛日</b></div></header>
 <div class="cards">
-  <div class="card"><span>回溯样本</span><b>572</b><em>场已完赛</em></div>
-  <div class="card"><span>覆盖日期</span><b>41</b><em>10-05 ~ 11-15</em></div>
-  <div class="card"><span>回溯/封存</span><b>351/221</b><em>场</em></div>
-  <div class="card"><span>现口径命中</span><b>65</b><em>11.4%</em></div>
-  <div class="card"><span>胜平负命中</span><b>325</b><em>56.8%</em></div></div>
+  <div class="card"><span>回溯样本</span><b>636</b><em>场已完赛</em></div>
+  <div class="card"><span>覆盖日期</span><b>48</b><em>10-05 ~ 11-22</em></div>
+  <div class="card"><span>回溯/封存</span><b>354/282</b><em>场</em></div>
+  <div class="card"><span>现口径命中</span><b>68</b><em>10.7%</em></div>
+  <div class="card"><span>胜平负命中</span><b>359</b><em>56.4%</em></div></div>
 <div class="rcb">⚠️ <b>样本性质：</b>回溯场次的赔率取自 500.com 历史页面留存，属于开赛前的最终赔率而非我们当日封存的那一版；因此可用于比较口径优劣，不能等同于每日实盘时点。<b>只做概率与模拟记录，不涉及任何投注。</b></div>
 
 <div class="h2">一、单格比分口径对比</div>
@@ -125,35 +125,35 @@ h3.subh{font-size:15px;margin:22px 0 8px;color:#334155;font-weight:600}
 <table><colgroup><col style="width:24%"><col style="width:10%"><col style="width:14%"><col style="width:11%"><col style="width:14%"><col style="width:27%"></colgroup>
 <thead><tr><th>口径</th><th>命中/场次</th><th>命中率(95%区间)</th><th>期望概率</th><th>虚拟回报</th><th>与现口径不一致场数 b/c · p 值</th></tr></thead>
 <tbody><tr>
-  <td>现口径·模型同向</td><td class="act">65/572</td>
-  <td class="act"><b>11.4%</b><br><small>9.0%–14.2%</small></td>
+  <td>现口径·模型同向</td><td class="act">68/636</td>
+  <td class="act"><b>10.7%</b><br><small>8.5%–13.3%</small></td>
   <td class="act">10.7%</td>
-  <td class="act"><span class="badge no">-21.9%</span></td>
+  <td class="act"><span class="badge no">-26.9%</span></td>
   <td class="act">—</td></tr><tr>
-  <td>模型全场最高</td><td class="act">70/572</td>
-  <td class="act"><b>12.2%</b><br><small>9.8%–15.2%</small></td>
-  <td class="act">11.5%</td>
-  <td class="act"><span class="badge no">-22.2%</span></td>
-  <td class="act">37/32 · p=0.630</td></tr><tr>
-  <td>纯DC同向</td><td class="act">64/572</td>
-  <td class="act"><b>11.2%</b><br><small>8.9%–14.0%</small></td>
-  <td class="act">9.7%</td>
-  <td class="act"><span class="badge no">-21.2%</span></td>
-  <td class="act">7/8 · p=1.000</td></tr><tr>
-  <td>纯市场同向</td><td class="act">64/564</td>
-  <td class="act"><b>11.3%</b><br><small>9.0%–14.2%</small></td>
+  <td>模型全场最高</td><td class="act">75/636</td>
+  <td class="act"><b>11.8%</b><br><small>9.5%–14.5%</small></td>
   <td class="act">11.6%</td>
-  <td class="act"><span class="badge no">-20.7%</span></td>
-  <td class="act">6/6 · p=1.000</td></tr><tr>
-  <td>市场全场最高</td><td class="act">68/564</td>
-  <td class="act"><b>12.1%</b><br><small>9.6%–15.0%</small></td>
+  <td class="act"><span class="badge no">-25.4%</span></td>
+  <td class="act">40/33 · p=0.483</td></tr><tr>
+  <td>纯DC同向</td><td class="act">67/636</td>
+  <td class="act"><b>10.5%</b><br><small>8.4%–13.2%</small></td>
+  <td class="act">9.7%</td>
+  <td class="act"><span class="badge no">-26.2%</span></td>
+  <td class="act">7/8 · p=1.000</td></tr><tr>
+  <td>纯市场同向</td><td class="act">68/628</td>
+  <td class="act"><b>10.8%</b><br><small>8.6%–13.5%</small></td>
+  <td class="act">11.6%</td>
+  <td class="act"><span class="badge no">-24.9%</span></td>
+  <td class="act">7/6 · p=1.000</td></tr><tr>
+  <td>市场全场最高</td><td class="act">74/628</td>
+  <td class="act"><b>11.8%</b><br><small>9.5%–14.5%</small></td>
   <td class="act">12.3%</td>
-  <td class="act"><span class="badge no">-21.7%</span></td>
-  <td class="act">34/30 · p=0.708</td></tr><tr>
-  <td>融合(0.5/0.5)同向</td><td class="act">64/564</td>
-  <td class="act"><b>11.3%</b><br><small>9.0%–14.2%</small></td>
+  <td class="act"><span class="badge no">-23.9%</span></td>
+  <td class="act">38/31 · p=0.470</td></tr><tr>
+  <td>融合(0.5/0.5)同向</td><td class="act">67/628</td>
+  <td class="act"><b>10.7%</b><br><small>8.5%–13.3%</small></td>
   <td class="act">10.6%</td>
-  <td class="act"><span class="badge no">-20.6%</span></td>
+  <td class="act"><span class="badge no">-25.8%</span></td>
   <td class="act">5/5 · p=1.000</td></tr></tbody></table>
 
 <div class="h2">二、覆盖口径：多买几格能换来什么</div>
@@ -161,27 +161,27 @@ h3.subh{font-size:15px;margin:22px 0 8px;color:#334155;font-weight:600}
 <table><colgroup><col style="width:20%"><col style="width:11%"><col style="width:15%"><col style="width:11%"><col style="width:11%"><col style="width:15%"><col style="width:17%"></colgroup>
 <thead><tr><th>口径</th><th>命中/场次</th><th>命中率(95%区间)</th><th>期望</th><th>成本</th><th>注/中</th><th>虚拟回报</th></tr></thead>
 <tbody><tr><td>比分 TOP1 覆盖</td>
-  <td class="act">65/572</td><td class="act"><b>11.4%</b><br>
-  <small>9.0%–14.2%</small></td>
+  <td class="act">68/636</td><td class="act"><b>10.7%</b><br>
+  <small>8.5%–13.3%</small></td>
   <td class="act">10.7%</td>
   <td class="act">1 注/场</td>
-  <td class="act">8.8 注/中</td>
+  <td class="act">9.4 注/中</td>
   <td class="act"><span class="badge">样本不足</span></td></tr><tr><td>比分 TOP3 覆盖</td>
-  <td class="act">184/572</td><td class="act"><b>32.2%</b><br>
-  <small>28.5%–36.1%</small></td>
-  <td class="act">30.6%</td>
+  <td class="act">201/636</td><td class="act"><b>31.6%</b><br>
+  <small>28.1%–35.3%</small></td>
+  <td class="act">30.7%</td>
   <td class="act">3 注/场</td>
-  <td class="act">9.3 注/中</td>
+  <td class="act">9.5 注/中</td>
   <td class="act"><span class="badge">样本不足</span></td></tr><tr><td>比分 TOP5 覆盖</td>
-  <td class="act">285/572</td><td class="act"><b>49.8%</b><br>
-  <small>45.7%–53.9%</small></td>
-  <td class="act">46.0%</td>
+  <td class="act">316/636</td><td class="act"><b>49.7%</b><br>
+  <small>45.8%–53.6%</small></td>
+  <td class="act">46.2%</td>
   <td class="act">5 注/场</td>
-  <td class="act">10.0 注/中</td>
+  <td class="act">10.1 注/中</td>
   <td class="act"><span class="badge">样本不足</span></td></tr><tr><td>比分 TOP10 覆盖</td>
-  <td class="act">417/572</td><td class="act"><b>72.9%</b><br>
-  <small>69.1%–76.4%</small></td>
-  <td class="act">72.4%</td>
+  <td class="act">464/636</td><td class="act"><b>73.0%</b><br>
+  <small>69.4%–76.3%</small></td>
+  <td class="act">72.6%</td>
   <td class="act">10 注/场</td>
   <td class="act">13.7 注/中</td>
   <td class="act"><span class="badge">样本不足</span></td></tr></tbody></table>
@@ -190,126 +190,126 @@ h3.subh{font-size:15px;margin:22px 0 8px;color:#334155;font-weight:600}
 <div class="hint">log-loss 越高越好（取负后越小越好），盲猜基准 −ln(31)=−3.434；Brier 为 31 档多分类平方误差，越低越好。</div>
 <table><colgroup><col style="width:30%"><col style="width:12%"><col style="width:34%"><col style="width:24%"></colgroup>
 <thead><tr><th>概率源</th><th>样本</th><th>平均 log</th><th>多分类 Brier</th></tr></thead>
-<tbody><tr><td>纯模型 DC</td><td class="act">572</td>
-  <td class="act"><span class="badge ok">−2.947</span><br><small>盲猜 −3.434</small></td>
-  <td class="act">0.934</td></tr><tr><td>纯市场比分赔率</td><td class="act">564</td>
-  <td class="act"><span class="badge ok">−2.934</span><br><small>盲猜 −3.434</small></td>
-  <td class="act">0.931</td></tr><tr><td>现行集成</td><td class="act">572</td>
-  <td class="act"><span class="badge ok">−2.929</span><br><small>盲猜 −3.434</small></td>
-  <td class="act">0.932</td></tr><tr><td>模型×市场几何平均</td><td class="act">564</td>
-  <td class="act"><span class="badge ok">−2.930</span><br><small>盲猜 −3.434</small></td>
+<tbody><tr><td>纯模型 DC</td><td class="act">636</td>
+  <td class="act"><span class="badge ok">−2.945</span><br><small>盲猜 −3.434</small></td>
+  <td class="act">0.934</td></tr><tr><td>纯市场比分赔率</td><td class="act">628</td>
+  <td class="act"><span class="badge ok">−2.933</span><br><small>盲猜 −3.434</small></td>
+  <td class="act">0.931</td></tr><tr><td>现行集成</td><td class="act">636</td>
+  <td class="act"><span class="badge ok">−2.926</span><br><small>盲猜 −3.434</small></td>
+  <td class="act">0.932</td></tr><tr><td>模型×市场几何平均</td><td class="act">628</td>
+  <td class="act"><span class="badge ok">−2.928</span><br><small>盲猜 −3.434</small></td>
   <td class="act">0.932</td></tr></tbody></table>
 
-<div class="h2">四、集成权重重搜（2026-10-28 之后为留出样本）</div>
+<div class="h2">四、集成权重重搜（2026-11-01 之后为留出样本）</div>
 <div class="hint">权重按 (dc/poi/mkt/tgs) 网格搜索，先在训练段取 log-loss 最优的 8 组，再看留出段是否守得住。留出段同样本内最优的差距才是可信的量级。</div>
 <table><colgroup><col style="width:26%"><col style="width:15%"><col style="width:21%"><col style="width:16%"><col style="width:22%"></colgroup>
 <thead><tr><th>dc/poi/mkt/tgs</th><th>训练 log</th><th>训练同向命中</th><th>留出 log</th><th>留出同向命中</th></tr></thead>
-<tbody><tr><td class="act">0.25 / 0.00 / 0.20 / 0.55</td>
+<tbody><tr><td class="act">0.19 / 0.06 / 0.20 / 0.55</td>
   <td class="act">−2.944</td>
-  <td class="act">10.2%（35/343）</td>
-  <td class="act"><b>−2.907</b></td>
-  <td class="act">13.5%（31/229）</td></tr><tr><td class="act">0.19 / 0.06 / 0.20 / 0.55</td>
+  <td class="act">9.7%（40/414）</td>
+  <td class="act"><b>−2.894</b></td>
+  <td class="act">12.6%（28/222）</td></tr><tr><td class="act">0.25 / 0.00 / 0.35 / 0.40</td>
   <td class="act">−2.944</td>
-  <td class="act">10.2%（35/343）</td>
-  <td class="act"><b>−2.907</b></td>
-  <td class="act">13.1%（30/229）</td></tr><tr><td class="act">0.25 / 0.00 / 0.35 / 0.40</td>
+  <td class="act">10.4%（43/414）</td>
+  <td class="act"><b>−2.892</b></td>
+  <td class="act">11.7%（26/222）</td></tr><tr><td class="act">0.19 / 0.06 / 0.35 / 0.40</td>
   <td class="act">−2.944</td>
-  <td class="act">10.2%（35/343）</td>
-  <td class="act"><b>−2.904</b></td>
-  <td class="act">13.1%（30/229）</td></tr><tr><td class="act">0.12 / 0.12 / 0.20 / 0.55</td>
+  <td class="act">9.4%（39/414）</td>
+  <td class="act"><b>−2.892</b></td>
+  <td class="act">11.7%（26/222）</td></tr><tr><td class="act">0.12 / 0.12 / 0.20 / 0.55</td>
+  <td class="act">−2.944</td>
+  <td class="act">9.2%（38/414）</td>
+  <td class="act"><b>−2.894</b></td>
+  <td class="act">11.7%（26/222）</td></tr><tr><td class="act">0.25 / 0.00 / 0.20 / 0.55</td>
   <td class="act">−2.945</td>
-  <td class="act">9.6%（33/343）</td>
-  <td class="act"><b>−2.907</b></td>
-  <td class="act">12.2%（28/229）</td></tr><tr><td class="act">0.10 / 0.00 / 0.35 / 0.55</td>
+  <td class="act">9.9%（41/414）</td>
+  <td class="act"><b>−2.895</b></td>
+  <td class="act">13.1%（29/222）</td></tr><tr><td class="act">0.12 / 0.12 / 0.35 / 0.40</td>
   <td class="act">−2.945</td>
-  <td class="act">9.6%（33/343）</td>
-  <td class="act"><b>−2.904</b></td>
-  <td class="act">12.7%（29/229）</td></tr><tr><td class="act">0.19 / 0.06 / 0.35 / 0.40</td>
+  <td class="act">9.2%（38/414）</td>
+  <td class="act"><b>−2.891</b></td>
+  <td class="act">11.7%（26/222）</td></tr><tr><td class="act">0.10 / 0.00 / 0.35 / 0.55</td>
   <td class="act">−2.945</td>
-  <td class="act">9.6%（33/343）</td>
-  <td class="act"><b>−2.904</b></td>
-  <td class="act">12.7%（29/229）</td></tr><tr><td class="act">0.40 / 0.00 / 0.20 / 0.40</td>
+  <td class="act">9.7%（40/414）</td>
+  <td class="act"><b>−2.893</b></td>
+  <td class="act">11.7%（26/222）</td></tr><tr><td class="act">0.30 / 0.10 / 0.20 / 0.40</td>
   <td class="act">−2.945</td>
-  <td class="act">10.2%（35/343）</td>
-  <td class="act"><b>−2.908</b></td>
-  <td class="act">14.8%（34/229）</td></tr><tr><td class="act">0.30 / 0.10 / 0.20 / 0.40</td>
+  <td class="act">9.2%（38/414）</td>
+  <td class="act"><b>−2.894</b></td>
+  <td class="act">12.6%（28/222）</td></tr><tr><td class="act">0.30 / 0.10 / 0.35 / 0.25 ← 现行权重</td>
   <td class="act">−2.945</td>
-  <td class="act">9.3%（32/343）</td>
-  <td class="act"><b>−2.907</b></td>
-  <td class="act">13.5%（31/229）</td></tr><tr><td class="act">0.30 / 0.10 / 0.35 / 0.25 ← 现行权重</td>
-  <td class="act">−2.945</td>
-  <td class="act">9.6%（33/343）</td>
-  <td class="act"><b>−2.904</b></td>
-  <td class="act">14.0%（32/229）</td></tr></tbody></table>
+  <td class="act">9.9%（41/414）</td>
+  <td class="act"><b>−2.892</b></td>
+  <td class="act">12.2%（27/222）</td></tr></tbody></table>
 <div class="hint">现行权重：0.30 / 0.10 / 0.35 / 0.25</div>
 
 <div class="h2">五、现口径按置信度分层</div>
 <table><colgroup><col style="width:20%"><col style="width:14%"><col style="width:16%"><col style="width:22%"><col style="width:28%"></colgroup>
 <thead><tr><th>首选概率档</th><th>场次</th><th>命中</th><th>命中率</th><th>层内期望</th></tr></thead>
-<tbody><tr><td>&lt;8%</td><td class="act">3</td><td class="act">0</td><td class="act"><b>0.0%</b></td><td class="act">7.0%</td></tr><tr><td>8–10%</td><td class="act">180</td><td class="act">19</td><td class="act"><b>10.6%</b></td><td class="act">9.5%</td></tr><tr><td>≥10%</td><td class="act">389</td><td class="act">46</td><td class="act"><b>11.8%</b></td><td class="act">11.2%</td></tr></tbody></table>
+<tbody><tr><td>&lt;8%</td><td class="act">3</td><td class="act">0</td><td class="act"><b>0.0%</b></td><td class="act">7.0%</td></tr><tr><td>8–10%</td><td class="act">197</td><td class="act">19</td><td class="act"><b>9.6%</b></td><td class="act">9.5%</td></tr><tr><td>≥10%</td><td class="act">436</td><td class="act">49</td><td class="act"><b>11.2%</b></td><td class="act">11.3%</td></tr></tbody></table>
 
-<div class="h2">六、Dixon-Coles ρ 校准（572 场，ρ 与 λ 联合重解）</div>
+<div class="h2">六、Dixon-Coles ρ 校准（636 场，ρ 与 λ 联合重解）</div>
 <div class="hint">每个 ρ 都重新反解期望进球 λ（热启动沿用上一点，避免优化器噪声把曲线抖成锯齿），再算两套实际比分那一格的对数似然：<b>集成列</b>是最终交付的四源加权分布，采用值按它选；<b>DC 单源列</b>只看模型自身的低比分修正，是 ρ 这个参数自己的似然。两列的 Δ 都相对各自最优，Δ≥−1.92 近似 95% 区间。
-本次采用 ρ=-0.11（集成分布最优 -0.11，区间 [-0.20, -0.01]；DC 单源 MLE -0.05，区间 [-0.08, -0.03]；小样本收缩系数 1.00）。
-两个口径的曲线都很平——整条网格的对数似然跨度只有几个单位，摊到 572 场就是万分位，逐场配对检验里 −0.02 到 −0.15 这段在统计上分不出高下。所以采用值只是集成分布上的最高点，不要当成"真值"；等样本再攒两周、区间收窄之前，这个数还会漂。已封存的历史记录仍带各自赛前的 ρ，不会被这次校准改写；新抓取场次用当前值。</div>
+本次采用 ρ=-0.09（集成分布最优 -0.09，区间 [-0.18, +0.00]；DC 单源 MLE -0.05，区间 [-0.07, -0.02]；小样本收缩系数 1.00）。
+两个口径的曲线都很平——整条网格的对数似然跨度只有几个单位，摊到 636 场就是万分位，逐场配对检验里 −0.02 到 −0.15 这段在统计上分不出高下。所以采用值只是集成分布上的最高点，不要当成"真值"；等样本再攒两周、区间收窄之前，这个数还会漂。已封存的历史记录仍带各自赛前的 ρ，不会被这次校准改写；新抓取场次用当前值。</div>
 <table><colgroup><col style="width:24%"><col style="width:19%"><col style="width:16%"><col style="width:19%"><col style="width:22%"></colgroup>
 <thead><tr><th>ρ</th><th>集成分布比分格对数似然</th><th>与最优差</th><th>DC 单源差</th><th>95% 区间（集成 / DC）</th></tr></thead>
 <tbody><tr><td class="act">-0.20</td>
-  <td class="act">−1,772.9</td>
-  <td class="act"><span class="badge mid">Δ-1.4</span></td>
-  <td class="act"><span class="badge no">Δ-34.3</span></td>
-  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.18</td>
-  <td class="act">−1,772.4</td>
-  <td class="act"><span class="badge mid">Δ-0.9</span></td>
-  <td class="act"><span class="badge no">Δ-26.1</span></td>
+  <td class="act">−1,959.7</td>
+  <td class="act"><span class="badge no">Δ-2.5</span></td>
+  <td class="act"><span class="badge no">Δ-42.4</span></td>
+  <td class="act">集成 不在区间 · DC 不在区间</td></tr><tr><td class="act">-0.18</td>
+  <td class="act">−1,958.9</td>
+  <td class="act"><span class="badge mid">Δ-1.7</span></td>
+  <td class="act"><span class="badge no">Δ-32.7</span></td>
   <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.16</td>
-  <td class="act">−1,772.0</td>
-  <td class="act"><span class="badge mid">Δ-0.5</span></td>
-  <td class="act"><span class="badge no">Δ-18.9</span></td>
+  <td class="act">−1,958.3</td>
+  <td class="act"><span class="badge mid">Δ-1.1</span></td>
+  <td class="act"><span class="badge no">Δ-24.1</span></td>
   <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.14</td>
-  <td class="act">−1,771.7</td>
-  <td class="act"><span class="badge mid">Δ-0.2</span></td>
-  <td class="act"><span class="badge no">Δ-12.7</span></td>
-  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.12</td>
-  <td class="act">−1,771.5</td>
-  <td class="act"><span class="badge mid">Δ-0.0</span></td>
-  <td class="act"><span class="badge no">Δ-7.7</span></td>
-  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.11 <b>← 采用</b></td>
-  <td class="act">−1,771.5</td>
-  <td class="act"><span class="badge ok">Δ+0.0</span></td>
-  <td class="act"><span class="badge no">Δ-5.6</span></td>
-  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.10</td>
-  <td class="act">−1,771.5</td>
-  <td class="act"><span class="badge ok">Δ-0.0</span></td>
-  <td class="act"><span class="badge no">Δ-3.8</span></td>
-  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.08</td>
-  <td class="act">−1,771.6</td>
-  <td class="act"><span class="badge mid">Δ-0.1</span></td>
-  <td class="act"><span class="badge mid">Δ-1.2</span></td>
-  <td class="act">集成 在区间 · DC 在区间</td></tr><tr><td class="act">-0.06</td>
-  <td class="act">−1,771.9</td>
-  <td class="act"><span class="badge mid">Δ-0.4</span></td>
-  <td class="act"><span class="badge mid">Δ-0.0</span></td>
-  <td class="act">集成 在区间 · DC 在区间</td></tr><tr><td class="act">-0.05 <b>← DC 单源最优</b></td>
-  <td class="act">−1,772.1</td>
+  <td class="act">−1,957.8</td>
   <td class="act"><span class="badge mid">Δ-0.6</span></td>
+  <td class="act"><span class="badge no">Δ-16.6</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.12</td>
+  <td class="act">−1,957.5</td>
+  <td class="act"><span class="badge mid">Δ-0.2</span></td>
+  <td class="act"><span class="badge no">Δ-10.5</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.10</td>
+  <td class="act">−1,957.2</td>
+  <td class="act"><span class="badge mid">Δ-0.0</span></td>
+  <td class="act"><span class="badge no">Δ-5.6</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.09 <b>← 采用</b></td>
+  <td class="act">−1,957.2</td>
+  <td class="act"><span class="badge ok">Δ+0.0</span></td>
+  <td class="act"><span class="badge no">Δ-3.7</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.08</td>
+  <td class="act">−1,957.2</td>
+  <td class="act"><span class="badge ok">Δ-0.0</span></td>
+  <td class="act"><span class="badge no">Δ-2.2</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">-0.06</td>
+  <td class="act">−1,957.3</td>
+  <td class="act"><span class="badge mid">Δ-0.1</span></td>
+  <td class="act"><span class="badge mid">Δ-0.3</span></td>
+  <td class="act">集成 在区间 · DC 在区间</td></tr><tr><td class="act">-0.05 <b>← DC 单源最优</b></td>
+  <td class="act">−1,957.5</td>
+  <td class="act"><span class="badge mid">Δ-0.3</span></td>
   <td class="act"><span class="badge ok">Δ+0.0</span></td>
   <td class="act">集成 在区间 · DC 在区间</td></tr><tr><td class="act">-0.04</td>
-  <td class="act">−1,772.4</td>
-  <td class="act"><span class="badge mid">Δ-0.9</span></td>
-  <td class="act"><span class="badge mid">Δ-0.3</span></td>
+  <td class="act">−1,957.7</td>
+  <td class="act"><span class="badge mid">Δ-0.5</span></td>
+  <td class="act"><span class="badge mid">Δ-0.1</span></td>
   <td class="act">集成 在区间 · DC 在区间</td></tr><tr><td class="act">-0.02</td>
-  <td class="act">−1,773.0</td>
-  <td class="act"><span class="badge mid">Δ-1.5</span></td>
-  <td class="act"><span class="badge no">Δ-2.2</span></td>
-  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">+0.00</td>
-  <td class="act">−1,773.7</td>
-  <td class="act"><span class="badge no">Δ-2.2</span></td>
-  <td class="act"><span class="badge no">Δ-5.6</span></td>
-  <td class="act">集成 不在区间 · DC 不在区间</td></tr><tr><td class="act">+0.02</td>
-  <td class="act">−1,776.1</td>
-  <td class="act"><span class="badge no">Δ-4.6</span></td>
-  <td class="act"><span class="badge no">Δ-16.5</span></td>
+  <td class="act">−1,958.1</td>
+  <td class="act"><span class="badge mid">Δ-0.9</span></td>
+  <td class="act"><span class="badge mid">Δ-1.6</span></td>
+  <td class="act">集成 在区间 · DC 在区间</td></tr><tr><td class="act">+0.00</td>
+  <td class="act">−1,958.8</td>
+  <td class="act"><span class="badge mid">Δ-1.6</span></td>
+  <td class="act"><span class="badge no">Δ-5.0</span></td>
+  <td class="act">集成 在区间 · DC 不在区间</td></tr><tr><td class="act">+0.02</td>
+  <td class="act">−1,961.1</td>
+  <td class="act"><span class="badge no">Δ-3.9</span></td>
+  <td class="act"><span class="badge no">Δ-15.9</span></td>
   <td class="act">集成 不在区间 · DC 不在区间</td></tr></tbody></table>
 <div class="h2">七、逐场明细（前 80 场）</div>
 <table><colgroup><col style="width:9%"><col style="width:8%"><col style="width:30%"><col style="width:11%"><col style="width:20%"><col style="width:12%"></colgroup>
