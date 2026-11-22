@@ -1,8 +1,8 @@
 {
  "job": "com.sequoia.jczq.simbank",
  "schedule": "每天 10:40 / 11:45 / 14:20 / 18:50",
- "at": "2026-11-22 01:47:47",
+ "at": "2026-11-22 11:34:12",
  "rc": 0,
  "today": 4,
- "pending": 7
+ "pending": 4
 }
