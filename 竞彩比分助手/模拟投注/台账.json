@@ -2344,17 +2344,17 @@
     "odds": 5.7,
     "kickoff": "2026-11-23 04:00",
     "score_pred": "0-2",
-    "score": "",
-    "hit": null
+    "score": "0:3",
+    "hit": false
    }
   ],
   "odds": 32.775,
   "p": 0.016356,
   "stake": 20.0,
   "ev": -0.4639,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-23 11:24:10"
  },
  {
   "id": "M20261122-H2",
@@ -2406,17 +2406,17 @@
     "odds": 1.39,
     "kickoff": "2026-11-23 01:00",
     "score_pred": "2-1",
-    "score": "",
-    "hit": null
+    "score": "5:1",
+    "hit": true
    }
   ],
   "odds": 1.39,
   "p": 0.6606,
   "stake": 30.0,
   "ev": -0.0818,
-  "status": "待结算",
-  "payout": 0.0,
-  "settled": ""
+  "status": "中",
+  "payout": 41.7,
+  "settled": "2026-11-23 11:24:10"
  },
  {
   "id": "M20261122-N2",
