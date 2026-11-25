@@ -78,12 +78,12 @@ footer p+p{margin-top:6px}
 <header class="hero"><div class="wrap">
   <div class="badge">概率记录 · 不是投注建议</div>
   <h1>爆冷雷达 <span>2026-11-25</span></h1>
-  <p class="sub">从当日 8 场里筛出 0 场“市场热门可能不赢”的比赛 · 按模型给冷门方向的概率排序 · 生成于 2026-11-25 04:45</p>
+  <p class="sub">从当日 9 场里筛出 1 场“市场热门可能不赢”的比赛 · 按模型给冷门方向的概率排序 · 生成于 2026-11-25 20:59</p>
 </div></header>
 <section class="kpis">
-  <div class="kpi"><div class="l">当日场次</div><div class="v">8</div><div class="s">有胜平负赔率的场次</div></div>
-  <div class="kpi"><div class="l">爆冷候选</div><div class="v">0</div><div class="s">模型高于市场 ≥ 0.5 点</div></div>
-  <div class="kpi"><div class="l">最高冷门概率</div><div class="v">0.0%</div><div class="s">单场单一方向</div></div>
+  <div class="kpi"><div class="l">当日场次</div><div class="v">9</div><div class="s">有胜平负赔率的场次</div></div>
+  <div class="kpi"><div class="l">爆冷候选</div><div class="v">1</div><div class="s">模型高于市场 ≥ 0.5 点</div></div>
+  <div class="kpi"><div class="l">最高冷门概率</div><div class="v">26.5%</div><div class="s">单场单一方向</div></div>
   <div class="kpi"><div class="l">强队翻车信号</div><div class="v">0</div><div class="s">热门 ≥ 60% 且冷门 ≥ 30%</div></div>
 </section>
 <main>
@@ -91,13 +91,36 @@ footer p+p{margin-top:6px}
   两者差值很小说明市场与模型基本一致，差值为正才是模型相对看好冷门。<b>今天没有“强队大热但模型明显看衰”的场次。</b></div>
   <h2>今日候选</h2>
   <p class="hint">卡片越红，冷门方向概率越高；比分是模型分布里该方向概率最高的两个。</p>
-  <div class="grid"><div class="empty">今天没有达到阈值的爆冷候选；说明市场定价与模型基本一致。</div></div>
+  <div class="grid">
+    <article class="card low">
+      <div class="card-top">
+        <span class="no">周三011</span><span class="lg">英冠</span>
+        <span class="lv lv-low">低</span>
+        <span class="kick">11-26 04:00</span>
+      </div>
+      <h3>斯托克城 <em>vs</em> 米尔沃尔</h3>
+      <div class="pair">
+        <div class="cell">
+          <div class="lab">市场热门</div>
+          <div class="val">主胜 <b>45%</b></div>
+          <div class="sub">赔率 1.95</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="cell dog">
+          <div class="lab">爆冷方向</div>
+          <div class="val">客胜 <b>26%</b></div>
+          <div class="sub">赔率 3.42 · 模型高 0.8 个点</div>
+        </div>
+      </div>
+      <div class="scores"><div class="score"><b>0-1</b><span>8.0%</span></div></div>
+      <div class="bar"><i style="width:59%"></i></div>
+    </article></div>
   <h2 style="margin-top:26px">明细</h2>
   <p class="hint">市场热门、冷门方向、赔率与比分候选一览。</p>
   <div class="table"><table>
     <thead><tr><th>场次</th><th>联赛</th><th>对阵</th><th>市场热门</th><th>爆冷方向</th><th>冷门赔率</th><th>比分候选</th></tr></thead>
-    <tbody></tbody>
-  </table><div class="empty">今天没有达到阈值的爆冷候选；说明市场定价与模型基本一致。</div></div>
+    <tbody><tr><td>周三011</td><td>英冠</td><td>斯托克城 vs 米尔沃尔</td><td>主胜 45%</td><td class='dog'>客胜 26%</td><td>3.42</td><td>0-1 8.0%</td></tr></tbody>
+  </table></div>
   <footer>
     <p><b>口径：</b>模型为 Dixon-Coles 比分分布；市场概率由胜平负赔率去水得到；冷门方向取非市场热门中模型相对市场最看好的一项。</p>
     <p><b>提醒：</b>所有方向的模型期望仍为负（庄家抽水），这里只做概率排序与比分参考，不代表“值得投注”。样本只有 100 多场，波动很大。</p>
