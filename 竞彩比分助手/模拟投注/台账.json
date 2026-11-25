@@ -2758,17 +2758,17 @@
     "odds": 1.6,
     "kickoff": "2026-11-25 18:00",
     "score_pred": "2-1",
-    "score": "",
-    "hit": null
+    "score": "2:0",
+    "hit": false
    }
   ],
   "odds": 1.6,
   "p": 0.5149,
   "stake": 20.0,
   "ev": -0.1762,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-25 22:38:23"
  },
  {
   "id": "M20261125-N1",
