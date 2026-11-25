@@ -1,7 +1,7 @@
 {
  "result": {
   "date": "2026-11-26",
-  "generated_at": "2026-11-26 00:43:18",
+  "generated_at": "2026-11-26 04:04:06",
   "cutoff": "2026-11-27 01:45",
   "train_rows": 4351,
   "ml_trained": true,
