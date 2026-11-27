@@ -2851,8 +2851,8 @@
     "odds": 8.0,
     "kickoff": "2026-11-27 01:45",
     "score_pred": "1-2",
-    "score": "",
-    "hit": null
+    "score": "2:4",
+    "hit": false
    },
    {
     "no": "周四006",
@@ -2865,17 +2865,17 @@
     "odds": 7.75,
     "kickoff": "2026-11-27 04:00",
     "score_pred": "1-2",
-    "score": "",
-    "hit": null
+    "score": "2:4",
+    "hit": false
    }
   ],
   "odds": 62.0,
   "p": 0.008712,
   "stake": 20.0,
   "ev": -0.4598,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-27 11:13:43"
  },
  {
   "id": "M20261126-H2",
@@ -2896,17 +2896,17 @@
     "odds": 1.57,
     "kickoff": "2026-11-27 04:00",
     "score_pred": "2-1",
-    "score": "",
-    "hit": null
+    "score": "3:1",
+    "hit": false
    }
   ],
   "odds": 1.57,
   "p": 0.5099,
   "stake": 20.0,
   "ev": -0.1995,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-27 11:13:43"
  },
  {
   "id": "M20261126-N1",
@@ -2927,17 +2927,17 @@
     "odds": 1.31,
     "kickoff": "2026-11-27 01:45",
     "score_pred": "1-2",
-    "score": "",
-    "hit": null
+    "score": "4:0",
+    "hit": false
    }
   ],
   "odds": 1.31,
   "p": 0.6977,
   "stake": 30.0,
   "ev": -0.086,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-27 11:13:43"
  },
  {
   "id": "M20261126-N2",
@@ -2958,17 +2958,17 @@
     "odds": 3.55,
     "kickoff": "2026-11-27 01:45",
     "score_pred": "1-2",
-    "score": "",
-    "hit": null
+    "score": "2:4",
+    "hit": false
    }
   ],
   "odds": 3.55,
   "p": 0.2415,
   "stake": 30.0,
   "ev": -0.1427,
-  "status": "待结算",
+  "status": "未中",
   "payout": 0.0,
-  "settled": ""
+  "settled": "2026-11-27 11:13:43"
  },
  {
   "id": "M20261127-H1",
